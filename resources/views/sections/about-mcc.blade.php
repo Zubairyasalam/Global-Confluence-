@@ -1,6 +1,6 @@
 <!-- About MCC Section -->
 <section class="about-organizers-section" style="background-color: #f8fbfa; padding: 60px 0 30px 0;">
-    <div class="container" style="max-width: 90%; margin: 0 auto;">
+    <div class="container" style="max-width: 1140px; margin: 0 auto; padding: 0 20px;">
         
         <!-- Header -->
         <div style="text-align: center; margin-bottom: 40px;">
@@ -14,10 +14,10 @@
         </div>
 
         <!-- Dashboard Wrapper -->
-        <div class="organizer-dashboard" style="display: flex; gap: 30px; background: #ffffff; border-radius: 24px; box-shadow: 0 15px 50px rgba(0,0,0,0.04); overflow: hidden; border: 1px solid #eaeaea; min-height: 480px;">
+        <div class="organizer-dashboard" style="display: flex; gap: 0; background: #ffffff; border-radius: 24px; box-shadow: 0 15px 50px rgba(0,0,0,0.04); overflow: hidden; border: 1px solid #eaeaea;">
             
             <!-- Sidebar Navigation -->
-            <div class="dashboard-sidebar" style="width: 320px; background: #fcfdfe; border-right: 1px solid #f0f0f0; padding: 30px 20px; display: flex; flex-direction: column; gap: 12px; flex-shrink: 0;">
+            <div class="dashboard-sidebar" style="width: 300px; background: #fcfdfe; border-right: 1px solid #f0f0f0; padding: 30px 20px; display: flex; flex-direction: column; gap: 12px; flex-shrink: 0;">
                 <div style="font-size: 0.8rem; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 1px; padding-left: 10px; margin-bottom: 5px;">Institution</div>
                 
                 <button class="nav-tab-btn active" onclick="switchOrganizerTab(event, 'tab-mcc')" style="display: flex; align-items: center; gap: 12px; padding: 14px 18px; border: none; background: none; border-radius: 12px; cursor: pointer; text-align: left; transition: all 0.3s ease; width: 100%;">
@@ -48,7 +48,7 @@
             </div>
 
             <!-- Content Area -->
-            <div class="dashboard-content" style="flex-grow: 1; padding: 40px; display: flex; flex-direction: column; justify-content: flex-start; background: #ffffff;">
+            <div class="dashboard-content" style="flex-grow: 1; padding: 35px 40px; display: flex; flex-direction: column; justify-content: flex-start; background: #ffffff;">
                 
                 <!-- Tab Panels -->
                 <div>
@@ -61,7 +61,7 @@
                             A Legacy of Academic Excellence
                         </h3>
                         
-                        <div style="max-width: 800px;">
+                        <div style="width: 100%;">
                             <p style="color: #475569; line-height: 1.8; font-size: 1.02rem; margin-bottom: 18px; text-align: justify;">
                                 <strong>Madras Christian College (MCC)</strong>, established in 1837, stands as a premier institution of higher learning with a distinguished legacy of 189 years of academic excellence, character formation, and nation-building.
                             </p>
@@ -83,7 +83,7 @@
                             Department of Microbiology (SFS)
                         </h3>
                         
-                        <div style="max-width: 800px;">
+                        <div style="width: 100%;">
                             <p style="color: #475569; line-height: 1.8; font-size: 1.02rem; margin-bottom: 18px; text-align: justify;">
                                 The <strong>Department of Microbiology (Self-Financed Stream)</strong> at Madras Christian College was established in 2002 and is committed to excellence in microbiology education, scientific inquiry, and research.
                             </p>
@@ -105,7 +105,7 @@
                             Department of Chemistry (SFS)
                         </h3>
                         
-                        <div style="max-width: 800px;">
+                        <div style="width: 100%;">
                             <p style="color: #475569; line-height: 1.8; font-size: 1.02rem; margin-bottom: 18px; text-align: justify;">
                                 The <strong>Department of Chemistry (Self-Financed Stream)</strong> at Madras Christian College was established in 2003, offering high-quality postgraduate education in Chemical Sciences.
                             </p>
