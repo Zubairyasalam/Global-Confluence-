@@ -189,33 +189,35 @@
                 <table class="schedule-table">
                     <thead>
                         <tr>
-                            <th style="width: 8%;">S.No</th>
-                            <th style="width: 25%;">Resource Persons</th>
-                            <th style="width: 37%;">Affiliation</th>
-                            <th style="width: 30%;">Expertise</th>
+                            <th style="width: 6%; text-align: center;">S.No</th>
+                            <th style="width: 28%; text-align: center;">Resource Persons</th>
+                            <th style="width: 40%;">Affiliation</th>
+                            <th style="width: 26%;">Expertise</th>
                         </tr>
                     </thead>
                     <tbody>
                         @php $sno = 1; @endphp
                         @for($i = 1; $i <= 30; $i++)
                             @if(!empty($settings['pre_conf_speaker_'.$i.'_name']))
-                            <tr>
-                                <td>{{ $sno++ }}.</td>
-                                <td style="text-align: center;">
+                            <tr style="border-bottom: 1px solid #e2e8f0;">
+                                <td style="text-align: center; vertical-align: middle; font-weight: 600; color: #64748b; font-size: 1rem;">{{ $sno++ }}.</td>
+                                <td style="text-align: center; vertical-align: middle; padding: 18px 12px;">
                                     @if(!empty($settings['pre_conf_speaker_'.$i.'_image']))
-                                    <img src="{{ asset($settings['pre_conf_speaker_'.$i.'_image']) }}" alt="{{ $settings['pre_conf_speaker_'.$i.'_name'] }}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px; margin: 0 auto 10px auto; display: block; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                                    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 5px; display: inline-block; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 8px;">
+                                        <img src="{{ asset($settings['pre_conf_speaker_'.$i.'_image']) }}" alt="{{ $settings['pre_conf_speaker_'.$i.'_name'] }}" style="width: 110px; height: 110px; object-fit: cover; border-radius: 8px; display: block;">
+                                    </div>
                                     @endif
-                                    <strong style="color: #0f172a;">{{ $settings['pre_conf_speaker_'.$i.'_name'] }}</strong>
+                                    <div style="font-weight: 800; color: #0f172a; font-size: 0.98rem; line-height: 1.3;">{{ $settings['pre_conf_speaker_'.$i.'_name'] }}</div>
                                 </td>
-                                <td>{{ $settings['pre_conf_speaker_'.$i.'_affiliation'] ?? '' }}</td>
-                                <td>{{ $settings['pre_conf_speaker_'.$i.'_expertise'] ?? '' }}</td>
+                                <td style="vertical-align: middle; color: #334155; line-height: 1.6; font-size: 0.95rem;">{{ $settings['pre_conf_speaker_'.$i.'_affiliation'] ?? '' }}</td>
+                                <td style="vertical-align: middle; color: #475569; line-height: 1.6; font-size: 0.95rem;">{{ $settings['pre_conf_speaker_'.$i.'_expertise'] ?? '' }}</td>
                             </tr>
                             @endif
                         @endfor
                         @if(!empty($settings['pre_conf_panel']))
-                        <tr>
-                            <td>{{ $sno }}.</td>
-                            <td colspan="3"><strong style="color: #0f172a;">{{ $settings['pre_conf_panel'] }}</strong></td>
+                        <tr style="background: #f8fafc;">
+                            <td style="text-align: center; vertical-align: middle; font-weight: 600; color: #64748b; font-size: 1rem;">{{ $sno }}.</td>
+                            <td colspan="3" style="vertical-align: middle; padding: 20px 24px;"><strong style="color: #0f172a; font-size: 1rem;">{{ $settings['pre_conf_panel'] }}</strong></td>
                         </tr>
                         @endif
                     </tbody>
