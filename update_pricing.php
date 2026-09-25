@@ -6,6 +6,18 @@ $app = require_once __DIR__ . '/bootstrap/app.php';
 $app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+
+if (!Schema::hasColumn('registration_fees', 'price_usd_online')) {
+    Schema::table('registration_fees', function ($table) {
+        $table->string('price_usd_online')->nullable();
+    });
+}
+if (!Schema::hasColumn('registration_fees', 'icon')) {
+    Schema::table('registration_fees', function ($table) {
+        $table->string('icon')->nullable();
+    });
+}
 
 $fees = [
     'Student'          => ['offline' => '750', 'online' => '1000', 'usd_offline' => '8', 'usd_online' => '10'],
