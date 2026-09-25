@@ -13,19 +13,22 @@ Highlight::truncate();
 $itemsCol1 = [
     'Plenary Sessions',
     'Invited Talks',
-    'Oral & poster presentations',
+    'Oral & Poster presentations',
+    'Separate tracks for Medical Practitioners & Industry',
 ];
 
 $itemsCol2 = [
     'Hackathon',
-    'Innovator Pitch Contest',
-    'Industry Merchandise',
+    'Innovator Pitch',
+    'Industry Connect',
+    'Pre-Conference Consultation',
 ];
 
 $itemsCol3 = [
+    'Conference proceedings as Publications in Scopus / WoS Journals',
     'Panel Discussions',
     'Policy Roundtable Discussions',
-    'Exemplary recognition',
+    'Distinguished Awards and Prizes',
 ];
 
 $sort = 0;
