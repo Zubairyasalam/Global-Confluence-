@@ -38,7 +38,7 @@ $speakers = [
         'expertise' => 'Indian Knowledge system'
     ],
     [
-        'image' => 'images/vijaykumar.png',
+        'image' => '',
         'name' => 'Dr. V. Vijaykumar',
         'affiliation' => 'Expert Advisor for child health, National Health Mission, Chennai',
         'expertise' => 'Public health integration and environmental determinants and health policy'
