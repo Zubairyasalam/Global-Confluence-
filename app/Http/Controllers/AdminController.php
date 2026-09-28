@@ -62,6 +62,22 @@ class AdminController extends Controller
         return back()->with('success', 'Submission deleted successfully.');
     }
 
+    public function awardApplications()
+    {
+        $applications = \App\Models\AwardApplication::orderBy('created_at', 'desc')->get();
+        return view('admin.award_applications', compact('applications'));
+    }
+
+    public function deleteAwardApplication($id)
+    {
+        $application = \App\Models\AwardApplication::findOrFail($id);
+        if ($application->file_path && \Illuminate\Support\Facades\Storage::disk('public')->exists($application->file_path)) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($application->file_path);
+        }
+        $application->delete();
+        return back()->with('success', 'Award application deleted successfully.');
+    }
+
     // CMS: Registration Fees
     public function fees()
     {

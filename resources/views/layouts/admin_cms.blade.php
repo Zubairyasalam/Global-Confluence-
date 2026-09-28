@@ -291,12 +291,12 @@
             </li>
             <li>
                 <a href="{{ route('admin.registrations') }}" class="{{ request()->routeIs('admin.registrations') ? 'active' : '' }}">
-                    <i class="fa-solid fa-users"></i> Registrations
+                    Registrations
                 </a>
             </li>
             <li>
-                <a href="{{ route('admin.submissions') }}" class="{{ request()->routeIs('admin.submissions') ? 'active' : '' }}">
-                    <i class="fa-solid fa-file-lines"></i> Paper Submissions
+                <a href="{{ route('admin.award_applications') }}" class="{{ request()->routeIs('admin.award_applications') ? 'active' : '' }}">
+                    Award Applications
                 </a>
             </li>
 

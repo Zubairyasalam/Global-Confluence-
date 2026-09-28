@@ -41,7 +41,7 @@
                     @if(count($submissions) > 0)
                         @foreach($submissions as $sub)
                             <tr style="border-bottom: 1px solid var(--admin-border); transition: background 0.2s;">
-                                <td style="padding: 14px 16px; color: #94a3b8; font-weight: 600; font-size: 0.9rem;">#{{ $sub->id }}</td>
+                                <td style="padding: 14px 16px; color: #94a3b8; font-weight: 600; font-size: 0.9rem;">{{ $sub->id }}</td>
 
                                 <td style="padding: 14px 16px;">
                                     <div style="font-weight: 700; color: var(--admin-sidebar); white-space: nowrap;">{{ $sub->title }} {{ $sub->name }}</div>

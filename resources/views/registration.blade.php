@@ -21,6 +21,115 @@
         <div class="container registration-container">
             
             <!-- Instructions -->
+            @if(session('success'))
+            <div id="successPopupModal" class="success-modal-overlay">
+                <div class="success-modal-card">
+                    <div class="success-modal-icon">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    <h2 class="success-modal-title">Registration Successful!</h2>
+                    <p class="success-modal-message">{{ session('success') }}</p>
+                    <p class="success-modal-submessage">Thank you for registering for GOHC 2026. A confirmation notification has been recorded.</p>
+                    <button type="button" onclick="closeSuccessModal()" class="success-modal-btn">
+                        OK, GOT IT
+                    </button>
+                </div>
+            </div>
+
+            <style>
+                .success-modal-overlay {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(15, 23, 42, 0.75);
+                    backdrop-filter: blur(6px);
+                    z-index: 999999;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 20px;
+                }
+                .success-modal-card {
+                    background: #ffffff;
+                    border-radius: 24px;
+                    padding: 45px 35px 35px;
+                    text-align: center;
+                    max-width: 480px;
+                    width: 100%;
+                    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+                    animation: successPopIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                    position: relative;
+                }
+                .success-modal-icon {
+                    background: linear-gradient(135deg, #00a896, #028090);
+                    width: 80px;
+                    height: 80px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin: 0 auto 25px;
+                    color: #ffffff;
+                    font-size: 2.5rem;
+                    box-shadow: 0 10px 25px rgba(0, 168, 150, 0.4);
+                }
+                .success-modal-title {
+                    font-size: 1.65rem;
+                    font-weight: 800;
+                    color: #0a192f;
+                    margin: 0 0 12px 0;
+                    letter-spacing: -0.5px;
+                }
+                .success-modal-message {
+                    font-size: 1.05rem;
+                    color: #00a896;
+                    font-weight: 700;
+                    margin: 0 0 8px 0;
+                }
+                .success-modal-submessage {
+                    font-size: 0.95rem;
+                    color: #64748b;
+                    margin: 0 0 30px 0;
+                    line-height: 1.5;
+                }
+                .success-modal-btn {
+                    background: linear-gradient(135deg, #00a896, #028090);
+                    color: #ffffff;
+                    border: none;
+                    padding: 15px 40px;
+                    border-radius: 30px;
+                    font-size: 1rem;
+                    font-weight: 700;
+                    letter-spacing: 1px;
+                    cursor: pointer;
+                    width: 100%;
+                    transition: all 0.3s ease;
+                    box-shadow: 0 8px 20px rgba(0, 168, 150, 0.3);
+                }
+                .success-modal-btn:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 12px 25px rgba(0, 168, 150, 0.45);
+                }
+                @keyframes successPopIn {
+                    0% { opacity: 0; transform: scale(0.7); }
+                    100% { opacity: 1; transform: scale(1); }
+                }
+            </style>
+
+            <script>
+                function closeSuccessModal() {
+                    const modal = document.getElementById('successPopupModal');
+                    if (modal) {
+                        modal.style.opacity = '0';
+                        modal.style.transition = 'opacity 0.3s ease';
+                        setTimeout(() => modal.remove(), 300);
+                    }
+                }
+            </script>
+            @endif
+
             <div class="reg-instructions" style="margin-bottom: 40px; background: #f0f7fa; padding: 35px 40px; border-radius: 12px; border: 1px solid #d1e5f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
                 <h3 style="text-align: center; color: #1e3250; margin-top: 0; font-size: 1.35rem; font-weight: 700; margin-bottom: 10px;">{{ $settings['reg_proc_title'] ?? 'Registration Process of GOHC - 2026' }}</h3>
                 <p style="text-align: center; font-size: 1.05rem; margin-bottom: 25px; color: #1e3250;">{{ $settings['reg_proc_sub'] ?? 'Participation in GOHC 2026 is open only to registered delegates..' }}</p>

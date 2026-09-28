@@ -41,10 +41,17 @@ class RegistrationController extends Controller
         // Save the dynamic fields as JSON
         $fieldsData = $request->input('fields');
 
-        // Handle abstract file upload
+        // Handle abstract file upload with original filename preservation
         if ($request->hasFile('abstract_file')) {
-            $path = $request->file('abstract_file')->store('abstracts', 'public');
+            $file = $request->file('abstract_file');
+            $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $extension = $file->getClientOriginalExtension();
+            $cleanName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $originalName);
+            $filename = time() . '_' . $cleanName . '.' . $extension;
+            
+            $path = $file->storeAs('abstracts', $filename, 'public');
             $fieldsData['abstract_file'] = $path;
+            $fieldsData['abstract_original_name'] = $file->getClientOriginalName();
         }
 
         $registration->form_data = $fieldsData;
@@ -54,6 +61,8 @@ class RegistrationController extends Controller
         $registration->phone = $fieldsData['phone'] ?? null;
         $registration->organization = $fieldsData['organization'] ?? null;
         $registration->interested_in = $fieldsData['interested_in'] ?? null;
+        $registration->registration_type = $fieldsData['registration_type'] ?? 'Participation';
+        $registration->abstract_file = $fieldsData['abstract_file'] ?? null;
 
         $registration->category_name = $request->input('reg_category_name', 'Registration');
         $registration->total_amount = $totalAmount;

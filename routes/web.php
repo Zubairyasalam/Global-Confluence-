@@ -168,6 +168,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::delete('/registrations/{id}', [AdminController::class, 'deleteRegistration'])->name('admin.registrations.destroy');
     Route::get('/submissions', [AdminController::class, 'submissions'])->name('admin.submissions');
     Route::delete('/submissions/{id}', [AdminController::class, 'deleteSubmission'])->name('admin.submissions.destroy');
+    Route::get('/award-applications', [AdminController::class, 'awardApplications'])->name('admin.award_applications');
+    Route::delete('/award-applications/{id}', [AdminController::class, 'deleteAwardApplication'])->name('admin.award_applications.destroy');
     
     // CMS: Registration Fees
     Route::get('/fees', [AdminController::class, 'fees'])->name('admin.fees');
@@ -308,14 +310,23 @@ Route::post('/awards/apply', function (\Illuminate\Http\Request $request) {
         'application_file' => 'required|file|mimes:doc,docx,pdf|max:10240', // 10MB max
     ]);
 
-    $awardName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $request->input('award_name', 'Award'));
+    $awardTitle = $request->input('award_name', 'Award Application');
+    $awardNameClean = preg_replace('/[^A-Za-z0-9_\-]/', '_', pathinfo($awardTitle, PATHINFO_FILENAME));
     $file = $request->file('application_file');
-    $filename = time() . '_' . $awardName . '_' . $file->getClientOriginalName();
+    $originalName = $file->getClientOriginalName();
+    $extension = $file->getClientOriginalExtension();
+    $filename = time() . '_' . $awardNameClean . '.' . $extension;
     
     // Store in storage/app/public/award_applications
-    $file->storeAs('public/award_applications', $filename);
+    $path = $file->storeAs('award_applications', $filename, 'public');
     
-    return redirect()->back()->with('success', 'Your application has been submitted successfully!');
+    \App\Models\AwardApplication::create([
+        'award_name' => $awardTitle,
+        'file_path' => $path,
+        'original_filename' => $originalName,
+    ]);
+
+    return redirect()->back()->with('success', 'Your award application has been submitted successfully!');
 })->name('awards.apply');
 
 Route::get('/pre-conference', function () {
