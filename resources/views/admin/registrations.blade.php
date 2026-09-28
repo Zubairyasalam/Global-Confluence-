@@ -277,16 +277,20 @@
                 const reg = JSON.parse(this.getAttribute('data-reg'));
                 const date = this.getAttribute('data-date');
                 
-                document.getElementById('m-name').innerText = (reg.title || '') + ' ' + (reg.name || '');
-                document.getElementById('m-org').innerText = reg.organization || 'N/A';
-                document.getElementById('m-email').innerText = reg.email || 'N/A';
-                document.getElementById('m-phone').innerText = reg.phone || 'N/A';
+                const title = reg.title || (reg.form_data && reg.form_data.title) || '';
+                const name = reg.name || (reg.form_data && reg.form_data.name) || '';
+                document.getElementById('m-name').innerText = (title ? title + ' ' : '') + name;
+                document.getElementById('m-org').innerText = reg.organization || (reg.form_data && reg.form_data.organization) || 'N/A';
+                document.getElementById('m-email').innerText = reg.email || (reg.form_data && reg.form_data.email) || 'N/A';
+                document.getElementById('m-phone').innerText = reg.phone || (reg.form_data && reg.form_data.phone) || 'N/A';
                 
-                const city = reg.city || 'N/A';
-                const country = reg.country || 'N/A';
-                document.getElementById('m-location').innerText = (city === 'N/A' && country === 'N/A') ? 'N/A' : (city + ', ' + country);
+                const city = reg.city || (reg.form_data && reg.form_data.city) || '';
+                const country = reg.country || (reg.form_data && reg.form_data.country) || '';
+                const locParts = [city, country].filter(Boolean);
+                document.getElementById('m-location').innerText = locParts.length > 0 ? locParts.join(', ') : 'N/A';
                 
-                document.getElementById('m-postal').innerText = reg.postal_code || 'N/A';
+                const postal = reg.postal_code || (reg.form_data && reg.form_data.postal_code) || 'N/A';
+                document.getElementById('m-postal').innerText = postal;
                 
                 const regType = reg.registration_type || (reg.form_data && reg.form_data.registration_type) || 'Participation';
                 const abstractFile = reg.abstract_file || (reg.form_data && reg.form_data.abstract_file);

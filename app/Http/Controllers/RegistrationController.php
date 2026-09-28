@@ -56,17 +56,22 @@ class RegistrationController extends Controller
 
         $registration->form_data = $fieldsData;
         
+        $registration->title = $fieldsData['title'] ?? null;
         $registration->name = $fieldsData['name'] ?? 'N/A';
         $registration->email = $fieldsData['email'] ?? 'N/A';
         $registration->phone = $fieldsData['phone'] ?? null;
         $registration->organization = $fieldsData['organization'] ?? null;
+        $registration->city = $fieldsData['city'] ?? null;
+        $registration->country = $fieldsData['country'] ?? null;
+        $registration->postal_code = $fieldsData['postal_code'] ?? null;
         $registration->interested_in = $fieldsData['interested_in'] ?? null;
         $registration->registration_type = $fieldsData['registration_type'] ?? 'Participation';
         $registration->abstract_file = $fieldsData['abstract_file'] ?? null;
+        $registration->reg_category = $request->input('reg_category');
+        $registration->payment_method = !empty($fieldsData['transaction_id']) ? ('Txn: ' . $fieldsData['transaction_id']) : 'N/A';
 
         $registration->category_name = $request->input('reg_category_name', 'Registration');
         $registration->total_amount = $totalAmount;
-        $registration->payment_method = 'N/A';
         $registration->addons = $addons;
         $registration->payment_status = 'completed'; // auto complete for demo purposes
         

@@ -60,13 +60,13 @@
                     </div>
                     <div id="award-apply-{{ $i }}" style="display: none; margin-top: 20px; padding: 20px; background: #e2e8f0; border-radius: 6px;">
                         <div style="margin-bottom: 20px; text-align: center;">
-                            <p style="margin-top: 0; color: #475569; font-size: 0.95rem;">Step 1: Download and fill the Proforma</p>
+                            <p style="margin-top: 0; color: #475569; font-size: 0.95rem; font-weight: 700;">Step 1: Download and fill the Proforma</p>
                             <a href="{{ route($downloadRouteName) }}" style="display: inline-block; background: #1e3250; color: white; padding: 12px 25px; text-decoration: none; border-radius: 4px; font-weight: bold;"><i class="fa-solid fa-download"></i> Download Proforma</a>
                         </div>
                         <form action="{{ route('awards.apply') }}" method="POST" enctype="multipart/form-data" style="margin: 0; padding: 20px; background: white; border-radius: 4px; border: 1px dashed #cbd5e1;">
                             @csrf
                             <input type="hidden" name="award_name" value="{{ $settings['award_' . $i . '_title'] }}">
-                            <p style="margin-top: 0; color: #475569; font-size: 0.95rem; text-align: center; margin-bottom: 15px;">Step 2: Upload your completed form</p>
+                            <p style="margin-top: 0; color: #475569; font-size: 0.95rem; text-align: center; margin-bottom: 15px; font-weight: 700;">Step 2: Upload your completed form</p>
                             <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #1e3250;">Upload Filled Form (.doc, .docx, .pdf)</label>
                             <input type="file" name="application_file" accept=".doc,.docx,.pdf" required style="display: block; width: 100%; margin-bottom: 15px; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px;">
                             <div style="text-align: center;">
