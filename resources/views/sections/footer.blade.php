@@ -44,7 +44,7 @@
                     <img src="{{ asset('images/msmf_logo.png') }}" alt="MSMF Logo" style="max-height: 85px; width: auto;">
                 </a>
                 <a href="/" class="footer-logo" style="text-decoration: none; display: inline-block; background-color: white; padding: 6px; border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
-                    <img src="{{ asset('images/micro.png') }}" alt="Microbiologists Society Logo" style="max-height: 90px; width: auto; border-radius: 50%; display: block;">
+                    <img src="{{ asset('images/microbiologists_society.png') }}" alt="Microbiologists Society Logo" style="max-height: 90px; width: auto; border-radius: 50%; display: block;">
                 </a>
             </div>
             <p style="color: #94a3b8; line-height: 1.7; font-size: 0.95rem; text-align: justify; margin-top: 0;">{{ $settings['footer_bio'] ?? 'We bring together brilliant minds from around the world to create transformative platforms for knowledge exchange, collaboration, and innovation.' }}</p>
