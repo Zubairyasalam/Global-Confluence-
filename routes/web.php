@@ -7,6 +7,22 @@ use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\PaperSubmissionController;
 use App\Http\Controllers\RegistrationController;
 
+Route::get('/storage-file/{path}', function ($path) {
+    $path = ltrim(str_replace(['public/', 'storage/'], '', $path), '/');
+    $filePath = storage_path('app/public/' . $path);
+    if (!file_exists($filePath)) {
+        $filePath = storage_path('app/' . $path);
+    }
+    if (!file_exists($filePath)) {
+        abort(404);
+    }
+    $mimeType = \Illuminate\Support\Facades\File::mimeType($filePath) ?: 'application/octet-stream';
+    return response()->file($filePath, [
+        'Content-Type' => $mimeType,
+        'Content-Disposition' => 'inline; filename="' . basename($filePath) . '"'
+    ]);
+})->where('path', '.*')->name('storage.file');
+
 Route::get('/', [FrontendController::class, 'index'])->name('home');
 
 Route::get('/setup-db', function () {

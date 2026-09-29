@@ -300,7 +300,7 @@
 
                 if (abstractFile) {
                     const cleanPath = abstractFile.replace(/^storage\//, '');
-                    const fileUrl = '{{ asset("storage") }}/' + cleanPath;
+                    const fileUrl = '{{ url("storage-file") }}/' + cleanPath;
                     const isPdf = cleanPath.toLowerCase().endsWith('.pdf');
                     
                     // Derive clean filename
@@ -308,14 +308,19 @@
                         ? reg.form_data.abstract_original_name 
                         : cleanPath.split('/').pop().replace(/^\d+_/, '');
                     
-                    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-                    
+                    let iframeContent = isPdf 
+                        ? `<iframe src="${fileUrl}" style="width: 100%; height: 580px; border: none; display: block; background: #fff;"></iframe>`
+                        : (!isLocal 
+                            ? `<iframe src="https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(fileUrl)}" style="width: 100%; height: 580px; border: none; display: block; background: #fff;"></iframe>`
+                            : `<div style="padding: 40px; text-align: center; color: #475569; background: #fff;"><i class="fa-solid fa-file-word" style="font-size: 3.5rem; color: #2563eb; margin-bottom: 15px; display: block;"></i><p style="font-weight: 700; font-size: 1.1rem; margin-bottom: 8px;">Word Document (.doc / .docx)</p><p style="font-size: 0.9rem; color: #64748b; margin-bottom: 20px;">Direct inline preview for Word docs is enabled on live server via Office Viewer. Click below to download on local dev.</p><a href="${fileUrl}" download="${displayFileName}" style="display: inline-flex; align-items: center; gap: 8px; background: #00a896; color: #fff; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 700;"><i class="fa-solid fa-download"></i> Download & View File</a></div>`
+                          );
+
                     let viewerFrame = `<div style="margin-top: 15px; border-radius: 12px; overflow: hidden; border: 2px solid #cbd5e1; box-shadow: 0 4px 15px rgba(0,0,0,0.08); background: #f8fafc;">
                         <div style="background: #0f172a; color: #fff; padding: 10px 18px; font-size: 0.88rem; font-weight: 700; display: flex; align-items: center; justify-content: space-between;">
                             <span><i class="fa-solid fa-file-lines" style="margin-right: 8px; color: #00a896;"></i> Inline Document Preview: ${displayFileName}</span>
                             <a href="${fileUrl}" target="_blank" style="color: #20c997; text-decoration: none; font-size: 0.82rem; font-weight: 700;"><i class="fa-solid fa-expand"></i> Open Full Screen Tab</a>
                         </div>
-                        <iframe src="${fileUrl}" style="width: 100%; height: 580px; border: none; display: block; background: #fff;"></iframe>
+                        ${iframeContent}
                     </div>`;
 
                     document.getElementById('m-document').innerHTML = `

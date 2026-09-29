@@ -79,7 +79,7 @@
                                 <td style="padding: 14px 16px;">
                                     <div style="display: flex; gap: 8px;">
                                         @if($sub->abstract_file_path)
-                                            <a href="{{ Storage::url($sub->abstract_file_path) }}" target="_blank"
+                                            <a href="{{ url('storage-file/' . str_replace('public/', '', $sub->abstract_file_path)) }}" target="_blank"
                                                style="display: inline-flex; align-items: center; gap: 6px; background: var(--admin-primary); color: #fff; padding: 7px 14px; border-radius: 8px; font-size: 0.82rem; font-weight: 700; text-decoration: none; white-space: nowrap;">
                                                 <i class="fa-solid fa-download"></i> Download
                                             </a>
