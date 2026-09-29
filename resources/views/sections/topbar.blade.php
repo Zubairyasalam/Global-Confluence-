@@ -25,7 +25,12 @@
     <div class="topbar-left" style="flex-shrink: 0; padding-right: 20px; border-right: 1px solid rgba(255,255,255,0.2); display: flex; gap: 15px; align-items: center;">
         <span><i class="fa-solid fa-phone" style="margin-right: 5px;"></i> {{ $settings['contact_phone'] ?? '+91 9789582404' }}</span>
         <span><i class="fa-solid fa-phone" style="margin-right: 5px;"></i> {{ $settings['contact_phone_2'] ?? '+91 9025596984' }}</span>
-        <span><i class="fa-solid fa-phone" style="margin-right: 5px;"></i> {{ $settings['contact_phone_3'] ?? '+91 8148018994' }}</span>
+        <span>
+            <a href="https://wa.me/918148018994" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+                <i class="fa-brands fa-whatsapp" style="color: #25d366; font-size: 1.1rem; margin-right: 2px;"></i>
+                {{ $settings['contact_phone_3'] ?? '+91 8148018994' }}
+            </a>
+        </span>
     </div>
     <div class="marquee-container">
         <div class="marquee-content">

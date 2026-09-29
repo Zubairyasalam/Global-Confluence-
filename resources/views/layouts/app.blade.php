@@ -44,11 +44,9 @@
 <body>
     @yield('content')
     <!-- Floating WhatsApp Button -->
-    @if(isset($settings['contact_whatsapp_link']) && !empty($settings['contact_whatsapp_link']))
-    <a href="{{ $settings['contact_whatsapp_link'] }}" class="whatsapp-float" target="_blank" rel="noopener noreferrer" title="Chat with us on WhatsApp">
+    <a href="{{ $settings['contact_whatsapp_link'] ?? 'https://wa.me/918148018994' }}" class="whatsapp-float" target="_blank" rel="noopener noreferrer" title="Chat with us on WhatsApp (+91 8148018994)">
         <i class="fa-brands fa-whatsapp"></i>
     </a>
-    @endif
 
     @yield('scripts')
 </body>
