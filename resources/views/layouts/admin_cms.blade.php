@@ -340,7 +340,7 @@
             </li>
             <li>
                 <a href="{{ route('admin.mcc_memorial') }}" class="{{ request()->routeIs('admin.mcc_memorial') ? 'active' : '' }}">
-                    <i class="fa-solid fa-landmark"></i> MCC Memorial
+                    <i class="fa-solid fa-landmark"></i> Glimpse of MCC
                 </a>
             </li>
             <li>

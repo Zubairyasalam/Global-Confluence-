@@ -25,7 +25,7 @@
         <a href="{{ route('schedule') }}">Schedule</a>
         <a href="{{ route('awards') }}">Awards</a>
         <a href="{{ route('pre-conference') }}">Pre-Conference</a>
-        <a href="{{ route('mcc-memorial') }}">MCC Memorial</a>
+        <a href="{{ route('mcc-memorial') }}">Glimpse of MCC</a>
         <a href="{{ route('venue') }}">Visit</a>
     </div>
     
