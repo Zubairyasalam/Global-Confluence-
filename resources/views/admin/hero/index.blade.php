@@ -270,8 +270,31 @@
                     @endif
                 </div>
             </div>
-            
-            <!-- Hide Topbar inputs from original UI but keep them so they don't get lost or implement them if requested. Just doing hero fields based on image 2 -->
+
+            <!-- Topbar & Contact Numbers Configuration -->
+            <div style="margin-top: 30px; padding-top: 25px; border-top: 2px dashed #e2e8f0;">
+                <h4 style="color: #1e293b; font-size: 1.1rem; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-phone" style="color: #2563eb;"></i> Topbar Contact Numbers & WhatsApp Integration
+                </h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group">
+                        <label class="form-label">Contact Phone 1</label>
+                        <input type="text" name="contact_phone" class="form-control" value="{{ $settings['contact']->where('key', 'contact_phone')->first()->value ?? '+91 9789582404' }}">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Contact Phone 2</label>
+                        <input type="text" name="contact_phone_2" class="form-control" value="{{ $settings['contact']->where('key', 'contact_phone_2')->first()->value ?? '+91 9025596984' }}">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Contact Phone 3 (WhatsApp Number)</label>
+                        <input type="text" name="contact_phone_3" class="form-control" value="{{ $settings['contact']->where('key', 'contact_phone_3')->first()->value ?? '+91 8148018994' }}">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">WhatsApp Direct Link / Number URL</label>
+                        <input type="text" name="contact_whatsapp_link" class="form-control" placeholder="e.g. https://wa.me/918148018994" value="{{ $settings['contact']->where('key', 'contact_whatsapp_link')->first()->value ?? 'https://wa.me/918148018994' }}">
+                    </div>
+                </div>
+            </div>
             
             <div style="text-align: right; margin-top: 20px;">
                 <button type="submit" class="btn-save">Save Details</button>
