@@ -169,11 +169,26 @@
         <div class="pre-conf-section" style="border-top-color: #f59e0b;">
             <h2 class="pre-conf-title"><i class="fa-solid fa-bullseye" style="color: #f59e0b;"></i> KEY OBJECTIVES</h2>
             <ul class="obj-list">
-                @for($i = 1; $i <= 20; $i++)
-                    @if(!empty($settings['pre_conf_obj_'.$i]))
-                        <li>{{ $settings['pre_conf_obj_'.$i] }}</li>
-                    @endif
-                @endfor
+                @php
+                    $allObjs = [];
+                    for ($i = 1; $i <= 20; $i++) {
+                        if (!empty($settings['pre_conf_obj_'.$i])) {
+                            $val = trim($settings['pre_conf_obj_'.$i]);
+                            if (preg_match_all('/(?:\d+\.\s*)(.*?)(?=(?:\s*\d+\.\s*)|$)/s', $val, $matches) && count($matches[1]) > 1) {
+                                foreach ($matches[1] as $m) {
+                                    $item = trim($m);
+                                    if ($item) $allObjs[] = $item;
+                                }
+                            } else {
+                                $cleanVal = preg_replace('/^\d+\.\s*/', '', $val);
+                                if ($cleanVal) $allObjs[] = $cleanVal;
+                            }
+                        }
+                    }
+                @endphp
+                @foreach($allObjs as $objItem)
+                    <li>{{ $objItem }}</li>
+                @endforeach
             </ul>
         </div>
 
