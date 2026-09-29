@@ -463,6 +463,8 @@ class AdminController extends Controller
             $names = $request->input('track_names', []);
             $topics = $request->input('track_topics', []);
             $colors = $request->input('track_colors', []);
+            $adjudicators = $request->input('track_adjudicators', []);
+            $staffs = $request->input('track_staffs', []);
             $count = 0;
             foreach ($names as $idx => $name) {
                 if (!empty($name)) {
@@ -470,6 +472,12 @@ class AdminController extends Controller
                     SiteSetting::updateOrCreate(['key' => "track_{$count}_name"], ['value' => $name, 'group' => 'schedule']);
                     SiteSetting::updateOrCreate(['key' => "track_{$count}_topic"], ['value' => $topics[$idx] ?? '', 'group' => 'schedule']);
                     SiteSetting::updateOrCreate(['key' => "track_{$count}_color"], ['value' => $colors[$idx] ?? '#009688', 'group' => 'schedule']);
+                    if (isset($adjudicators[$idx])) {
+                        SiteSetting::updateOrCreate(['key' => "track_{$count}_adjudicator"], ['value' => $adjudicators[$idx], 'group' => 'schedule']);
+                    }
+                    if (isset($staffs[$idx])) {
+                        SiteSetting::updateOrCreate(['key' => "track_{$count}_staff"], ['value' => $staffs[$idx], 'group' => 'schedule']);
+                    }
                 }
             }
             SiteSetting::updateOrCreate(['key' => 'track_count'], ['value' => $count, 'group' => 'schedule']);

@@ -370,8 +370,18 @@
                             <input type="text" name="track_colors[]" class="form-control" value="{{ $settings['track_' . $i . '_color'] ?? '#009688' }}">
                         </div>
                         <div class="form-group" style="margin-bottom: 0;">
-                            <label class="form-label">Topic / Description</label>
+                            <label class="form-label">Topic / Track Details</label>
                             <input type="text" name="track_topics[]" class="form-control" value="{{ $settings['track_' . $i . '_topic'] ?? '' }}">
+                        </div>
+                    </div>
+                    <div class="grid-2" style="margin-top: 15px;">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label class="form-label">Adjudicator</label>
+                            <input type="text" name="track_adjudicators[]" class="form-control" value="{{ $settings['track_' . $i . '_adjudicator'] ?? '' }}" placeholder="e.g. Dr. Ananthi Rachel Livingstone...">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label class="form-label">Staff Incharge</label>
+                            <input type="text" name="track_staffs[]" class="form-control" value="{{ $settings['track_' . $i . '_staff'] ?? '' }}" placeholder="e.g. Dr.S. Niren Andrew & Mrs.Adline Jennefa Daniel...">
                         </div>
                     </div>
                 </div>
@@ -468,8 +478,18 @@ function addTrackRow() {
                 <input type="text" name="track_colors[]" class="form-control" value="#009688">
             </div>
             <div class="form-group" style="margin-bottom: 0;">
-                <label class="form-label">Topic / Description</label>
-                <input type="text" name="track_topics[]" class="form-control" placeholder="Topic name">
+                <label class="form-label">Topic / Track Details</label>
+                <input type="text" name="track_topics[]" class="form-control" placeholder="Topic details">
+            </div>
+        </div>
+        <div class="grid-2" style="margin-top: 15px;">
+            <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Adjudicator</label>
+                <input type="text" name="track_adjudicators[]" class="form-control" placeholder="Adjudicator name/details">
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Staff Incharge</label>
+                <input type="text" name="track_staffs[]" class="form-control" placeholder="Staff incharge name/details">
             </div>
         </div>
     </div>`;

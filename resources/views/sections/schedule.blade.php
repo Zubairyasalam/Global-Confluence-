@@ -22,7 +22,7 @@
                 <i class="fa-solid fa-calendar-days" style="margin-right: 8px;"></i> {{ $settings['sched_day2_title'] ?? 'DAY – II' }}
             </button>
             <button onclick="switchScheduleTab('tracks')" id="tab-btn-tracks" class="schedule-nav-tab" style="padding: 14px 30px; border: none; border-bottom: 3px solid transparent; background: transparent; color: #64748b; font-weight: 600; font-size: 1.05rem; cursor: pointer; transition: all 0.2s ease; margin-bottom: -2px;">
-                <i class="fa-solid fa-layer-group" style="margin-right: 8px;"></i> Track-wise Schedule
+                <i class="fa-solid fa-layer-group" style="margin-right: 8px;"></i> Track-wise Incharge
             </button>
         </div>
 
@@ -108,20 +108,45 @@
 
         <!-- TRACK-WISE SCHEDULE TAB PANEL -->
         <div id="schedule-content-tracks" class="schedule-tab-panel" style="display: none;">
-            <div style="border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; background: #ffffff; padding: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
-                <h3 style="color: #0f172a; font-size: 1.4rem; font-weight: 700; margin-top: 0; margin-bottom: 10px;">
-                    {{ $settings['sched_tracks_title'] ?? 'Track-wise Parallel Technical Sessions' }}
+            <div style="border: 1px solid #cbd5e1; border-radius: 14px; overflow: hidden; background: #ffffff; padding: 35px 40px; box-shadow: 0 6px 25px rgba(0,0,0,0.05);">
+                <h3 style="color: #0f172a; font-size: 1.85rem; font-weight: 800; margin-top: 0; margin-bottom: 12px; letter-spacing: -0.5px; text-transform: uppercase;">
+                    {{ $settings['sched_tracks_title'] ?? 'TRACK-WISE INCHARGE' }}
                 </h3>
-                <p style="color: #64748b; margin-bottom: 25px;">
+                <p style="color: #475569; font-size: 1.15rem; font-weight: 500; margin-bottom: 30px; line-height: 1.6;">
                     {{ $settings['sched_tracks_sub'] ?? 'Technical oral and poster sessions run concurrently across designated conference halls for Tracks I through VI.' }}
                 </p>
 
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                <div style="display: flex; flex-direction: column; gap: 24px;">
                     @for($i = 1; $i <= 20; $i++)
                         @if(isset($settings['track_' . $i . '_name']))
-                            <div style="background: #f8fafc; border-left: 4px solid {{ $settings['track_' . $i . '_color'] ?? '#009688' }}; border-radius: 8px; padding: 20px;">
-                                <h4 style="color: {{ $settings['track_' . $i . '_color'] ?? '#009688' }}; margin: 0 0 8px 0; font-weight: 700;">{{ $settings['track_' . $i . '_name'] }}</h4>
-                                <p style="margin: 0; color: #1e293b; font-weight: 600;">{{ $settings['track_' . $i . '_topic'] }}</p>
+                            <div style="background: #f8fafc; border-left: 6px solid {{ $settings['track_' . $i . '_color'] ?? '#009688' }}; border-radius: 12px; padding: 26px 28px; box-shadow: 0 3px 12px rgba(0,0,0,0.03); border: 1px solid #cbd5e1; border-left-width: 6px;">
+                                <h4 style="color: {{ $settings['track_' . $i . '_color'] ?? '#009688' }}; margin: 0 0 12px 0; font-weight: 800; font-size: 1.4rem; letter-spacing: -0.3px;">{{ $settings['track_' . $i . '_name'] }}</h4>
+                                <p style="margin: 0 0 18px 0; color: #0f172a; font-weight: 700; font-size: 1.25rem; line-height: 1.5;">{{ $settings['track_' . $i . '_topic'] }}</p>
+                                
+                                @if(!empty($settings['track_' . $i . '_adjudicator']) || !empty($settings['track_' . $i . '_staff']))
+                                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 18px; margin-top: 18px; padding-top: 18px; border-top: 2px dashed #cbd5e1; font-size: 1.05rem;">
+                                        @if(!empty($settings['track_' . $i . '_adjudicator']))
+                                            <div style="background: #ffffff; padding: 16px 20px; border-radius: 10px; border: 1px solid #cbd5e1; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
+                                                <strong style="color: #009688; display: block; margin-bottom: 8px; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.7px; font-weight: 800;">
+                                                    <i class="fa-solid fa-user-tie" style="margin-right: 8px;"></i> Adjudicator
+                                                </strong>
+                                                <div style="color: #0f172a; font-weight: 700; line-height: 1.6; font-size: 1.08rem;">
+                                                    {!! implode('<div style="color: #009688; font-weight: 800; margin: 4px 0;">&amp;</div>', array_map('trim', explode('&', nl2br(e($settings['track_' . $i . '_adjudicator']))))) !!}
+                                                </div>
+                                            </div>
+                                        @endif
+                                        @if(!empty($settings['track_' . $i . '_staff']))
+                                            <div style="background: #ffffff; padding: 16px 20px; border-radius: 10px; border: 1px solid #cbd5e1; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
+                                                <strong style="color: #334155; display: block; margin-bottom: 8px; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.7px; font-weight: 800;">
+                                                    <i class="fa-solid fa-users" style="margin-right: 8px;"></i> Staff Incharge
+                                                </strong>
+                                                <div style="color: #0f172a; font-weight: 700; line-height: 1.6; font-size: 1.08rem;">
+                                                    {!! implode('<div style="color: #009688; font-weight: 800; margin: 4px 0;">&amp;</div>', array_map('trim', explode('&', $settings['track_' . $i . '_staff']))) !!}
+                                                </div>
+                                            </div>
+                                        @endif
+                                    </div>
+                                @endif
                             </div>
                         @endif
                     @endfor
