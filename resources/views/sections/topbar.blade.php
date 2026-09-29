@@ -31,11 +31,13 @@
         <div class="marquee-content">
             <!-- Set 1 -->
             <span style="margin-right: 40px;">Registration starts: 20th September 2026</span>
+            <span style="margin-right: 40px;">Pre-Conference: 9th October 2026</span>
             <span style="margin-right: 40px;">Submission of abstract: 15th October 2026</span>
             <span style="margin-right: 40px;">Acceptance of abstract: 25th October 2026</span>
             <span style="margin-right: 40px;">Full paper: 20th November 2026</span>
             <!-- Set 2 -->
             <span style="margin-right: 40px;">Registration starts: 20th September 2026</span>
+            <span style="margin-right: 40px;">Pre-Conference: 9th October 2026</span>
             <span style="margin-right: 40px;">Submission of abstract: 15th October 2026</span>
             <span style="margin-right: 40px;">Acceptance of abstract: 25th October 2026</span>
             <span style="margin-right: 40px;">Full paper: 20th November 2026</span>
