@@ -283,6 +283,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     // LEGACY BUT NEEDED FOR NOW:
     Route::get('/settings/registration', [AdminController::class, 'registrationSettings'])->name('admin.settings.registration');
     Route::post('/settings/registration', [AdminController::class, 'updateRegistrationSettings'])->name('admin.settings.registration.update');
+    Route::post('/settings/registration/interest-options', [AdminController::class, 'storeInterestOption'])->name('admin.interest_options.store');
+    Route::delete('/settings/registration/interest-options/{id}', [AdminController::class, 'deleteInterestOption'])->name('admin.interest_options.delete');
     Route::get('/about-organizer', [AdminController::class, 'aboutOrganizerSettings'])->name('admin.about_organizer');
     Route::post('/about-organizer', [AdminController::class, 'updateSettings'])->name('admin.about_organizer.update');
 });

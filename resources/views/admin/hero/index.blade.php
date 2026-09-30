@@ -287,11 +287,11 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label">Contact Phone 3 (WhatsApp Number)</label>
-                        <input type="text" name="contact_phone_3" class="form-control" value="{{ $settings['contact']->where('key', 'contact_phone_3')->first()->value ?? '+91 8148018994' }}">
+                        <input type="text" name="contact_phone_3" class="form-control" value="{{ $settings['contact']->where('key', 'contact_phone_3')->first()->value ?? '+91 81480 18894' }}">
                     </div>
                     <div class="form-group">
                         <label class="form-label">WhatsApp Direct Link / Number URL</label>
-                        <input type="text" name="contact_whatsapp_link" class="form-control" placeholder="e.g. https://wa.me/918148018994" value="{{ $settings['contact']->where('key', 'contact_whatsapp_link')->first()->value ?? 'https://wa.me/918148018994' }}">
+                        <input type="text" name="contact_whatsapp_link" class="form-control" placeholder="e.g. https://wa.me/918148018894" value="{{ $settings['contact']->where('key', 'contact_whatsapp_link')->first()->value ?? 'https://wa.me/918148018894' }}">
                     </div>
                 </div>
             </div>
