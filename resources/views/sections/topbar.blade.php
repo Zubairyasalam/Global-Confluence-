@@ -25,27 +25,24 @@
     <div class="topbar-left" style="flex-shrink: 0; padding-right: 20px; border-right: 1px solid rgba(255,255,255,0.2); display: flex; gap: 15px; align-items: center;">
         <span><i class="fa-solid fa-phone" style="margin-right: 5px;"></i> {{ $settings['contact_phone'] ?? '+91 9789582404' }}</span>
         <span><i class="fa-solid fa-phone" style="margin-right: 5px;"></i> {{ $settings['contact_phone_2'] ?? '+91 9025596984' }}</span>
-        <span>
-            <a href="https://wa.me/918148018894" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
-                <i class="fa-brands fa-whatsapp" style="color: #25d366; font-size: 1.1rem; margin-right: 2px;"></i>
-                {{ $settings['contact_phone_3'] ?? '+91 81480 18894' }}
-            </a>
-        </span>
+        <span><i class="fa-solid fa-phone" style="margin-right: 5px;"></i> {{ $settings['contact_phone_3'] ?? '+91 81480 18894' }}</span>
     </div>
     <div class="marquee-container">
         <div class="marquee-content">
-            <!-- Set 1 -->
-            <span style="margin-right: 40px;">Registration starts: 20th September 2026</span>
-            <span style="margin-right: 40px;">Pre-Conference: 9th October 2026</span>
-            <span style="margin-right: 40px;">Submission of abstract: 15th October 2026</span>
-            <span style="margin-right: 40px;">Acceptance of abstract: 25th October 2026</span>
-            <span style="margin-right: 40px;">Full paper: 20th November 2026</span>
-            <!-- Set 2 -->
-            <span style="margin-right: 40px;">Registration starts: 20th September 2026</span>
-            <span style="margin-right: 40px;">Pre-Conference: 9th October 2026</span>
-            <span style="margin-right: 40px;">Submission of abstract: 15th October 2026</span>
-            <span style="margin-right: 40px;">Acceptance of abstract: 25th October 2026</span>
-            <span style="margin-right: 40px;">Full paper: 20th November 2026</span>
+            @if(isset($deadlines) && count($deadlines) > 0)
+                @foreach($deadlines as $dl)
+                    <span style="margin-right: 40px;">{{ $dl->title }}: {{ $dl->deadline_date }}</span>
+                @endforeach
+                @foreach($deadlines as $dl)
+                    <span style="margin-right: 40px;">{{ $dl->title }}: {{ $dl->deadline_date }}</span>
+                @endforeach
+            @else
+                <span style="margin-right: 40px;">Registration starts: {{ $settings['reg_start_date'] ?? '20th September 2026' }}</span>
+                <span style="margin-right: 40px;">Pre-Conference: {{ $settings['pre_conf_date'] ?? '9th October 2026' }}</span>
+                <span style="margin-right: 40px;">Submission of abstract: {{ $settings['abstract_sub_date'] ?? '15th October 2026' }}</span>
+                <span style="margin-right: 40px;">Acceptance of abstract: {{ $settings['abstract_acc_date'] ?? '25th October 2026' }}</span>
+                <span style="margin-right: 40px;">Full paper: {{ $settings['full_paper_date'] ?? '20th November 2026' }}</span>
+            @endif
         </div>
     </div>
 </div>

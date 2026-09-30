@@ -159,7 +159,7 @@
                     <i class="fa-solid {{ $icons[$index % count($icons)] }}"></i>
                 </div>
                 <div class="kd-text">
-                    <div class="kd-date">{{ $deadline->deadline_date ? \Carbon\Carbon::parse($deadline->deadline_date)->format('M d, Y') : 'TBA' }}</div>
+                    <div class="kd-date">{{ $deadline->deadline_date ?? 'TBA' }}</div>
                     <div class="kd-label">{{ $deadline->title }}</div>
                 </div>
             </div>

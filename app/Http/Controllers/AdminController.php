@@ -1484,7 +1484,24 @@ class AdminController extends Controller
     public function mccMemorialSettings()
     {
         $settings = \App\Models\SiteSetting::where('group', 'mcc_memorial')->get();
-        return view('admin.mcc_memorial.index', compact('settings'));
+        $images = [];
+        $files = glob(public_path('images/mcc_memorial_*.*'));
+        foreach ($files as $file) {
+            $images[] = [
+                'name' => basename($file),
+                'url' => asset('images/' . basename($file)),
+                'path' => $file
+            ];
+        }
+        usort($images, function($a, $b) {
+            preg_match('/mcc_memorial_(\d+)/', $a['name'], $matchA);
+            preg_match('/mcc_memorial_(\d+)/', $b['name'], $matchB);
+            $numA = (int)($matchA[1] ?? 0);
+            $numB = (int)($matchB[1] ?? 0);
+            return $numA <=> $numB;
+        });
+
+        return view('admin.mcc_memorial.index', compact('settings', 'images'));
     }
 
     public function updateMccMemorialSettings(Request $request)
@@ -1492,8 +1509,10 @@ class AdminController extends Controller
         $settings = $request->except(['_token']);
         foreach ($settings as $key => $value) {
             if ($request->hasFile($key)) {
-                $path = $request->file($key)->store('public/settings');
-                $value = str_replace('public/', 'storage/', $path);
+                $file = $request->file($key);
+                $fileName = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('images'), $fileName);
+                $value = 'images/' . $fileName;
             }
             \App\Models\SiteSetting::updateOrCreate(
                 ['key' => $key],
@@ -1501,6 +1520,52 @@ class AdminController extends Controller
             );
         }
         return back()->with('success', 'MCC Memorial Settings updated successfully.');
+    }
+
+    public function uploadMccMemorialImages(Request $request)
+    {
+        $request->validate([
+            'gallery_images' => 'required|array',
+            'gallery_images.*' => 'image|mimes:jpeg,png,jpg,webp,gif|max:10240'
+        ]);
+
+        $files = glob(public_path('images/mcc_memorial_*.*'));
+        $maxNum = 0;
+        foreach ($files as $f) {
+            if (preg_match('/mcc_memorial_(\d+)/', basename($f), $m)) {
+                $num = (int)$m[1];
+                if ($num > $maxNum) $maxNum = $num;
+            }
+        }
+
+        if ($request->hasFile('gallery_images')) {
+            foreach ($request->file('gallery_images') as $file) {
+                $maxNum++;
+                $ext = $file->getClientOriginalExtension();
+                $filename = 'mcc_memorial_' . $maxNum . '.' . $ext;
+                $file->move(public_path('images'), $filename);
+            }
+        }
+
+        return back()->with('success', 'MCC Memorial gallery image(s) uploaded successfully.');
+    }
+
+    public function deleteMccMemorialImage(Request $request)
+    {
+        $filename = basename($request->input('filename'));
+        if (!empty($filename) && str_startswith($filename, 'mcc_memorial_')) {
+            $filePath = public_path('images/' . $filename);
+            if (file_exists($filePath)) {
+                @unlink($filePath);
+            }
+        }
+
+        // Also check if setting key matches
+        if ($request->has('setting_key')) {
+            \App\Models\SiteSetting::where('key', $request->input('setting_key'))->delete();
+        }
+
+        return back()->with('success', 'Image deleted successfully.');
     }
 
     public function themeSettings()

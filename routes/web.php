@@ -270,6 +270,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     // 8. MCC Memorial
     Route::get('/mcc-memorial', [AdminController::class, 'mccMemorialSettings'])->name('admin.mcc_memorial');
     Route::post('/mcc-memorial', [AdminController::class, 'updateMccMemorialSettings'])->name('admin.mcc_memorial.update');
+    Route::post('/mcc-memorial/upload-images', [AdminController::class, 'uploadMccMemorialImages'])->name('admin.mcc_memorial.upload_images');
+    Route::post('/mcc-memorial/delete-image', [AdminController::class, 'deleteMccMemorialImage'])->name('admin.mcc_memorial.delete_image');
 
     // 9. Visit (Renamed from Venue)
     Route::get('/visit', [AdminController::class, 'venueSettings'])->name('admin.visit');
