@@ -137,7 +137,10 @@ class CommitteeSeeder extends Seeder
         ];
 
         foreach ($members as $member) {
-            \App\Models\CommitteeMember::create($member);
+            \App\Models\CommitteeMember::updateOrCreate(
+                ['name' => $member['name'], 'category' => $member['category']],
+                $member
+            );
         }
     }
 }

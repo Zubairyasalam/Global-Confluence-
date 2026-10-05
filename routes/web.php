@@ -56,6 +56,27 @@ Route::get('/run-migration', function () {
     }
 });
 
+Route::get('/clear-cache', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('view:clear');
+        \Illuminate\Support\Facades\Artisan::call('cache:clear');
+        \Illuminate\Support\Facades\Artisan::call('config:clear');
+        \Illuminate\Support\Facades\Artisan::call('route:clear');
+        return "All caches (view, cache, config, route) cleared successfully!";
+    } catch (\Exception $e) {
+        return "Error clearing cache: " . $e->getMessage();
+    }
+});
+
+Route::get('/seed-db', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
+        return "Database seeded successfully!<br>Output:<br>" . nl2br(\Illuminate\Support\Facades\Artisan::output());
+    } catch (\Exception $e) {
+        return "Error seeding database: " . $e->getMessage();
+    }
+});
+
 Route::get('/seed-tracks', function () {
     $tracks = [
         [

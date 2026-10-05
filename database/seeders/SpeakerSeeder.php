@@ -76,7 +76,10 @@ class SpeakerSeeder extends Seeder
         ];
 
         foreach ($speakers as $speaker) {
-            \App\Models\Speaker::create($speaker);
+            \App\Models\Speaker::updateOrCreate(
+                ['name' => $speaker['name']],
+                $speaker
+            );
         }
     }
 }
