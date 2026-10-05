@@ -353,10 +353,21 @@
                 Settings
             </li>
             <li>
+                <a href="{{ route('admin.navigation') }}" class="{{ request()->routeIs('admin.navigation') ? 'active' : '' }}">
+                    <i class="fa-solid fa-bars-staggered"></i> Header Navigation
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('admin.partner_logos') }}" class="{{ request()->routeIs('admin.partner_logos') ? 'active' : '' }}">
+                    <i class="fa-solid fa-handshake"></i> Partner Logos
+                </a>
+            </li>
+            <li>
                 <a href="{{ route('admin.theme_settings') }}" class="{{ request()->routeIs('admin.theme_settings') ? 'active' : '' }}">
                     <i class="fa-solid fa-palette"></i> Theme Settings
                 </a>
             </li>
+
             <li>
                 <a href="/" target="_blank">
                     <i class="fa-solid fa-arrow-up-right-from-square"></i> View Live Site

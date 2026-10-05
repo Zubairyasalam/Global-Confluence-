@@ -1589,4 +1589,141 @@ class AdminController extends Controller
         }
         return back()->with('success', 'Theme Settings updated successfully.');
     }
+
+    public function navigationSettings()
+    {
+        $settings = \App\Models\SiteSetting::where('group', 'navigation')->pluck('value', 'key')->toArray();
+        return view('admin.navigation.index', compact('settings'));
+    }
+
+    public function updateNavigationSettings(Request $request)
+    {
+        $settings = $request->except(['_token']);
+        foreach ($settings as $key => $value) {
+            \App\Models\SiteSetting::updateOrCreate(
+                ['key' => $key],
+                ['value' => is_array($value) ? json_encode($value) : $value, 'group' => 'navigation']
+            );
+        }
+        return back()->with('success', 'Navigation menu settings updated successfully.');
+    }
+
+    public function posterPresentationSettings()
+    {
+        $settings = \App\Models\SiteSetting::where('group', 'poster_presentation')->pluck('value', 'key')->toArray();
+        return view('admin.poster_presentation.index', compact('settings'));
+    }
+
+    public function updatePosterPresentationSettings(Request $request)
+    {
+        $settings = $request->except(['_token']);
+        foreach ($settings as $key => $value) {
+            \App\Models\SiteSetting::updateOrCreate(
+                ['key' => $key],
+                ['value' => is_array($value) ? json_encode($value) : $value, 'group' => 'poster_presentation']
+            );
+        }
+        return back()->with('success', 'Poster Presentation content updated successfully.');
+    }
+
+    public function oralPresentationSettings()
+    {
+        $settings = \App\Models\SiteSetting::where('group', 'oral_presentation')->pluck('value', 'key')->toArray();
+        return view('admin.oral_presentation.index', compact('settings'));
+    }
+
+    public function updateOralPresentationSettings(Request $request)
+    {
+        $settings = $request->except(['_token']);
+        foreach ($settings as $key => $value) {
+            \App\Models\SiteSetting::updateOrCreate(
+                ['key' => $key],
+                ['value' => is_array($value) ? json_encode($value) : $value, 'group' => 'oral_presentation']
+            );
+        }
+        return back()->with('success', 'Oral Presentation content updated successfully.');
+    }
+
+    // CMS: Partner Logos
+    public function partnerLogosSettings()
+    {
+        $logos = \App\Models\PartnerLogo::orderBy('sort_order')->get();
+        return view('admin.partner_logos.index', compact('logos'));
+    }
+
+    public function storePartnerLogo(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'logo' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
+            'link_url' => 'nullable|string',
+        ]);
+
+        $logoPath = '';
+        if ($request->hasFile('logo')) {
+            $file = $request->file('logo');
+            $filename = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
+            $file->move(public_path('images'), $filename);
+            $logoPath = 'images/' . $filename;
+        }
+
+        $maxSort = \App\Models\PartnerLogo::max('sort_order') ?? 0;
+
+        \App\Models\PartnerLogo::create([
+            'name' => $request->name,
+            'logo_path' => $logoPath,
+            'link_url' => $request->link_url ?? '/',
+            'sort_order' => $maxSort + 1,
+            'is_active' => true,
+        ]);
+
+        return back()->with('success', 'Partner logo added successfully.');
+    }
+
+    public function updatePartnerLogo(Request $request, $id)
+    {
+        $logo = \App\Models\PartnerLogo::findOrFail($id);
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
+            'link_url' => 'nullable|string',
+        ]);
+
+        $data = [
+            'name' => $request->name,
+            'link_url' => $request->link_url ?? '/',
+            'is_active' => $request->has('is_active') ? true : false,
+        ];
+
+        if ($request->hasFile('logo')) {
+            $file = $request->file('logo');
+            $filename = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
+            $file->move(public_path('images'), $filename);
+            $data['logo_path'] = 'images/' . $filename;
+        }
+
+        $logo->update($data);
+
+        return back()->with('success', 'Partner logo updated successfully.');
+    }
+
+    public function destroyPartnerLogo($id)
+    {
+        $logo = \App\Models\PartnerLogo::findOrFail($id);
+        $logo->delete();
+        return back()->with('success', 'Partner logo deleted successfully.');
+    }
+
+    public function reorderPartnerLogos(Request $request)
+    {
+        $order = $request->input('order', []);
+        foreach ($order as $index => $id) {
+            \App\Models\PartnerLogo::where('id', $id)->update(['sort_order' => $index + 1]);
+        }
+        return response()->json(['status' => 'success']);
+    }
 }
+
+
+

@@ -54,6 +54,19 @@ class RegistrationController extends Controller
             $fieldsData['abstract_original_name'] = $file->getClientOriginalName();
         }
 
+        // Handle ID card file upload
+        if ($request->hasFile('id_card_file')) {
+            $file = $request->file('id_card_file');
+            $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $extension = $file->getClientOriginalExtension();
+            $cleanName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $originalName);
+            $filename = time() . '_id_' . $cleanName . '.' . $extension;
+            
+            $path = $file->storeAs('id_cards', $filename, 'public');
+            $fieldsData['id_card_file'] = $path;
+            $fieldsData['id_card_original_name'] = $file->getClientOriginalName();
+        }
+
         $registration->form_data = $fieldsData;
         
         $registration->title = $fieldsData['title'] ?? null;

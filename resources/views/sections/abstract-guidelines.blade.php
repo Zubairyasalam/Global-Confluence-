@@ -230,61 +230,8 @@
             }
         </style>
 
-        <!-- Main Submission Guidelines -->
-        <div class="ag-grid-main">
-            <div class="ag-card" style="border-bottom: 4px solid var(--ag-primary);">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 20px;">
-                    <div>
-                        <div class="ag-header-pill"><i class="fa-solid fa-star"></i> {{ $settings['abstract_tag'] ?? 'PRIMARY GUIDELINES' }}</div>
-                        <h3 class="ag-title">
-                            {{ $settings['abstract_title'] ?? 'Abstract Submission' }}
-                        </h3>
-                    </div>
-                </div>
-                
-                <ul class="ag-list" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 15px;">
-                    @for($i = 1; $i <= ($settings['abstract_count'] ?? 20); $i++)
-                        @if(!empty($settings['abstract_item_' . $i]))
-                            <li><i class="fa-solid fa-check-circle"></i> <span>{!! $settings['abstract_item_' . $i] !!}</span></li>
-                        @endif
-                    @endfor
-                </ul>
-            </div>
-        </div>
-
-        <!-- Oral & Poster Guidelines -->
-        <div class="ag-grid-2">
-            <!-- Oral Presentation -->
-            <div class="ag-card">
-                <h3 class="ag-title">
-                    {{ $settings['oral_title'] ?? 'Oral Presentation' }}
-                </h3>
-                <ul class="ag-list">
-                    @for($i = 1; $i <= ($settings['oral_count'] ?? 20); $i++)
-                        @if(!empty($settings['oral_item_' . $i]))
-                            <li><i class="fa-solid fa-check-circle"></i> <span>{!! $settings['oral_item_' . $i] !!}</span></li>
-                        @endif
-                    @endfor
-                </ul>
-            </div>
-
-            <!-- Poster Presentation -->
-            <div class="ag-card">
-                <h3 class="ag-title">
-                    {{ $settings['poster_title'] ?? 'Poster Presentation' }}
-                </h3>
-                <ul class="ag-list" style="margin-bottom: 25px;">
-                    @for($i = 1; $i <= ($settings['poster_count'] ?? 20); $i++)
-                        @if(!empty($settings['poster_item_' . $i]))
-                            <li><i class="fa-solid fa-check-circle"></i> <span>{!! $settings['poster_item_' . $i] !!}</span></li>
-                        @endif
-                    @endfor
-                </ul>
-            </div>
-        </div>
-
         <!-- Scientific Publications Block -->
-        <div class="ag-pub-section">
+        <div class="ag-pub-section" style="margin-top: 0;">
             <i class="fa-solid fa-book-open ag-pub-watermark"></i>
             
             <div style="text-align: center; position: relative; z-index: 2;">

@@ -130,24 +130,72 @@
             </script>
             @endif
 
-            <div class="reg-instructions" style="margin-bottom: 40px; background: #f0f7fa; padding: 35px 40px; border-radius: 12px; border: 1px solid #d1e5f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
-                <h3 style="text-align: center; color: #1e3250; margin-top: 0; font-size: 1.35rem; font-weight: 700; margin-bottom: 10px;">{{ $settings['reg_proc_title'] ?? 'Registration Process of GOHC - 2026' }}</h3>
-                <p style="text-align: center; font-size: 1.05rem; margin-bottom: 25px; color: #1e3250;">{{ $settings['reg_proc_sub'] ?? 'Participation in GOHC 2026 is open only to registered delegates..' }}</p>
-                
-                <h4 style="text-align: center; color: #1e3250; font-size: 1.15rem; font-weight: 700; margin-bottom: 20px;">{{ $settings['reg_proc_heading'] ?? 'Steps for Conference Registration' }}</h4>
-                
-                <ul style="list-style-type: none; padding: 0; margin: 0;">
-                    @for($i = 1; $i <= 5; $i++)
-                        @if(!empty($settings['reg_step_' . $i]))
-                        <li style="margin-bottom: 15px; font-size: 1.05rem; font-style: italic; display: flex; align-items: flex-start; line-height: 1.5; color: #1e3250;">
-                            <span style="font-weight: bold; font-style: normal; margin-right: 8px;">*</span> 
-                            <span>{{ $settings['reg_step_' . $i] }}</span>
-                        </li>
-                        @endif
-                    @endfor
-                </ul>
-                <div style="margin-top: 30px; border-top: 1px solid #d1e5f0; padding-top: 20px;">
-                    <p style="margin: 0; color: #475569; line-height: 1.6; text-align: center;">{!! $settings['reg_page_notice'] ?? '<strong>All fields are required.</strong> Payments (INR) are securely processed online. Confirmations are sent within 48 hours. For support: <a href="mailto:gohc2026@gmail.com" style="color: var(--teal-accent); font-weight: 600;">gohc2026@gmail.com</a>.' !!}</p>
+            <!-- Registration Plans (Dark Section) -->
+            <div style="background-color: #0b1528; padding: 45px 30px; border-radius: 20px; margin-bottom: 45px; color: #ffffff; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.2);">
+                <h2 style="font-size: 2.4rem; font-weight: 800; color: #ffffff; margin-bottom: 8px;">Registration Plans</h2>
+                <p style="color: #94a3b8; font-size: 1.05rem; margin-bottom: 35px; line-height: 1.6;">Choose the appropriate registration tier to access the conference.<br>Super early-bird rates are currently active.</p>
+
+                <!-- Inner White Card: Registration Process -->
+                <div class="reg-instructions" style="background: #ffffff; color: #1e3250; padding: 35px 40px; border-radius: 16px; margin-bottom: 40px; text-align: left; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                    <h3 style="text-align: center; color: #1e3250; margin-top: 0; font-size: 1.35rem; font-weight: 700; margin-bottom: 10px;">{{ $settings['reg_proc_title'] ?? 'Registration Process of GOHC - 2026' }}</h3>
+                    <p style="text-align: center; font-size: 1.05rem; margin-bottom: 25px; color: #64748b;">{{ $settings['reg_proc_sub'] ?? 'Participation in GOHC 2026 is open only to registered delegates..' }}</p>
+                    
+                    <h4 style="text-align: center; color: #1e3250; font-size: 1.15rem; font-weight: 700; margin-bottom: 20px;">{{ $settings['reg_proc_heading'] ?? 'Steps for Conference Registration' }}</h4>
+                    
+                    <ul style="list-style-type: none; padding: 0; margin: 0;">
+                        @for($i = 1; $i <= 5; $i++)
+                            @if(!empty($settings['reg_step_' . $i]))
+                            <li style="margin-bottom: 15px; font-size: 1.05rem; font-style: italic; display: flex; align-items: flex-start; line-height: 1.5; color: #1e3250;">
+                                <span style="font-weight: bold; font-style: normal; margin-right: 8px;">*</span> 
+                                <span>{{ $settings['reg_step_' . $i] }}</span>
+                            </li>
+                            @endif
+                        @endfor
+                    </ul>
+                    <div style="margin-top: 30px; border-top: 1px solid #d1e5f0; padding-top: 20px;">
+                        <p style="margin: 0; color: #475569; line-height: 1.6; text-align: center;">{!! $settings['reg_page_notice'] ?? '<strong>All fields are required.</strong> Payments (INR) are securely processed online. Confirmations are sent within 48 hours. For support: <a href="mailto:gohc2026@gmail.com" style="color: var(--teal-accent); font-weight: 600;">gohc2026@gmail.com</a>.' !!}</p>
+                    </div>
+                </div>
+
+                <!-- Dynamic Pricing Tiers Grid -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; text-align: center;">
+                    @foreach($registrationFees as $index => $fee)
+                        @php
+                            $isPopular = ($index == 2 || str_contains(strtolower($fee->category_name), 'faculty'));
+                            $offlinePrice = $fee->price_inr ?? '1,000';
+                            $onlinePrice = $fee->price_online ?? '1,500';
+                        @endphp
+                        <div style="background: #152238; border: {{ $isPopular ? '2px solid #00A896' : '1px solid #233554' }}; border-radius: 16px; padding: 30px 18px 25px; position: relative; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
+                            @if($isPopular)
+                                <div style="position: absolute; top: -13px; left: 50%; transform: translateX(-50%); background: #00A896; color: #ffffff; font-size: 0.72rem; font-weight: 800; padding: 3px 14px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.8px; white-space: nowrap;">
+                                    MOST POPULAR
+                                </div>
+                            @endif
+
+                            <div>
+                                <h3 style="font-size: 1.25rem; font-weight: 700; color: #ffffff; margin-bottom: 15px; margin-top: 5px;">{{ $fee->category_name }}</h3>
+                                <div style="font-size: 2.1rem; font-weight: 800; color: #ffffff; margin-bottom: 20px; display: flex; align-items: baseline; justify-content: center; gap: 4px;">
+                                    ₹{{ $offlinePrice }} <span style="font-size: 0.8rem; color: #00A896; font-weight: 700;">INR</span>
+                                </div>
+
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px;">
+                                    <div style="background: #0d1726; padding: 6px 8px; border-radius: 6px; font-size: 0.78rem; color: #cbd5e1;">
+                                        <span style="display: block; font-size: 0.62rem; color: #64748b; font-weight: 800; text-transform: uppercase;">OFFLINE</span>
+                                        ₹{{ $offlinePrice }} / $
+                                    </div>
+                                    <div style="background: #0d1726; padding: 6px 8px; border-radius: 6px; font-size: 0.78rem; color: #20c997;">
+                                        <span style="display: block; font-size: 0.62rem; color: #64748b; font-weight: 800; text-transform: uppercase;">ONLINE</span>
+                                        ₹{{ $onlinePrice }} / $
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="font-size: 0.85rem; color: #94a3b8; display: flex; align-items: flex-start; gap: 8px; text-align: left; line-height: 1.45; border-top: 1px solid #233554; padding-top: 15px;">
+                                <i class="fa-solid fa-circle-check" style="color: #00A896; margin-top: 2px; flex-shrink: 0; font-size: 0.9rem;"></i>
+                                <span>Registration includes conference kit, certificate, lunch and refreshment.</span>
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
             </div>
 
@@ -200,15 +248,87 @@
                         </div>
                     </div>
 
-                    <div class="form-group file-upload-group" id="abstract-upload-section" style="grid-column: 1 / -1; margin-top: 10px; display: none;">
-                        <label for="abstract_file" class="file-upload-label" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 50px 20px; border: 2px dashed var(--teal-accent); border-radius: 12px; background: #f8fafc; cursor: pointer; transition: all 0.3s ease; text-align: center;">
-                            <i class="fa-solid fa-cloud-arrow-up" style="font-size: 3.5rem; color: var(--teal-accent); margin-bottom: 15px;"></i>
-                            <span style="font-weight: 700; font-size: 1.3rem; color: var(--navy-dark); margin-bottom: 8px;">Upload Abstract Document</span>
-                            <span style="font-size: 0.95rem; color: #64748b;">Supported formats: DOC, DOCX, PDF (Max size: 5MB)</span>
-                            <span id="file-chosen" style="margin-top: 20px; font-weight: 700; color: var(--green-accent); font-size: 1.1rem; display: none; background: rgba(0, 168, 150, 0.1); padding: 8px 16px; border-radius: 8px;"></span>
+                    <!-- Presentation Selection Flow (Appears only when 'Presentation' is selected) -->
+                    <div id="presentation-details-section" style="grid-column: 1 / -1; display: none; background: #f8fafc; border: 1.5px solid #d1e5f0; border-radius: 14px; padding: 25px; margin-top: 5px;">
+                        
+                        <!-- Step 1: Event Type Selection -->
+                        <div style="margin-bottom: 22px;">
+                            <label style="font-weight: 700; color: var(--navy-dark); margin-bottom: 12px; display: block; font-size: 1.05rem;">
+                                Select Presentation Type <span style="color: #ef4444;">*</span>
+                            </label>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px;">
+                                <label class="pres-event-option" style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 8px; background: #ffffff; cursor: pointer; transition: all 0.2s;">
+                                    <input type="radio" name="fields[presentation_event_type]" value="Oral Presentation" style="accent-color: var(--teal-accent); width: 18px; height: 18px;" onchange="updatePresentationOptionStyle()">
+                                    <span style="font-weight: 600; color: #1e293b; font-size: 0.95rem;">Oral Presentation</span>
+                                </label>
+                                <label class="pres-event-option" style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 8px; background: #ffffff; cursor: pointer; transition: all 0.2s;">
+                                    <input type="radio" name="fields[presentation_event_type]" value="Poster Presentation" style="accent-color: var(--teal-accent); width: 18px; height: 18px;" onchange="updatePresentationOptionStyle()">
+                                    <span style="font-weight: 600; color: #1e293b; font-size: 0.95rem;">Poster Presentation</span>
+                                </label>
+                                <label class="pres-event-option" style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 8px; background: #ffffff; cursor: pointer; transition: all 0.2s;">
+                                    <input type="radio" name="fields[presentation_event_type]" value="Hackathon" style="accent-color: var(--teal-accent); width: 18px; height: 18px;" onchange="updatePresentationOptionStyle()">
+                                    <span style="font-weight: 600; color: #1e293b; font-size: 0.95rem;">Hackathon</span>
+                                </label>
+                                <label class="pres-event-option" style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 8px; background: #ffffff; cursor: pointer; transition: all 0.2s;">
+                                    <input type="radio" name="fields[presentation_event_type]" value="Innovation Pitch" style="accent-color: var(--teal-accent); width: 18px; height: 18px;" onchange="updatePresentationOptionStyle()">
+                                    <span style="font-weight: 600; color: #1e293b; font-size: 0.95rem;">Innovation Pitch</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Track Selection -->
+                        <div style="margin-bottom: 22px;">
+                            <label style="font-weight: 700; color: var(--navy-dark); margin-bottom: 8px; display: block; font-size: 1.05rem;">
+                                Select Conference Track <span style="color: #ef4444;">*</span>
+                            </label>
+                            @php
+                                $tracksList = \App\Models\Track::orderBy('sort_order')->get();
+                            @endphp
+                            <select name="fields[presentation_track]" id="presentation_track" class="form-control" style="width: 100%; padding: 12px 15px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem; background: #ffffff;">
+                                <option value="">-- Choose Track --</option>
+                                @if($tracksList->count() > 0)
+                                    @foreach($tracksList as $track)
+                                        <option value="{{ $track->title }}">{{ $track->title }}</option>
+                                    @endforeach
+                                @else
+                                    <option value="Track 1: Infectious Diseases, Zoonoses & AMR (Human, Animal & Plant Health)">Track 1: Infectious Diseases, Zoonoses & AMR (Human, Animal & Plant Health)</option>
+                                    <option value="Track 2: Genomics, AI, One Health Informatics and Omics Technologies">Track 2: Genomics, AI, One Health Informatics and Omics Technologies</option>
+                                    <option value="Track 3: Integrating Environment and Climate change in One Health">Track 3: Integrating Environment and Climate change in One Health</option>
+                                    <option value="Track 4: Translating Sustainable Chemistry and Future Technologies to One Health">Track 4: Translating Sustainable Chemistry and Future Technologies to One Health</option>
+                                    <option value="Track 5: Ensuring health intervention through the Indian Knowledge System">Track 5: Ensuring health intervention through the Indian Knowledge System</option>
+                                    <option value="Track 6: Regenerative Health: Redefining Industrial One Health Paradigms">Track 6: Regenerative Health: Redefining Industrial One Health Paradigms</option>
+                                @endif
+                            </select>
+                        </div>
+
+                        <!-- Step 3: Abstract Document Upload -->
+                        <div class="form-group file-upload-group" id="abstract-upload-section" style="margin-bottom: 0;">
+                            <label style="font-weight: 700; color: var(--navy-dark); margin-bottom: 8px; display: block; font-size: 1.05rem;">
+                                Abstract Document <span style="color: #ef4444;">*</span>
+                            </label>
+                            <label for="abstract_file" class="file-upload-label" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 35px 20px; border: 2px dashed var(--teal-accent); border-radius: 12px; background: #ffffff; cursor: pointer; transition: all 0.3s ease; text-align: center;">
+                                <i class="fa-solid fa-cloud-arrow-up" style="font-size: 3rem; color: var(--teal-accent); margin-bottom: 12px;"></i>
+                                <span style="font-weight: 700; font-size: 1.15rem; color: var(--navy-dark); margin-bottom: 6px;">Select & Upload Abstract Document</span>
+                                <span style="font-size: 0.9rem; color: #64748b;">Supported formats: DOC, DOCX, PDF (Max size: 5MB)</span>
+                                <span id="file-chosen" style="margin-top: 15px; font-weight: 700; color: var(--green-accent); font-size: 1.05rem; display: none; background: rgba(0, 168, 150, 0.1); padding: 8px 16px; border-radius: 8px;"></span>
+                            </label>
+                            <input type="file" name="abstract_file" id="abstract_file" accept=".doc,.docx,.pdf" style="display: none;">
+                            <span id="file-error" style="color: #ef4444; font-size: 0.95rem; margin-top: 10px; font-weight: 600; display: none;"><i class="fa-solid fa-circle-exclamation"></i> Please select presentation type, choose track, and upload your abstract document before submitting.</span>
+                        </div>
+                    </div>
+
+                    <!-- Proof of Eligibility Upload -->
+                    <div class="form-group file-upload-group" style="grid-column: 1 / -1; margin-top: 15px;">
+                        <label style="font-weight: 700; color: var(--navy-dark); margin-bottom: 8px; display: block; font-size: 1.05rem;">
+                            Proof of Eligibility <span style="font-weight: normal; color: #64748b; font-size: 0.9rem;">(Upload your Institutional ID Card)</span> <span style="color: #ef4444;">*</span>
                         </label>
-                        <input type="file" name="abstract_file" id="abstract_file" accept=".doc,.docx,.pdf" style="display: none;">
-                        <span id="file-error" style="color: #ef4444; font-size: 0.95rem; margin-top: 10px; font-weight: 600; display: none;"><i class="fa-solid fa-circle-exclamation"></i> Please upload your abstract document before submitting.</span>
+                        <label for="id_card_file" class="file-upload-label" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px 20px; border: 2px dashed #cbd5e1; border-radius: 12px; background: #ffffff; cursor: pointer; transition: all 0.3s ease; text-align: center;" onmouseover="this.style.borderColor='var(--teal-accent)'" onmouseout="this.style.borderColor='#cbd5e1'">
+                            <i class="fa-solid fa-id-card" style="font-size: 2.5rem; color: var(--teal-accent); margin-bottom: 10px;"></i>
+                            <span style="font-weight: 700; font-size: 1.1rem; color: var(--navy-dark); margin-bottom: 4px;">Click to Upload ID Card</span>
+                            <span style="font-size: 0.88rem; color: #64748b;">Supported formats: JPG, PNG, PDF (Max size: 5MB)</span>
+                            <span id="id-file-chosen" style="margin-top: 12px; font-weight: 700; color: var(--teal-accent); font-size: 0.95rem; display: none; background: rgba(0, 168, 150, 0.1); padding: 6px 14px; border-radius: 6px;"></span>
+                        </label>
+                        <input type="file" name="id_card_file" id="id_card_file" accept=".jpg,.jpeg,.png,.pdf" required style="display: none;" onchange="document.getElementById('id-file-chosen').innerText = this.files[0] ? this.files[0].name : ''; document.getElementById('id-file-chosen').style.display = this.files[0] ? 'inline-block' : 'none';">
                     </div>
                 </div>
 
@@ -484,13 +604,31 @@
             updateModePrices();
             calculateTotal();
 
-            // Abstract Upload Logic
+            // Presentation sub-option styling helper
+            window.updatePresentationOptionStyle = function() {
+                const options = document.querySelectorAll('.pres-event-option');
+                options.forEach(opt => {
+                    const radio = opt.querySelector('input');
+                    if (radio.checked) {
+                        opt.style.borderColor = 'var(--teal-accent)';
+                        opt.style.background = '#f0fdfa';
+                        opt.style.color = 'var(--teal-accent)';
+                    } else {
+                        opt.style.borderColor = '#e2e8f0';
+                        opt.style.background = '#ffffff';
+                        opt.style.color = '#1e293b';
+                    }
+                });
+            };
+
+            // Abstract & Presentation Flow Logic
             window.toggleAbstractUpload = function(val) {
-                const uploadSection = document.getElementById('abstract-upload-section');
+                const presentationSection = document.getElementById('presentation-details-section');
                 const fileInput = document.getElementById('abstract_file');
+                const trackSelect = document.getElementById('presentation_track');
                 const options = document.querySelectorAll('.reg-type-option');
                 
-                // Style the options
+                // Style the Registration Type options
                 options.forEach(opt => {
                     const radio = opt.querySelector('input');
                     if(radio.checked) {
@@ -503,42 +641,68 @@
                 });
 
                 if(val === 'Presentation') {
-                    uploadSection.style.display = 'block';
+                    presentationSection.style.display = 'block';
+                    if (trackSelect) trackSelect.setAttribute('required', 'required');
                 } else {
-                    uploadSection.style.display = 'none';
-                    fileInput.value = ''; 
-                    document.getElementById('file-chosen').style.display = 'none';
-                    document.getElementById('file-error').style.display = 'none';
+                    presentationSection.style.display = 'none';
+                    if (trackSelect) {
+                        trackSelect.removeAttribute('required');
+                        trackSelect.value = '';
+                    }
+                    const presTypeRadios = document.querySelectorAll('input[name="fields[presentation_event_type]"]');
+                    presTypeRadios.forEach(r => r.checked = false);
+                    updatePresentationOptionStyle();
+                    
+                    if (fileInput) fileInput.value = ''; 
+                    const fileChosen = document.getElementById('file-chosen');
+                    if (fileChosen) fileChosen.style.display = 'none';
+                    const fileErr = document.getElementById('file-error');
+                    if (fileErr) fileErr.style.display = 'none';
                 }
             };
 
-            const abstractUploadSection = document.getElementById('abstract-upload-section');
+            const presentationSection = document.getElementById('presentation-details-section');
             const abstractFileInput = document.getElementById('abstract_file');
             const fileChosenLabel = document.getElementById('file-chosen');
             const form = document.getElementById('registration-form');
             const fileError = document.getElementById('file-error');
 
-            if (abstractFileInput) {
+            if (form) {
                 form.addEventListener('submit', function(e) {
                     const regType = document.querySelector('input[name="fields[registration_type]"]:checked');
                     if (regType && regType.value === 'Presentation') {
-                        if (!abstractFileInput.files || abstractFileInput.files.length === 0) {
-                            e.preventDefault(); 
-                            fileError.style.display = 'block';
-                            abstractUploadSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        const eventType = document.querySelector('input[name="fields[presentation_event_type]"]:checked');
+                        const trackVal = document.getElementById('presentation_track') ? document.getElementById('presentation_track').value : '';
+                        const hasFile = abstractFileInput && abstractFileInput.files && abstractFileInput.files.length > 0;
+
+                        if (!eventType || !trackVal || !hasFile) {
+                            e.preventDefault();
+                            if (fileError) {
+                                fileError.style.display = 'block';
+                                if (!eventType) {
+                                    fileError.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Please select a Presentation Type (Oral, Poster, Hackathon, or Innovation Pitch).';
+                                } else if (!trackVal) {
+                                    fileError.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Please select a Conference Track.';
+                                } else {
+                                    fileError.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Please upload your abstract document before submitting.';
+                                }
+                            }
+                            presentationSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
                         }
                     }
                 });
 
-                abstractFileInput.addEventListener('change', function(e) {
-                    if (this.files && this.files.length > 0) {
-                        fileChosenLabel.style.display = 'inline-block';
-                        fileChosenLabel.innerHTML = '<i class="fa-solid fa-file-check" style="margin-right: 5px;"></i> ' + this.files[0].name;
-                        fileError.style.display = 'none';
-                    } else {
-                        fileChosenLabel.style.display = 'none';
-                    }
-                });
+                if (abstractFileInput) {
+                    abstractFileInput.addEventListener('change', function(e) {
+                        if (this.files && this.files.length > 0) {
+                            fileChosenLabel.style.display = 'inline-block';
+                            fileChosenLabel.innerHTML = '<i class="fa-solid fa-file-check" style="margin-right: 5px;"></i> ' + this.files[0].name;
+                            if (fileError) fileError.style.display = 'none';
+                        } else {
+                            fileChosenLabel.style.display = 'none';
+                        }
+                    });
+                }
             }
 
 

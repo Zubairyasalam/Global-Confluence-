@@ -16,4 +16,16 @@ class FrontendController extends Controller
 
         return view('welcome', compact('registrationFees', 'addons'));
     }
+
+    public function customPage($slug)
+    {
+        $formattedTitle = ucwords(str_replace('-', ' ', $slug));
+        $content = \App\Models\SiteSetting::where('group', 'custom_pages')->where('key', 'page_' . $slug)->value('value');
+        return view('custom_page', [
+            'title' => $formattedTitle,
+            'slug' => $slug,
+            'content' => $content ?: 'Content for ' . $formattedTitle . ' will be updated soon. Please check back later!'
+        ]);
+    }
 }
+

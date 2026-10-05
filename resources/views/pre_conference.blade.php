@@ -192,52 +192,6 @@
             </ul>
         </div>
 
-        <!-- SCHEDULE -->
-        <div class="pre-conf-section" style="border-top-color: #3b82f6;">
-            <h2 class="pre-conf-title"><i class="fa-regular fa-calendar-days" style="color: #3b82f6;"></i> SCHEDULE FOR THE PRE-CONFERENCE</h2>
-            
-            <div class="schedule-note">
-                <i class="fa-solid fa-circle-info"></i> {{ $settings['pre_conf_schedule_note'] ?? 'Proposed date: TBD | Venue: TBD | Mode: Hybrid' }}
-            </div>
-
-            <div class="schedule-table-wrap">
-                <table class="schedule-table">
-                    <thead>
-                        <tr>
-                            <th style="width: 6%; text-align: center;">S.No</th>
-                            <th style="width: 28%; text-align: center;">Resource Persons</th>
-                            <th style="width: 40%;">Affiliation</th>
-                            <th style="width: 26%;">Expertise</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @php $sno = 1; @endphp
-                        @for($i = 1; $i <= 30; $i++)
-                            @if(!empty($settings['pre_conf_speaker_'.$i.'_name']))
-                            <tr style="border-bottom: 1px solid #e2e8f0;">
-                                <td style="text-align: center; vertical-align: middle; font-weight: 600; color: #64748b; font-size: 1rem;">{{ $sno++ }}.</td>
-                                <td style="text-align: center; vertical-align: middle; padding: 18px 12px;">
-                                    @if(!empty($settings['pre_conf_speaker_'.$i.'_image']))
-                                    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 5px; display: inline-block; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 8px;">
-                                        <img src="{{ asset($settings['pre_conf_speaker_'.$i.'_image']) }}" alt="{{ $settings['pre_conf_speaker_'.$i.'_name'] }}" style="width: 110px; height: 110px; object-fit: cover; border-radius: 8px; display: block;">
-                                    </div>
-                                    @endif
-                                    <div style="font-weight: 800; color: #0f172a; font-size: 0.98rem; line-height: 1.3;">{{ $settings['pre_conf_speaker_'.$i.'_name'] }}</div>
-                                </td>
-                                <td style="vertical-align: middle; color: #334155; line-height: 1.6; font-size: 0.95rem;">{{ $settings['pre_conf_speaker_'.$i.'_affiliation'] ?? '' }}</td>
-                                <td style="vertical-align: middle; color: #475569; line-height: 1.6; font-size: 0.95rem;">{{ $settings['pre_conf_speaker_'.$i.'_expertise'] ?? '' }}</td>
-                            </tr>
-                            @endif
-                        @endfor
-                        @if(!empty($settings['pre_conf_panel']))
-                        <tr style="background: #f8fafc;">
-                            <td style="text-align: center; vertical-align: middle; font-weight: 600; color: #64748b; font-size: 1rem;">{{ $sno }}.</td>
-                            <td colspan="3" style="vertical-align: middle; padding: 20px 24px;"><strong style="color: #0f172a; font-size: 1rem;">{{ $settings['pre_conf_panel'] }}</strong></td>
-                        </tr>
-                        @endif
-                    </tbody>
-                </table>
-            </div>
         </div>
 
     </div>

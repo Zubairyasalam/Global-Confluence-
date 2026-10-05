@@ -54,12 +54,12 @@ class SpeakerSeeder extends Seeder
                 'sort_order' => 4
             ],
             [
-                'name' => 'Thomas J. Webster',
-                'h_index' => '137',
-                'university' => 'Hebei University of Technology',
-                'country' => 'China',
-                'title' => 'Ensuring Implant Success in Humans Using Nanomedicine: Over 45,000 Patients and Still Counting',
-                'image_path' => 'images/speakers/speaker5.png',
+                'name' => 'Dr. Upendra Bhojani',
+                'h_index' => null,
+                'university' => 'Lead, Centre for Commercial Determinants of Health, India Alliance (DBT/Wellcome Trust) Senior Fellow, Former Director, Institute of Public Health',
+                'country' => 'Bengaluru, India',
+                'title' => 'Senior Fellow (Professor Grade)',
+                'image_path' => 'images/speakers/upendra_bhojani.jpg',
                 'type' => 'distinguished',
                 'sort_order' => 5
             ],

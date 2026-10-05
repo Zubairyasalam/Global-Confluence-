@@ -56,6 +56,34 @@
                 color: #0f172a;
                 font-weight: 800;
                 line-height: 1.4;
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .track-highlight-pill {
+                display: inline-flex;
+                align-items: center;
+                font-weight: 800;
+                font-size: 0.95rem;
+                padding: 4px 14px;
+                border-radius: 8px;
+                letter-spacing: 0.2px;
+                text-transform: none;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+            }
+
+            .pill-medical {
+                background: #e0f2fe;
+                color: #0369a1;
+                border: 1.5px solid #7dd3fc;
+            }
+
+            .pill-industry {
+                background: #fef3c7;
+                color: #b45309;
+                border: 1.5px solid #fcd34d;
             }
 
             .premium-topic-list-columns {
@@ -100,7 +128,20 @@
             @forelse($tracks as $index => $track)
                 <div class="premium-topic-card-horizontal">
                     <h3 class="premium-topic-title-horizontal">
-                        {{ $track->title }}
+                        @php
+                            $titleFormatted = e($track->title);
+                            $titleFormatted = preg_replace(
+                                '/\((for medical practitioners?)\)/i',
+                                '<span class="track-highlight-pill pill-medical">(for medical practitioners)</span>',
+                                $titleFormatted
+                            );
+                            $titleFormatted = preg_replace(
+                                '/\((for industry(?: track)?)\)/i',
+                                '<span class="track-highlight-pill pill-industry">(for industry track)</span>',
+                                $titleFormatted
+                            );
+                        @endphp
+                        {!! $titleFormatted !!}
                     </h3>
                     
                     @if(isset($trackDescriptions[$index]))

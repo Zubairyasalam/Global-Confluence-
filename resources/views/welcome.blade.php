@@ -8,6 +8,7 @@
     @include('sections.about-mcc')
     @include('sections.about-dept')
     @include('sections.about')
+    @include('sections.deadlines')
     @include('sections.highlights')
     @include('sections.participants')
     {{-- @include('sections.workshop') --}}
@@ -18,7 +19,6 @@
     @include('sections.schedule')
 
     @include('sections.abstract-banner')
-    @include('sections.deadlines')
     {{-- @include('sections.cta') --}}
     @include('sections.venue')
     @include('sections.footer')

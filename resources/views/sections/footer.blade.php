@@ -34,18 +34,27 @@
     <div class="footer-main">
         <div class="footer-col brand-col">
             <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px; flex-wrap: wrap;">
-                <a href="/" class="footer-logo" style="text-decoration: none; display: inline-block;">
-                    <img src="{{ asset('images/MMC-LOGO-2.jpg') }}" alt="MMC Logo" style="max-height: 160px; width: auto; filter: grayscale(1) invert(1) contrast(5); mix-blend-mode: screen; opacity: 0.9; transform: translateX(-15px);">
-                </a>
-                <a href="/" class="footer-logo" style="text-decoration: none; display: inline-block;">
-                    <img src="{{ asset('images/nis-logo.png') }}" alt="NIS Logo" style="max-height: 95px; width: auto;">
-                </a>
-                <a href="/" class="footer-logo" style="text-decoration: none; display: inline-block; background-color: white; padding: 8px; border-radius: 10px;">
-                    <img src="{{ asset('images/msmf_logo.png') }}" alt="MSMF Logo" style="max-height: 85px; width: auto;">
-                </a>
-                <a href="/" class="footer-logo" style="text-decoration: none; display: inline-block; background-color: white; padding: 6px; border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
-                    <img src="{{ asset('images/microbiologists_society.png') }}" alt="Microbiologists Society Logo" style="max-height: 90px; width: auto; border-radius: 50%; display: block;">
-                </a>
+                @php
+                    $partnerLogos = collect();
+                    try {
+                        if (\Illuminate\Support\Facades\Schema::hasTable('partner_logos')) {
+                            $partnerLogos = \App\Models\PartnerLogo::where('is_active', true)->orderBy('sort_order')->get();
+                        }
+                    } catch (\Throwable $e) {
+                        $partnerLogos = collect();
+                    }
+                @endphp
+                @if($partnerLogos->count() > 0)
+                    @foreach($partnerLogos as $logo)
+                        <a href="{{ $logo->link_url ?? '/' }}" class="footer-logo" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center; background-color: #ffffff; padding: 6px 12px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'" title="{{ $logo->name }}">
+                            <img src="{{ asset($logo->logo_path) }}" alt="{{ $logo->name }}" style="max-height: 85px; max-width: 130px; width: auto; height: auto; object-fit: contain; border-radius: 6px;">
+                        </a>
+                    @endforeach
+                @else
+                    <a href="https://mcc.edu.in" target="_blank" class="footer-logo" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center; background-color: #ffffff; padding: 6px 12px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                        <img src="{{ asset('images/logo.png') }}" alt="MCC" style="max-height: 85px; max-width: 130px; object-fit: contain;">
+                    </a>
+                @endif
             </div>
             <p style="color: #94a3b8; line-height: 1.7; font-size: 0.95rem; text-align: justify; margin-top: 0;">{{ $settings['footer_bio'] ?? 'We bring together brilliant minds from around the world to create transformative platforms for knowledge exchange, collaboration, and innovation.' }}</p>
         </div>

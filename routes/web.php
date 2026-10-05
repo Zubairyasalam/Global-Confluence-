@@ -24,6 +24,7 @@ Route::get('/storage-file/{path}', function ($path) {
 })->where('path', '.*')->name('storage.file');
 
 Route::get('/', [FrontendController::class, 'index'])->name('home');
+Route::get('/page/{slug}', [FrontendController::class, 'customPage'])->name('custom.page');
 
 Route::get('/setup-db', function () {
     try {
@@ -192,6 +193,24 @@ Route::get('/venue', function () {
 Route::get('/schedule', function () {
     return view('schedule');
 })->name('schedule');
+
+// Technical Event Pages
+Route::get('/events/oral-presentation', function () {
+    return view('events.oral_presentation');
+})->name('events.oral_presentation');
+
+Route::get('/events/poster-presentation', function () {
+    return view('events.poster_presentation');
+})->name('events.poster_presentation');
+
+Route::get('/events/innovation-pitch', function () {
+    return view('events.innovation_pitch');
+})->name('events.innovation_pitch');
+
+Route::get('/events/hackathon', function () {
+    return view('events.hackathon');
+})->name('events.hackathon');
+
 Route::post('/api/submit-paper', [PaperSubmissionController::class, 'store'])->name('api.submit_paper');
 Route::post('/api/register', [RegistrationController::class, 'store']);
 
@@ -218,6 +237,13 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::put('/addons/{id}', [AdminController::class, 'updateAddon'])->name('admin.addons.update');
     Route::delete('/addons/{id}', [AdminController::class, 'deleteAddon'])->name('admin.addons.delete');
 
+
+    // Partner Logos CMS
+    Route::get('/partner-logos', [AdminController::class, 'partnerLogosSettings'])->name('admin.partner_logos');
+    Route::post('/partner-logos', [AdminController::class, 'storePartnerLogo'])->name('admin.partner_logos.store');
+    Route::put('/partner-logos/{id}', [AdminController::class, 'updatePartnerLogo'])->name('admin.partner_logos.update');
+    Route::delete('/partner-logos/{id}', [AdminController::class, 'destroyPartnerLogo'])->name('admin.partner_logos.destroy');
+    Route::post('/partner-logos/reorder', [AdminController::class, 'reorderPartnerLogos'])->name('admin.partner_logos.reorder');
 
     // CMS: Global Settings
     Route::get('/settings', [AdminController::class, 'settings'])->name('admin.settings');
@@ -294,6 +320,16 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::post('/mcc-memorial/upload-images', [AdminController::class, 'uploadMccMemorialImages'])->name('admin.mcc_memorial.upload_images');
     Route::post('/mcc-memorial/delete-image', [AdminController::class, 'deleteMccMemorialImage'])->name('admin.mcc_memorial.delete_image');
 
+    // Poster Presentation Settings
+    Route::get('/poster-presentation', [AdminController::class, 'posterPresentationSettings'])->name('admin.poster_presentation');
+    Route::post('/poster-presentation', [AdminController::class, 'updatePosterPresentationSettings'])->name('admin.poster_presentation.update');
+
+    // Oral Presentation Settings
+    Route::get('/oral-presentation', [AdminController::class, 'oralPresentationSettings'])->name('admin.oral_presentation');
+    Route::post('/oral-presentation', [AdminController::class, 'updateOralPresentationSettings'])->name('admin.oral_presentation.update');
+
+
+
     // 9. Visit (Renamed from Venue)
     Route::get('/visit', [AdminController::class, 'venueSettings'])->name('admin.visit');
     Route::post('/visit', [AdminController::class, 'updateVenueSettings'])->name('admin.venue.update');
@@ -301,6 +337,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     // 10. Theme Settings
     Route::get('/theme-settings', [AdminController::class, 'themeSettings'])->name('admin.theme_settings');
     Route::post('/theme-settings', [AdminController::class, 'updateThemeSettings'])->name('admin.theme_settings.update');
+
+    // 11. Header & Navigation Settings
+    Route::get('/navigation', [AdminController::class, 'navigationSettings'])->name('admin.navigation');
+    Route::post('/navigation', [AdminController::class, 'updateNavigationSettings'])->name('admin.navigation.update');
 
 
     // LEGACY BUT NEEDED FOR NOW:

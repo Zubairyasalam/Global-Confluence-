@@ -1,9 +1,9 @@
 <!-- About Section -->
-<section class="about-section" style="padding: 60px 0; background-color: #f8fbfa;">
+<section class="about-section" style="padding: 50px 0 25px; background-color: #f8fbfa;">
     <div class="container" style="max-width: 95%; margin: 0 auto; padding: 0 20px;">
         
         <!-- Preamble & Countdown Grid -->
-        <div class="about-container" style="display: flex; gap: 40px; flex-wrap: wrap; align-items: flex-start; margin-bottom: 60px;">
+        <div class="about-container" style="display: flex; gap: 40px; flex-wrap: wrap; align-items: flex-start; margin-bottom: 0;">
             
             <!-- Left Side: Preamble -->
             <div class="about-content" style="flex: 1; min-width: 320px; display: flex; flex-direction: column; justify-content: flex-start; padding-top: 10px;">

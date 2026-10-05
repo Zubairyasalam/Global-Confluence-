@@ -441,6 +441,69 @@
     </div>
     @endif
 
+    <!-- Track-Wise Incharge Section -->
+    @php
+        $trackSettings = \App\Models\SiteSetting::where('group', 'schedule')->pluck('value', 'key')->toArray();
+    @endphp
+    <div class="cm-section-title" style="margin-top: 60px;">
+        <h2>{{ $trackSettings['sched_tracks_title'] ?? 'TRACK-WISE INCHARGE' }}</h2>
+        <div class="cm-line"></div>
+        <p style="max-width: 850px; margin: 18px auto 35px auto; color: #64748b; font-size: 1.05rem; line-height: 1.6;">
+            {{ $trackSettings['sched_tracks_sub'] ?? 'Parallel technical tracks covering specialized domains of Global One Health Confluence 2026.' }}
+        </p>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 24px; max-width: 1000px; margin: 0 auto 60px auto;">
+        @for($i = 1; $i <= 20; $i++)
+            @if(isset($trackSettings['track_' . $i . '_name']))
+                <div style="background: #ffffff; border-left: 6px solid {{ $trackSettings['track_' . $i . '_color'] ?? '#009688' }}; border-radius: 14px; padding: 28px 30px; box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05); border: 1px solid #cbd5e1; border-left-width: 6px;">
+                    <h4 style="color: {{ $trackSettings['track_' . $i . '_color'] ?? '#009688' }}; margin: 0 0 10px 0; font-weight: 800; font-size: 1.35rem; letter-spacing: -0.3px;">{{ $trackSettings['track_' . $i . '_name'] }}</h4>
+                    <p style="margin: 0 0 18px 0; color: #0f172a; font-weight: 700; font-size: 1.2rem; line-height: 1.5;">
+                        @php
+                            $topicFormatted = e($trackSettings['track_' . $i . '_topic']);
+                            $topicFormatted = preg_replace(
+                                '/\((for medical practitioners?)\)/i',
+                                '<span style="display: inline-flex; align-items: center; background: #e0f2fe; color: #0369a1; border: 1.5px solid #7dd3fc; font-weight: 800; font-size: 0.92rem; padding: 3px 12px; border-radius: 6px; margin-left: 8px; vertical-align: middle;">(for medical practitioners)</span>',
+                                $topicFormatted
+                            );
+                            $topicFormatted = preg_replace(
+                                '/\((for industry(?: track)?)\)/i',
+                                '<span style="display: inline-flex; align-items: center; background: #fef3c7; color: #b45309; border: 1.5px solid #fcd34d; font-weight: 800; font-size: 0.92rem; padding: 3px 12px; border-radius: 6px; margin-left: 8px; vertical-align: middle;">(for industry track)</span>',
+                                $topicFormatted
+                            );
+                        @endphp
+                        {!! $topicFormatted !!}
+                    </p>
+                    
+                    @if(!empty($trackSettings['track_' . $i . '_adjudicator']) || !empty($trackSettings['track_' . $i . '_staff']))
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 18px; margin-top: 18px; padding-top: 18px; border-top: 2px dashed #cbd5e1; font-size: 1.05rem;">
+                            @if(!empty($trackSettings['track_' . $i . '_adjudicator']))
+                                <div style="background: #f8fafc; padding: 18px 22px; border-radius: 10px; border: 1px solid #cbd5e1; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
+                                    <strong style="color: #009688; display: block; margin-bottom: 8px; font-size: 0.92rem; text-transform: uppercase; letter-spacing: 0.7px; font-weight: 800;">
+                                        <i class="fa-solid fa-user-tie" style="margin-right: 8px;"></i> Adjudicator
+                                    </strong>
+                                    <div style="color: #0f172a; font-weight: 700; line-height: 1.6; font-size: 1.05rem;">
+                                        {!! implode('<div style="color: #009688; font-weight: 800; margin: 4px 0;">&amp;</div>', array_map('trim', explode('&', nl2br(e($trackSettings['track_' . $i . '_adjudicator']))))) !!}
+                                    </div>
+                                </div>
+                            @endif
+                            @if(!empty($trackSettings['track_' . $i . '_staff']))
+                                <div style="background: #f8fafc; padding: 18px 22px; border-radius: 10px; border: 1px solid #cbd5e1; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
+                                    <strong style="color: #334155; display: block; margin-bottom: 8px; font-size: 0.92rem; text-transform: uppercase; letter-spacing: 0.7px; font-weight: 800;">
+                                        <i class="fa-solid fa-users" style="margin-right: 8px;"></i> Staff Incharge
+                                    </strong>
+                                    <div style="color: #0f172a; font-weight: 700; line-height: 1.6; font-size: 1.05rem;">
+                                        {!! implode('<div style="color: #009688; font-weight: 800; margin: 4px 0;">&amp;</div>', array_map('trim', explode('&', nl2br(e($trackSettings['track_' . $i . '_staff']))))) !!}
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+                    @endif
+                </div>
+            @endif
+        @endfor
+    </div>
+
     <!-- Venue / College Info -->
     <div class="college-banner">
         <h3>{{ $settings['banner_title'] ?? 'Madras Christian College' }}</h3>
