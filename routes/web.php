@@ -480,6 +480,18 @@ Route::get('/contact', function () {
     return view('contact', compact('settings'));
 })->name('contact');
 
+Route::get('/contact-us', function () {
+    return redirect()->route('contact');
+});
+
+Route::get('/page/contact-us', function () {
+    return redirect()->route('contact');
+});
+
+Route::get('/page/contact', function () {
+    return redirect()->route('contact');
+});
+
 Route::get('/venue', function () {
     $settings = \App\Models\SiteSetting::where('group', 'visit')->pluck('value', 'key')->toArray();
     $placesJson = $settings['visit_places_json'] ?? null;
@@ -490,5 +502,41 @@ Route::get('/venue', function () {
 Route::get('/visit', function () {
     return redirect()->route('venue');
 })->name('visit');
+
+// Helper route to sync and update default site settings and track incharges safely on live server
+Route::get('/sync-db-settings', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('view:clear');
+        \Illuminate\Support\Facades\Artisan::call('cache:clear');
+        \Illuminate\Support\Facades\Artisan::call('config:clear');
+        \Illuminate\Support\Facades\Artisan::call('route:clear');
+        
+        $seeder = new \Database\Seeders\SiteSettingSeeder();
+        $seeder->run();
+
+        return "<div style='font-family: sans-serif; padding: 40px; background: #f0fdf4; color: #166534; border-radius: 12px; margin: 30px auto; max-width: 600px; border: 1px solid #bbf7d0;'>
+            <h2><i class='fa-solid fa-circle-check'></i> Live Database Settings Synchronized!</h2>
+            <p>All Site Settings (including Track 1-6 Adjudicators, Staff Incharges, Committee, and Contact Us) have been synchronized and all caches cleared.</p>
+            <a href='/' style='background: #16a34a; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block; margin-top: 15px;'>Back to Homepage</a>
+        </div>";
+    } catch (\Exception $e) {
+        return "<div style='font-family: sans-serif; padding: 40px; background: #fef2f2; color: #991b1b; border-radius: 12px; margin: 30px auto; max-width: 600px; border: 1px solid #fecaca;'>
+            <h2>Sync Error</h2>
+            <p>" . $e->getMessage() . "</p>
+        </div>";
+    }
+});
+
+Route::get('/clear-all-cache', function () {
+    \Illuminate\Support\Facades\Artisan::call('view:clear');
+    \Illuminate\Support\Facades\Artisan::call('cache:clear');
+    \Illuminate\Support\Facades\Artisan::call('config:clear');
+    \Illuminate\Support\Facades\Artisan::call('route:clear');
+    return "<div style='font-family: sans-serif; padding: 40px; background: #f0fdf4; color: #166534; border-radius: 12px; margin: 30px auto; max-width: 600px; border: 1px solid #bbf7d0;'>
+        <h2>All Caches Cleared!</h2>
+        <p>Views, routes, config, and cache have been reset.</p>
+        <a href='/' style='background: #16a34a; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block; margin-top: 15px;'>Go to Website</a>
+    </div>";
+});
 
 

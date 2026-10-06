@@ -114,7 +114,7 @@
 
         <!-- 10. Contact Us -->
         @if(($settings['nav_contact_show'] ?? '1') == '1')
-            <a href="{{ $settings['nav_contact_url'] ?? '/page/contact-us' }}">{{ $settings['nav_contact_label'] ?? 'Contact Us' }}</a>
+            <a href="{{ $settings['nav_contact_url'] ?? route('contact') }}">{{ $settings['nav_contact_label'] ?? 'Contact Us' }}</a>
         @endif
     </div>
     

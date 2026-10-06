@@ -456,44 +456,79 @@
     <div style="display: flex; flex-direction: column; gap: 24px; max-width: 1000px; margin: 0 auto 60px auto;">
         @for($i = 1; $i <= 20; $i++)
             @if(isset($trackSettings['track_' . $i . '_name']))
-                <div style="background: #ffffff; border-left: 6px solid {{ $trackSettings['track_' . $i . '_color'] ?? '#009688' }}; border-radius: 14px; padding: 28px 30px; box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05); border: 1px solid #cbd5e1; border-left-width: 6px;">
-                    <h4 style="color: {{ $trackSettings['track_' . $i . '_color'] ?? '#009688' }}; margin: 0 0 10px 0; font-weight: 800; font-size: 1.35rem; letter-spacing: -0.3px;">{{ $trackSettings['track_' . $i . '_name'] }}</h4>
+                @php
+                    $tName = $trackSettings['track_' . $i . '_name'];
+                    $tColor = $trackSettings['track_' . $i . '_color'] ?? '#009688';
+                    $rawTopic = $trackSettings['track_' . $i . '_topic'] ?? '';
+                    $tAdjudicator = $trackSettings['track_' . $i . '_adjudicator'] ?? '';
+                    $tStaff = $trackSettings['track_' . $i . '_staff'] ?? '';
+
+                    // Smart fallback: if adjudicator is empty but combined in topic string
+                    if (empty($tAdjudicator) && empty($tStaff) && !empty($rawTopic)) {
+                        if ($i == 1 && str_contains($rawTopic, 'Dr. Ananthi')) {
+                            $rawTopic = 'Emerging infectious diseases through a One health lens (for medical practitioners)';
+                            $tAdjudicator = 'Dr. Ananthi Rachel Livingstone, Head of the Dept.';
+                            $tStaff = "Dr.S. Niren Andrew, Assistant Professor, Department of Microbiology,Madras Christian College, Chennai-59\n&\nMrs.Adline Jennefa Daniel, Assistant Professor, Department of Zoology, Madras Christian College, Chennai-59";
+                        } elseif ($i == 2 && str_contains($rawTopic, 'Dr. R. Sridhar')) {
+                            $rawTopic = 'Strengthening Health Systems from Theory to Practice: Embedding Social Infrastructure and Public Governance in One Health Capacities';
+                            $tAdjudicator = 'Dr. R. Sridhar, Vice-Principal (Admin), Associate Professor';
+                            $tStaff = "Dr.S.Premina, Assistant Professor, Department of Microbiology,Madras Christian College, Chennai-59\n&\nDr.Milton Devadayavu N, Assistant Professor, Department of Public Administration, Madras Christian College, Chennai-59";
+                        } elseif ($i == 3 && (str_contains($rawTopic, 'Dr. S. Premalatha') || str_contains($rawTopic, 'Dr. R. Sengottaiyan'))) {
+                            $rawTopic = 'Integrating Environment and Climate change in One Health';
+                            $tAdjudicator = 'Dr. S. Premalatha, Assistant Professor, Dept. of Botany';
+                            $tStaff = "Dr. R. Sengottaiyan, Assistant Professor, Department of Zoology, Madras Christian College, Chennai-59\n&\nDr. P. Senthil Kumar, Assistant Professor, Department of Botany, Madras Christian College, Chennai-59";
+                        } elseif ($i == 4 && (str_contains($rawTopic, 'Dr. T. Robinson') || str_contains($rawTopic, 'Dr. V. Mahalakshmi'))) {
+                            $rawTopic = 'Translating Sustainable Chemistry and Future Technologies to One Health (for industry track)';
+                            $tAdjudicator = 'Dr. T. Robinson, Associate Professor & Head, Department of Chemistry';
+                            $tStaff = "Dr. V. Mahalakshmi, Assistant Professor, Department of Chemistry, Madras Christian College, Chennai-59\n&\nDr. S. K. Ashok Kumar, Assistant Professor, Department of Chemistry, Madras Christian College, Chennai-59";
+                        } elseif ($i == 5 && (str_contains($rawTopic, 'Dr. P. Wilson') || str_contains($rawTopic, 'Dr. C. Anbalagan'))) {
+                            $rawTopic = 'Ensuring health intervention through the Indian Knowledge System';
+                            $tAdjudicator = 'Dr. P. Wilson, Principal & Associate Professor of Chemistry';
+                            $tStaff = "Dr. C. Anbalagan, Assistant Professor, Department of Tamil, Madras Christian College, Chennai-59\n&\nDr. J. Prince, Assistant Professor, Department of Philosophy, Madras Christian College, Chennai-59";
+                        } elseif ($i == 6 && (str_contains($rawTopic, 'Dr. K. Gnanasekaran') || str_contains($rawTopic, 'Dr. M. Boaz'))) {
+                            $rawTopic = 'Cross-Cutting Perspectives: AI, Policy, Ethics & Community Engagement';
+                            $tAdjudicator = 'Dr. K. Gnanasekaran, Associate Professor, Department of Statistics';
+                            $tStaff = "Dr. M. Boaz, Assistant Professor, Department of Computer Science, Madras Christian College, Chennai-59\n&\nDr. D. Ezhil, Assistant Professor, Department of Social Work, Madras Christian College, Chennai-59";
+                        }
+                    }
+
+                    $topicFormatted = e($rawTopic);
+                    $topicFormatted = preg_replace(
+                        '/\((for medical practitioners?)\)/i',
+                        '<span style="display: inline-flex; align-items: center; background: #e0f2fe; color: #0369a1; border: 1.5px solid #7dd3fc; font-weight: 800; font-size: 0.92rem; padding: 3px 12px; border-radius: 6px; margin-left: 8px; vertical-align: middle;">(for medical practitioners)</span>',
+                        $topicFormatted
+                    );
+                    $topicFormatted = preg_replace(
+                        '/\((for industry(?: track)?)\)/i',
+                        '<span style="display: inline-flex; align-items: center; background: #fef3c7; color: #b45309; border: 1.5px solid #fcd34d; font-weight: 800; font-size: 0.92rem; padding: 3px 12px; border-radius: 6px; margin-left: 8px; vertical-align: middle;">(for industry track)</span>',
+                        $topicFormatted
+                    );
+                @endphp
+                <div style="background: #ffffff; border-left: 6px solid {{ $tColor }}; border-radius: 14px; padding: 28px 30px; box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05); border: 1px solid #cbd5e1; border-left-width: 6px;">
+                    <h4 style="color: {{ $tColor }}; margin: 0 0 10px 0; font-weight: 800; font-size: 1.35rem; letter-spacing: -0.3px;">{{ $tName }}</h4>
                     <p style="margin: 0 0 18px 0; color: #0f172a; font-weight: 700; font-size: 1.2rem; line-height: 1.5;">
-                        @php
-                            $topicFormatted = e($trackSettings['track_' . $i . '_topic']);
-                            $topicFormatted = preg_replace(
-                                '/\((for medical practitioners?)\)/i',
-                                '<span style="display: inline-flex; align-items: center; background: #e0f2fe; color: #0369a1; border: 1.5px solid #7dd3fc; font-weight: 800; font-size: 0.92rem; padding: 3px 12px; border-radius: 6px; margin-left: 8px; vertical-align: middle;">(for medical practitioners)</span>',
-                                $topicFormatted
-                            );
-                            $topicFormatted = preg_replace(
-                                '/\((for industry(?: track)?)\)/i',
-                                '<span style="display: inline-flex; align-items: center; background: #fef3c7; color: #b45309; border: 1.5px solid #fcd34d; font-weight: 800; font-size: 0.92rem; padding: 3px 12px; border-radius: 6px; margin-left: 8px; vertical-align: middle;">(for industry track)</span>',
-                                $topicFormatted
-                            );
-                        @endphp
                         {!! $topicFormatted !!}
                     </p>
                     
-                    @if(!empty($trackSettings['track_' . $i . '_adjudicator']) || !empty($trackSettings['track_' . $i . '_staff']))
+                    @if(!empty($tAdjudicator) || !empty($tStaff))
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 18px; margin-top: 18px; padding-top: 18px; border-top: 2px dashed #cbd5e1; font-size: 1.05rem;">
-                            @if(!empty($trackSettings['track_' . $i . '_adjudicator']))
+                            @if(!empty($tAdjudicator))
                                 <div style="background: #f8fafc; padding: 18px 22px; border-radius: 10px; border: 1px solid #cbd5e1; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
                                     <strong style="color: #009688; display: block; margin-bottom: 8px; font-size: 0.92rem; text-transform: uppercase; letter-spacing: 0.7px; font-weight: 800;">
                                         <i class="fa-solid fa-user-tie" style="margin-right: 8px;"></i> Adjudicator
                                     </strong>
                                     <div style="color: #0f172a; font-weight: 700; line-height: 1.6; font-size: 1.05rem;">
-                                        {!! implode('<div style="color: #009688; font-weight: 800; margin: 4px 0;">&amp;</div>', array_map('trim', explode('&', nl2br(e($trackSettings['track_' . $i . '_adjudicator']))))) !!}
+                                        {!! implode('<div style="color: #009688; font-weight: 800; margin: 4px 0;">&amp;</div>', array_map('trim', explode('&', nl2br(e($tAdjudicator))))) !!}
                                     </div>
                                 </div>
                             @endif
-                            @if(!empty($trackSettings['track_' . $i . '_staff']))
+                            @if(!empty($tStaff))
                                 <div style="background: #f8fafc; padding: 18px 22px; border-radius: 10px; border: 1px solid #cbd5e1; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
                                     <strong style="color: #334155; display: block; margin-bottom: 8px; font-size: 0.92rem; text-transform: uppercase; letter-spacing: 0.7px; font-weight: 800;">
                                         <i class="fa-solid fa-users" style="margin-right: 8px;"></i> Staff Incharge
                                     </strong>
                                     <div style="color: #0f172a; font-weight: 700; line-height: 1.6; font-size: 1.05rem;">
-                                        {!! implode('<div style="color: #009688; font-weight: 800; margin: 4px 0;">&amp;</div>', array_map('trim', explode('&', nl2br(e($trackSettings['track_' . $i . '_staff']))))) !!}
+                                        {!! implode('<div style="color: #009688; font-weight: 800; margin: 4px 0;">&amp;</div>', array_map('trim', explode('&', nl2br(e($tStaff))))) !!}
                                     </div>
                                 </div>
                             @endif
