@@ -211,9 +211,12 @@ h6 {
 
 .nav-links {
     display: flex;
-    gap: 14px;
-    flex-wrap: nowrap;
+    gap: 22px;
+    flex-wrap: wrap;
+    justify-content: center;
     align-items: center;
+    flex: 1;
+    margin: 0 auto;
     height: 100%;
 }
 
@@ -221,7 +224,7 @@ h6 {
     text-decoration: none;
     color: var(--navy-dark);
     font-weight: 600;
-    font-size: 0.88rem;
+    font-size: 1rem;
     white-space: nowrap;
     transition: var(--transition);
     position: relative;
