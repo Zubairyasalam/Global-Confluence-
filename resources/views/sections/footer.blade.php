@@ -8,7 +8,14 @@
                 </div>
                 <div class="fc-text">
                     <strong>Reach Us</strong>
-                    <p style="font-size: 0.9rem; line-height: 1.3;">{!! nl2br(e($settings['contact_address'] ?? 'Madras Christian College\nTambaram East, Chennai 600 059')) !!}</p>
+                    @php
+                        $rawAddr = $settings['contact_address'] ?? 'Madras Christian College, Tambaram, Chennai';
+                        $cleanAddr = str_replace(['\r\n', '\n', '\r'], ', ', $rawAddr);
+                        if (str_contains($cleanAddr, 'Tambaram East, Chennai 600 059') || $cleanAddr === 'Madras Christian College, Tambaram East, Chennai 600 059') {
+                            $cleanAddr = 'Madras Christian College, Tambaram, Chennai';
+                        }
+                    @endphp
+                    <p style="font-size: 0.9rem; line-height: 1.3;">{{ $cleanAddr }}</p>
                 </div>
             </div>
             <div class="fc-item">

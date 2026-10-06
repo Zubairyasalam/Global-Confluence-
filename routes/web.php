@@ -512,6 +512,7 @@ Route::get('/sync-db-settings', function () {
         \Illuminate\Support\Facades\Artisan::call('route:clear');
         
         \App\Models\RegistrationField::where('name', 'interested_in')->delete();
+        \App\Models\SiteSetting::updateOrCreate(['key' => 'contact_address'], ['value' => 'Madras Christian College, Tambaram, Chennai', 'group' => 'contact']);
 
         $seeder = new \Database\Seeders\SiteSettingSeeder();
         $seeder->run();
