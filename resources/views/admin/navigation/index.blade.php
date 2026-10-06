@@ -269,7 +269,7 @@
                     </div>
                     <div class="form-group">
                         <label>Item 3 Target URL</label>
-                        <input type="text" name="nav_publications_url" value="{{ $settings['nav_publications_url'] ?? '/guidelines#publications' }}" required>
+                        <input type="text" name="nav_publications_url" value="{{ $settings['nav_publications_url'] ?? '/publications' }}" required>
                     </div>
                     <div class="form-group">
                         <label>Status</label>

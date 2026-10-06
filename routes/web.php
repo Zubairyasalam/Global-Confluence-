@@ -174,7 +174,8 @@ Route::get('/guidelines', function () {
 })->name('guidelines');
 
 Route::get('/publications', function () {
-    return redirect('/guidelines#publications');
+    $settings = \App\Models\SiteSetting::pluck('value', 'key')->toArray();
+    return view('guidelines', compact('settings'));
 })->name('publications');
 
 Route::get('/sponsors', function () {

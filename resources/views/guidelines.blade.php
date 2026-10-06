@@ -6,8 +6,8 @@
 @include('sections.navbar')
 
     @php
-        $bannerTitle = \App\Models\SiteSetting::where('group', 'page_banners')->where('key', 'banner_guidelines_title')->value('value') ?? 'GUIDELINES';
-        $bannerImage = \App\Models\SiteSetting::where('group', 'page_banners')->where('key', 'banner_guidelines_image')->value('value');
+        $bannerTitle = \App\Models\SiteSetting::where('group', 'page_banners')->where('key', 'banner_publications_title')->value('value') ?? (\App\Models\SiteSetting::where('group', 'page_banners')->where('key', 'banner_guidelines_title')->value('value') ?? 'PUBLICATIONS');
+        $bannerImage = \App\Models\SiteSetting::where('group', 'page_banners')->where('key', 'banner_publications_image')->value('value') ?? \App\Models\SiteSetting::where('group', 'page_banners')->where('key', 'banner_guidelines_image')->value('value');
     @endphp
     <!-- Page Banner -->
     <div class="page-banner" style="{{ $bannerImage ? "background-image: linear-gradient(rgba(10, 25, 47, 0.7), rgba(10, 25, 47, 0.8)), url('" . asset($bannerImage) . "');" : '' }}">
@@ -170,76 +170,8 @@
 <div class="guidelines-page-bg">
     <div class="guidelines-container">
 
-        <!-- Abstract Submission -->
-        <div class="gl-card gl-card-primary">
-            <div class="gl-badge">
-                <i class="fa-solid fa-star"></i> {{ $settings['abstract_tag'] ?? 'PRIMARY GUIDELINES' }}
-            </div>
-            
-            <h2 class="gl-title">{{ $settings['abstract_title'] ?? 'Abstract Submission' }}</h2>
-
-            <div class="gl-grid-abstract">
-                @for($i = 1; $i <= 6; $i++)
-                    @if(!empty($settings['abstract_item_' . $i]))
-                    <div class="gl-list-item">
-                        <i class="fa-solid fa-circle-check gl-icon-check"></i>
-                        <div class="gl-item-text">
-                            {!! $settings['abstract_item_' . $i] !!}
-                        </div>
-                    </div>
-                    @endif
-                @endfor
-            </div>
-        </div>
-
-        <!-- Oral & Poster Grid -->
-        <div class="gl-split-grid">
-            
-            <!-- Oral Presentation -->
-            <div class="gl-card">
-                <h2 class="gl-title">{{ $settings['oral_title'] ?? 'Oral Presentation' }}</h2>
-                <div class="gl-list-vertical">
-                    @for($i = 1; $i <= 4; $i++)
-                        @if(!empty($settings['oral_item_' . $i]))
-                        <div class="gl-list-item">
-                            <i class="fa-solid fa-circle-check gl-icon-check"></i>
-                            <div class="gl-item-text">
-                                {!! $settings['oral_item_' . $i] !!}
-                            </div>
-                        </div>
-                        @endif
-                    @endfor
-                </div>
-            </div>
-
-            <!-- Poster Presentation -->
-            <div class="gl-card">
-                <h2 class="gl-title">{{ $settings['poster_title'] ?? 'Poster Presentation' }}</h2>
-                <div class="gl-list-vertical">
-                    @for($i = 1; $i <= 4; $i++)
-                        @if(!empty($settings['poster_item_' . $i]))
-                        <div class="gl-list-item">
-                            <i class="fa-solid fa-circle-check gl-icon-check"></i>
-                            <div class="gl-item-text">
-                                {!! $settings['poster_item_' . $i] !!}
-                            </div>
-                        </div>
-                        @endif
-                    @endfor
-                </div>
-
-                <div class="gl-dim-box">
-                    <div class="gl-dim-label">
-                        <i class="fa-solid fa-ruler-combined" style="color: #009688;"></i> {{ $settings['poster_dim_label'] ?? 'POSTER DIMENSIONS' }}
-                    </div>
-                    <p class="gl-dim-value">{{ $settings['poster_dim_val'] ?? '90 cm (Width) × 120 cm (Height)' }}</p>
-                </div>
-            </div>
-
-        </div>
-
         <!-- Publications Section -->
-        <div class="gl-card" id="publications" style="margin-top: 30px; border-top: 4px solid #009688;">
+        <div class="gl-card gl-card-primary" id="publications" style="margin-top: 0; border-top: 4px solid #009688;">
             <div class="gl-badge">
                 <i class="fa-solid fa-book-open"></i> {{ $settings['pub_tag'] ?? ($settings['publication_badge'] ?? 'SCIENTIFIC PUBLICATIONS') }}
             </div>
