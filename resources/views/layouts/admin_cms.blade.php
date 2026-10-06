@@ -388,6 +388,11 @@
                 Settings
             </li>
             <li>
+                <a href="{{ route('admin.topbar') }}" class="{{ request()->routeIs('admin.topbar') ? 'active' : '' }}">
+                    <i class="fa-solid fa-bullhorn"></i> Topbar &amp; Ticker
+                </a>
+            </li>
+            <li>
                 <a href="{{ route('admin.navigation') }}" class="{{ request()->routeIs('admin.navigation') ? 'active' : '' }}">
                     <i class="fa-solid fa-bars-staggered"></i> Header Navigation
                 </a>

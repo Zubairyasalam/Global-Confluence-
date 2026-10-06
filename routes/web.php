@@ -376,6 +376,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/navigation', [AdminController::class, 'navigationSettings'])->name('admin.navigation');
     Route::post('/navigation', [AdminController::class, 'updateNavigationSettings'])->name('admin.navigation.update');
 
+    // 11b. Topbar & Announcements Settings
+    Route::get('/topbar', [AdminController::class, 'topbarSettings'])->name('admin.topbar');
+    Route::post('/topbar', [AdminController::class, 'updateTopbarSettings'])->name('admin.topbar.update');
+
     // 12. Contact Us Settings
     Route::get('/contact', [AdminController::class, 'contactSettings'])->name('admin.contact');
     Route::post('/contact', [AdminController::class, 'updateContactSettings'])->name('admin.contact.update');

@@ -1,11 +1,38 @@
 <!-- Topbar (Desktop Only) -->
+@php
+    $topbarBg = $settings['topbar_bg_color'] ?? '#0f233a';
+    $topbarText = $settings['topbar_text_color'] ?? '#ffffff';
+    $topbarSpeed = $settings['topbar_speed'] ?? '25';
+
+    $phones = [];
+    if (!empty($settings['contact_phone'])) $phones[] = $settings['contact_phone'];
+    if (!empty($settings['contact_phone_2'])) $phones[] = $settings['contact_phone_2'];
+    if (!empty($settings['contact_phone_3'])) $phones[] = $settings['contact_phone_3'];
+    for ($p = 4; $p <= 10; $p++) {
+        if (!empty($settings['contact_phone_' . $p])) {
+            $phones[] = $settings['contact_phone_' . $p];
+        }
+    }
+    if (empty($phones)) {
+        $phones = ['+91 9789582404', '+91 9025596984', '+91 81480 18894'];
+    }
+
+    $tickerMode = $settings['topbar_ticker_mode'] ?? 'deadlines';
+    $customItems = [];
+    for ($t = 1; $t <= 20; $t++) {
+        if (!empty($settings['topbar_ticker_' . $t])) {
+            $customItems[] = $settings['topbar_ticker_' . $t];
+        }
+    }
+@endphp
+
 <style>
     .topbar-desktop {
         padding: 8px 30px;
         display: flex;
         align-items: center;
-        background-color: #0f233a;
-        color: #ffffff;
+        background-color: {{ $topbarBg }};
+        color: {{ $topbarText }};
         font-size: 0.85rem;
     }
     .topbar-left {
@@ -18,7 +45,17 @@
         white-space: nowrap;
         font-weight: 500;
         z-index: 2;
-        background-color: #0f233a;
+        background-color: {{ $topbarBg }};
+    }
+    .topbar-left a {
+        color: inherit;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        transition: opacity 0.2s;
+    }
+    .topbar-left a:hover {
+        opacity: 0.85;
     }
     .marquee-container {
         flex-grow: 1;
@@ -33,7 +70,7 @@
     .marquee-content {
         display: flex;
         min-width: max-content;
-        animation: marquee-scroll 25s linear infinite;
+        animation: marquee-scroll {{ $topbarSpeed }}s linear infinite;
         will-change: transform;
     }
     .marquee-container:hover .marquee-content {
@@ -44,15 +81,27 @@
         100% { transform: translateX(-50%); }
     }
 </style>
+
 <div class="topbar topbar-desktop">
     <div class="topbar-left">
-        <span><i class="fa-solid fa-phone" style="margin-right: 5px; color: #00A896;"></i> {{ $settings['contact_phone'] ?? '+91 9789582404' }}</span>
-        <span><i class="fa-solid fa-phone" style="margin-right: 5px; color: #00A896;"></i> {{ $settings['contact_phone_2'] ?? '+91 9025596984' }}</span>
-        <span><i class="fa-solid fa-phone" style="margin-right: 5px; color: #00A896;"></i> {{ $settings['contact_phone_3'] ?? '+91 81480 18894' }}</span>
+        @foreach($phones as $ph)
+            <span>
+                <a href="tel:{{ preg_replace('/[^0-9+]/', '', $ph) }}">
+                    <i class="fa-solid fa-phone" style="margin-right: 5px; color: #00A896;"></i> {{ $ph }}
+                </a>
+            </span>
+        @endforeach
     </div>
     <div class="marquee-container">
         <div class="marquee-content">
-            @if(isset($deadlines) && count($deadlines) > 0)
+            @if($tickerMode === 'custom' && count($customItems) > 0)
+                @foreach($customItems as $item)
+                    <span style="margin-right: 50px;">{{ $item }}</span>
+                @endforeach
+                @foreach($customItems as $item)
+                    <span style="margin-right: 50px;">{{ $item }}</span>
+                @endforeach
+            @elseif(isset($deadlines) && count($deadlines) > 0)
                 @foreach($deadlines as $dl)
                     <span style="margin-right: 50px;">{{ $dl->title }}: {{ $dl->deadline_date }}</span>
                 @endforeach
