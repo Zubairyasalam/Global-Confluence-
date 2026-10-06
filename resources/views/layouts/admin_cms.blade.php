@@ -324,6 +324,26 @@
                 </a>
             </li>
             <li>
+                <a href="{{ route('admin.oral_presentation') }}" class="{{ request()->routeIs('admin.oral_presentation') ? 'active' : '' }}">
+                    <i class="fa-solid fa-microphone-lines"></i> Oral Presentation
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('admin.poster_presentation') }}" class="{{ request()->routeIs('admin.poster_presentation') ? 'active' : '' }}">
+                    <i class="fa-solid fa-image"></i> Poster Presentation
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('admin.innovation_pitch') }}" class="{{ request()->routeIs('admin.innovation_pitch') ? 'active' : '' }}">
+                    <i class="fa-solid fa-lightbulb"></i> Innovation Pitch
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('admin.hackathon') }}" class="{{ request()->routeIs('admin.hackathon') ? 'active' : '' }}">
+                    <i class="fa-solid fa-code"></i> Hackathon
+                </a>
+            </li>
+            <li>
                 <a href="{{ route('admin.schedule') }}" class="{{ request()->routeIs('admin.schedule') ? 'active' : '' }}">
                     <i class="fa-solid fa-calendar-days"></i> Schedule
                 </a>

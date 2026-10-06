@@ -204,18 +204,30 @@ Route::get('/pre-conference', function () {
 Route::get('/events/oral-presentation', function () {
     return view('events.oral_presentation');
 })->name('events.oral_presentation');
+Route::get('/oral-presentation', function () {
+    return view('events.oral_presentation');
+})->name('oral-presentation');
 
 Route::get('/events/poster-presentation', function () {
     return view('events.poster_presentation');
 })->name('events.poster_presentation');
+Route::get('/poster-presentation', function () {
+    return view('events.poster_presentation');
+})->name('poster-presentation');
 
 Route::get('/events/innovation-pitch', function () {
     return view('events.innovation_pitch');
 })->name('events.innovation_pitch');
+Route::get('/innovation-pitch', function () {
+    return view('events.innovation_pitch');
+})->name('innovation-pitch');
 
 Route::get('/events/hackathon', function () {
     return view('events.hackathon');
 })->name('events.hackathon');
+Route::get('/hackathon', function () {
+    return view('events.hackathon');
+})->name('hackathon');
 
 Route::post('/api/submit-paper', [PaperSubmissionController::class, 'store'])->name('api.submit_paper');
 Route::post('/api/register', [RegistrationController::class, 'store']);
@@ -341,6 +353,14 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     // Oral Presentation Settings
     Route::get('/oral-presentation', [AdminController::class, 'oralPresentationSettings'])->name('admin.oral_presentation');
     Route::post('/oral-presentation', [AdminController::class, 'updateOralPresentationSettings'])->name('admin.oral_presentation.update');
+
+    // Innovation Pitch Settings
+    Route::get('/innovation-pitch', [AdminController::class, 'innovationPitchSettings'])->name('admin.innovation_pitch');
+    Route::post('/innovation-pitch', [AdminController::class, 'updateInnovationPitchSettings'])->name('admin.innovation_pitch.update');
+
+    // Hackathon Settings
+    Route::get('/hackathon', [AdminController::class, 'hackathonSettings'])->name('admin.hackathon');
+    Route::post('/hackathon', [AdminController::class, 'updateHackathonSettings'])->name('admin.hackathon.update');
 
 
 

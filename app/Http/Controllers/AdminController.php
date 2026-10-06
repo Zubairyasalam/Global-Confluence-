@@ -1737,6 +1737,42 @@ class AdminController extends Controller
         return back()->with('success', 'Oral Presentation content updated successfully.');
     }
 
+    public function innovationPitchSettings()
+    {
+        $settings = \App\Models\SiteSetting::where('group', 'innovation_pitch')->pluck('value', 'key')->toArray();
+        return view('admin.innovation_pitch.index', compact('settings'));
+    }
+
+    public function updateInnovationPitchSettings(Request $request)
+    {
+        $settings = $request->except(['_token']);
+        foreach ($settings as $key => $value) {
+            \App\Models\SiteSetting::updateOrCreate(
+                ['key' => $key],
+                ['value' => is_array($value) ? json_encode($value) : $value, 'group' => 'innovation_pitch']
+            );
+        }
+        return back()->with('success', 'Innovation Pitch content updated successfully.');
+    }
+
+    public function hackathonSettings()
+    {
+        $settings = \App\Models\SiteSetting::where('group', 'hackathon')->pluck('value', 'key')->toArray();
+        return view('admin.hackathon.index', compact('settings'));
+    }
+
+    public function updateHackathonSettings(Request $request)
+    {
+        $settings = $request->except(['_token']);
+        foreach ($settings as $key => $value) {
+            \App\Models\SiteSetting::updateOrCreate(
+                ['key' => $key],
+                ['value' => is_array($value) ? json_encode($value) : $value, 'group' => 'hackathon']
+            );
+        }
+        return back()->with('success', 'Hackathon content updated successfully.');
+    }
+
     // CMS: Partner Logos
     public function partnerLogosSettings()
     {
@@ -1919,6 +1955,7 @@ class AdminController extends Controller
         return back()->with('success', 'Visit and Places of Interest settings updated successfully.');
     }
 }
+
 
 
 
