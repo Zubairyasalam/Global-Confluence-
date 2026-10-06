@@ -148,7 +148,7 @@
         function editTrack(track) {
             document.getElementById('track-form-title').innerText = 'Edit Track';
             let form = document.getElementById('track-form');
-            form.action = `/admin/programs/tracks/${track.id}`;
+            form.action = `/admin/tracks/${track.id}`;
             document.getElementById('track-method').innerHTML = '<input type="hidden" name="_method" value="PUT">';
             
             document.getElementById('track_title').value = track.title;

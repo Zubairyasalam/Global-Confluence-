@@ -116,31 +116,41 @@
             </div>
         </div>
 
+        @php
+            $posterItems = !empty($posterSettings['poster_guidelines_json']) ? json_decode($posterSettings['poster_guidelines_json'], true) : null;
+        @endphp
+
         <h3 style="font-size: 1.35rem; font-weight: 700; color: #0f172a; margin-top: 35px; margin-bottom: 15px;">
             Key Presentation Instructions:
         </h3>
 
         <ul class="guideline-list">
-            <li>
-                <i class="fa-solid fa-circle-check"></i>
-                <strong>Top Section:</strong> Include Title, Authors, Affiliations, and Conflict-of-Interest disclosure at the top of the poster.
-            </li>
-            <li>
-                <i class="fa-solid fa-circle-check"></i>
-                <strong>Content Structure:</strong> Ensure a clear flow of Background, Methods, Results, Conclusions, and References.
-            </li>
-            <li>
-                <i class="fa-solid fa-circle-check"></i>
-                <strong>Visual Elements:</strong> Use clear graphs, tables, and high-resolution images instead of long paragraphs.
-            </li>
-            <li>
-                <i class="fa-solid fa-circle-check"></i>
-                <strong>Applicable Tracks:</strong> Dedicated guidelines for <span class="highlight-badge">Track 1 (Medical Practitioners)</span> and <span class="highlight-badge">Track 6 (Industry)</span>.
-            </li>
-            <li>
-                <i class="fa-solid fa-circle-check"></i>
-                <strong>On-Site Requirement:</strong> Presenters must bring a printed poster, mount it before the session begins, and remain beside it during the assigned time.
-            </li>
+            @if(!empty($posterItems) && is_array($posterItems))
+                @foreach($posterItems as $item)
+                    <li><i class="fa-solid fa-circle-check"></i> {!! $item !!}</li>
+                @endforeach
+            @else
+                <li>
+                    <i class="fa-solid fa-circle-check"></i>
+                    <strong>Top Section:</strong> Include Title, Authors, Affiliations, and Conflict-of-Interest disclosure at the top of the poster.
+                </li>
+                <li>
+                    <i class="fa-solid fa-circle-check"></i>
+                    <strong>Content Structure:</strong> Ensure a clear flow of Background, Methods, Results, Conclusions, and References.
+                </li>
+                <li>
+                    <i class="fa-solid fa-circle-check"></i>
+                    <strong>Visual Elements:</strong> Use clear graphs, tables, and high-resolution images instead of long paragraphs.
+                </li>
+                <li>
+                    <i class="fa-solid fa-circle-check"></i>
+                    <strong>Applicable Tracks:</strong> Dedicated guidelines for <span class="highlight-badge">Track 1 (Medical Practitioners)</span> and <span class="highlight-badge">Track 6 (Industry)</span>.
+                </li>
+                <li>
+                    <i class="fa-solid fa-circle-check"></i>
+                    <strong>On-Site Requirement:</strong> Presenters must bring a printed poster, mount it before the session begins, and remain beside it during the assigned time.
+                </li>
+            @endif
         </ul>
     </div>
 </div>

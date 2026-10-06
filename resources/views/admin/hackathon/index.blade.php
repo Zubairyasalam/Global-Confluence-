@@ -41,6 +41,23 @@
         border-color: #00A896;
         outline: none;
     }
+
+    .dynamic-item-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 12px 16px;
+        margin-bottom: 10px;
+        transition: all 0.2s ease;
+    }
+
+    .dynamic-item-row:hover {
+        border-color: #00A896;
+        background: #ffffff;
+    }
 </style>
 
 <div class="event-admin-wrap">
@@ -51,7 +68,7 @@
             <h2 style="font-size: 1.7rem; font-weight: 800; color: #0a192f; margin: 0 0 4px 0;">
                 <i class="fa-solid fa-laptop-code" style="color: #00A896; margin-right: 8px;"></i> Hackathon CMS
             </h2>
-            <p style="color: #64748b; font-size: 0.95rem; margin: 0;">Customize hackathon challenge themes, team requirements, duration, cash prizes, and guidelines.</p>
+            <p style="color: #64748b; font-size: 0.95rem; margin: 0;">Customize hackathon challenge themes, team requirements, duration, cash prizes, and guidelines with full Add/Edit/Delete.</p>
         </div>
         <div style="display: flex; gap: 12px; align-items: center;">
             <a href="/events/hackathon" target="_blank" style="background: #ffffff; color: #0f172a; border: 1.5px solid #cbd5e1; padding: 11px 20px; border-radius: 10px; font-weight: 700; font-size: 0.92rem; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
@@ -70,6 +87,16 @@
         $bannerTitle = $settings['hackathon_banner_title'] ?? 'HACKATHON';
         $sectionTitle = $settings['hackathon_section_title'] ?? 'One Health Grand Hackathon Challenge';
         $mainContent = $settings['hackathon_main_content'] ?? 'Join multidisciplinary teams of engineers, healthcare professionals, data scientists, and developers to build rapid digital and hardware solutions for One Health surveillance, pandemic preparedness, antimicrobial resistance tracking, and environmental monitoring.';
+
+        $defaultGuidelines = [
+            'Track A - Genomic & AMR Surveillance: AI-powered tools for early pathogen detection, AMR mutation tracking, and outbreak modeling.',
+            'Track B - Environmental Biosensors: Low-cost IoT sensors for real-time monitoring of effluent water, soil toxicants, and airborne pathogens.',
+            'Track C - Community Health & Tele-Diagnostics: Portable point-of-care diagnostics and accessible mobile apps for rural community outreach.',
+            'Track D - Sustainable Bioprocesses: Circular economy algorithms and biotechnological tools for safe clinical waste remediation.',
+            'Deliverables: Functional prototype / code repository, 5-minute live demonstration, and project presentation.'
+        ];
+
+        $guidelineList = !empty($guidelines) ? $guidelines : $defaultGuidelines;
     @endphp
 
     <!-- 1. LIVE VISUAL PREVIEW -->
@@ -108,6 +135,17 @@
                         <p style="color: #475569; font-size: 0.85rem; margin: 0;">{{ $settings['hackathon_spec_prizes'] ?? 'Cash Awards + Fast-track Incubation Support' }}</p>
                     </div>
                 </div>
+
+                <!-- Problem Statements Preview -->
+                <h4 style="color: #0f172a; font-size: 1.1rem; font-weight: 700; margin-bottom: 12px;"><i class="fa-solid fa-layer-group" style="color: #00A896;"></i> Problem Statements & Challenge Rules</h4>
+                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px;">
+                    @foreach($guidelineList as $g)
+                        <li style="display: flex; align-items: flex-start; gap: 10px; color: #334155; font-size: 0.92rem; line-height: 1.6;">
+                            <i class="fa-solid fa-check" style="color: #00A896; margin-top: 3px;"></i>
+                            <span>{{ $g }}</span>
+                        </li>
+                    @endforeach
+                </ul>
             </div>
         </div>
     </div>
@@ -159,13 +197,35 @@
                         <input type="text" name="hackathon_spec_prizes" value="{{ $settings['hackathon_spec_prizes'] ?? 'Cash Awards + Fast-track Incubation Support' }}" class="form-input">
                     </div>
                 </div>
+            </div>
 
-                <div style="margin-bottom: 20px;">
-                    <label class="form-label">Problem Statements & Challenge Rules (HTML Supported)</label>
-                    <textarea name="hackathon_guidelines_content" rows="6" class="form-input">{{ $settings['hackathon_guidelines_content'] ?? '1. AI / ML in Genomic Surveillance & AMR Detection.\n2. IoT & Sensor Technologies for Real-Time Water and Air Quality.\n3. Digital Health & Telemedicine Platforms for Remote Communities.\n4. Circular Economy & Smart Biodegradable Medical Waste Solutions.' }}</textarea>
+            <!-- Dynamic Guidelines Items (Add / Edit / Delete) -->
+            <div class="admin-card-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 10px;">
+                    <div>
+                        <h3 style="margin: 0 0 4px 0; font-size: 1.25rem; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 8px;">
+                            <i class="fa-solid fa-list-ol" style="color: #00A896;"></i> 3. Dynamic Problem Statements & Challenge Rules
+                        </h3>
+                        <p style="color: #64748b; font-size: 0.9rem; margin: 0;">Add new problem tracks, edit in place, or delete obsolete rules.</p>
+                    </div>
+                    <button type="button" onclick="addHackathonTrackRow()" style="background: #e6fffa; color: #0d9488; border: 1.5px solid #99f6e4; padding: 9px 18px; border-radius: 8px; font-weight: 700; font-size: 0.88rem; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+                        <i class="fa-solid fa-plus"></i> Add Problem Track
+                    </button>
                 </div>
 
-                <div style="text-align: right;">
+                <div id="hackathon-guidelines-container" style="display: flex; flex-direction: column; gap: 10px;">
+                    @foreach($guidelineList as $idx => $item)
+                        <div class="dynamic-item-row">
+                            <i class="fa-solid fa-circle-check" style="color: #00A896; font-size: 1.15rem;"></i>
+                            <input type="text" name="hackathon_guideline_items[]" value="{{ $item }}" class="form-input" style="flex: 1; padding: 10px 14px;" required placeholder="Enter problem statement / track / rule...">
+                            <button type="button" onclick="this.closest('.dynamic-item-row').remove()" style="background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; width: 38px; height: 38px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0;" title="Delete item">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
+                    @endforeach
+                </div>
+
+                <div style="text-align: right; margin-top: 25px;">
                     <button type="submit" class="btn" style="background: linear-gradient(135deg, #00A896, #028090); color: #ffffff; padding: 13px 34px; border-radius: 10px; font-weight: 800; font-size: 1rem; border: none; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 168, 150, 0.35); display: inline-flex; align-items: center; gap: 8px;">
                         <i class="fa-solid fa-floppy-disk"></i> Save Hackathon Content
                     </button>
@@ -176,4 +236,21 @@
     </form>
 
 </div>
+
+<script>
+    function addHackathonTrackRow() {
+        const container = document.getElementById('hackathon-guidelines-container');
+        const div = document.createElement('div');
+        div.className = 'dynamic-item-row';
+        div.innerHTML = `
+            <i class="fa-solid fa-circle-check" style="color: #00A896; font-size: 1.15rem;"></i>
+            <input type="text" name="hackathon_guideline_items[]" value="" class="form-input" style="flex: 1; padding: 10px 14px;" required placeholder="Enter new problem statement / track / rule...">
+            <button type="button" onclick="this.closest('.dynamic-item-row').remove()" style="background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; width: 38px; height: 38px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0;" title="Delete item">
+                <i class="fa-solid fa-trash-can"></i>
+            </button>
+        `;
+        container.appendChild(div);
+        div.querySelector('input').focus();
+    }
+</script>
 @endsection

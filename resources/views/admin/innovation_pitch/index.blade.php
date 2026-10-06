@@ -41,6 +41,23 @@
         border-color: #00A896;
         outline: none;
     }
+
+    .dynamic-item-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 12px 16px;
+        margin-bottom: 10px;
+        transition: all 0.2s ease;
+    }
+
+    .dynamic-item-row:hover {
+        border-color: #00A896;
+        background: #ffffff;
+    }
 </style>
 
 <div class="event-admin-wrap">
@@ -51,7 +68,7 @@
             <h2 style="font-size: 1.7rem; font-weight: 800; color: #0a192f; margin: 0 0 4px 0;">
                 <i class="fa-solid fa-lightbulb" style="color: #00A896; margin-right: 8px;"></i> Innovation Pitch CMS
             </h2>
-            <p style="color: #64748b; font-size: 0.95rem; margin: 0;">Customize pitch competition criteria, evaluation metrics, incubation opportunities, and guidelines.</p>
+            <p style="color: #64748b; font-size: 0.95rem; margin: 0;">Customize pitch competition criteria, evaluation metrics, incubation opportunities, and guidelines with full Add/Edit/Delete.</p>
         </div>
         <div style="display: flex; gap: 12px; align-items: center;">
             <a href="/events/innovation-pitch" target="_blank" style="background: #ffffff; color: #0f172a; border: 1.5px solid #cbd5e1; padding: 11px 20px; border-radius: 10px; font-weight: 700; font-size: 0.92rem; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
@@ -70,6 +87,16 @@
         $bannerTitle = $settings['pitch_banner_title'] ?? 'INNOVATION PITCH';
         $sectionTitle = $settings['pitch_section_title'] ?? 'One Health Innovation Pitch Challenge';
         $mainContent = $settings['pitch_main_content'] ?? 'The Innovation Pitch invites startups, innovators, student entrepreneurs, and interdisciplinary research teams to present novel technologies, prototypes, biomedical devices, diagnostic platforms, and digital solutions tackling complex One Health challenges.';
+
+        $defaultGuidelines = [
+            'Problem Statement & Impact: Significance of the healthcare, veterinary, or environmental challenge addressed.',
+            'Technological Novelty: Originality of the innovation, prototype readiness, and intellectual property potential.',
+            'Commercial Viability: Market feasibility, scalable business model, regulatory pathway, and financial sustainability.',
+            'Pitch Deck Specifications: Maximum 10 presentation slides covering problem, solution, traction, team, and funding requirements.',
+            'Jury Interaction: Live 3-minute Q&A with venture capitalists, translational researchers, and industry leaders.'
+        ];
+
+        $guidelineList = !empty($guidelines) ? $guidelines : $defaultGuidelines;
     @endphp
 
     <!-- 1. LIVE VISUAL PREVIEW -->
@@ -108,6 +135,17 @@
                         <p style="color: #475569; font-size: 0.85rem; margin: 0;">{{ $settings['pitch_spec_opp'] ?? 'Incubation Grants & Mentor Connect' }}</p>
                     </div>
                 </div>
+
+                <!-- Criteria Preview -->
+                <h4 style="color: #0f172a; font-size: 1.1rem; font-weight: 700; margin-bottom: 12px;"><i class="fa-solid fa-clipboard-check" style="color: #00A896;"></i> Evaluation Criteria & Submission Details</h4>
+                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px;">
+                    @foreach($guidelineList as $g)
+                        <li style="display: flex; align-items: flex-start; gap: 10px; color: #334155; font-size: 0.92rem; line-height: 1.6;">
+                            <i class="fa-solid fa-check" style="color: #00A896; margin-top: 3px;"></i>
+                            <span>{{ $g }}</span>
+                        </li>
+                    @endforeach
+                </ul>
             </div>
         </div>
     </div>
@@ -159,13 +197,35 @@
                         <input type="text" name="pitch_spec_opp" value="{{ $settings['pitch_spec_opp'] ?? 'Incubation Grants & Mentor Connect' }}" class="form-input">
                     </div>
                 </div>
+            </div>
 
-                <div style="margin-bottom: 20px;">
-                    <label class="form-label">Evaluation Criteria & Pitch Guidelines (HTML Supported)</label>
-                    <textarea name="pitch_guidelines_content" rows="6" class="form-input">{{ $settings['pitch_guidelines_content'] ?? '1. Problem Statement & Market Need in One Health.\n2. Novelty and Technological Feasibility of the Proposed Solution.\n3. Business Model, Commercialization Roadmap & ESG Impact.\n4. Live Demonstration / Prototype / Slide Deck (Max 10 slides).' }}</textarea>
+            <!-- Dynamic Guidelines Items (Add / Edit / Delete) -->
+            <div class="admin-card-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 10px;">
+                    <div>
+                        <h3 style="margin: 0 0 4px 0; font-size: 1.25rem; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 8px;">
+                            <i class="fa-solid fa-list-ol" style="color: #00A896;"></i> 3. Dynamic Evaluation Criteria & Guidelines
+                        </h3>
+                        <p style="color: #64748b; font-size: 0.9rem; margin: 0;">Add, edit in place, or delete pitch evaluation criteria.</p>
+                    </div>
+                    <button type="button" onclick="addPitchCriterionRow()" style="background: #e6fffa; color: #0d9488; border: 1.5px solid #99f6e4; padding: 9px 18px; border-radius: 8px; font-weight: 700; font-size: 0.88rem; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+                        <i class="fa-solid fa-plus"></i> Add Criterion
+                    </button>
                 </div>
 
-                <div style="text-align: right;">
+                <div id="pitch-guidelines-container" style="display: flex; flex-direction: column; gap: 10px;">
+                    @foreach($guidelineList as $idx => $item)
+                        <div class="dynamic-item-row">
+                            <i class="fa-solid fa-circle-check" style="color: #00A896; font-size: 1.15rem;"></i>
+                            <input type="text" name="pitch_guideline_items[]" value="{{ $item }}" class="form-input" style="flex: 1; padding: 10px 14px;" required placeholder="Enter pitch criterion...">
+                            <button type="button" onclick="this.closest('.dynamic-item-row').remove()" style="background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; width: 38px; height: 38px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0;" title="Delete item">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
+                    @endforeach
+                </div>
+
+                <div style="text-align: right; margin-top: 25px;">
                     <button type="submit" class="btn" style="background: linear-gradient(135deg, #00A896, #028090); color: #ffffff; padding: 13px 34px; border-radius: 10px; font-weight: 800; font-size: 1rem; border: none; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 168, 150, 0.35); display: inline-flex; align-items: center; gap: 8px;">
                         <i class="fa-solid fa-floppy-disk"></i> Save Innovation Pitch Content
                     </button>
@@ -176,4 +236,21 @@
     </form>
 
 </div>
+
+<script>
+    function addPitchCriterionRow() {
+        const container = document.getElementById('pitch-guidelines-container');
+        const div = document.createElement('div');
+        div.className = 'dynamic-item-row';
+        div.innerHTML = `
+            <i class="fa-solid fa-circle-check" style="color: #00A896; font-size: 1.15rem;"></i>
+            <input type="text" name="pitch_guideline_items[]" value="" class="form-input" style="flex: 1; padding: 10px 14px;" required placeholder="Enter new pitch criterion...">
+            <button type="button" onclick="this.closest('.dynamic-item-row').remove()" style="background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; width: 38px; height: 38px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0;" title="Delete item">
+                <i class="fa-solid fa-trash-can"></i>
+            </button>
+        `;
+        container.appendChild(div);
+        div.querySelector('input').focus();
+    }
+</script>
 @endsection

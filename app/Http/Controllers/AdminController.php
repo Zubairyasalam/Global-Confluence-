@@ -1704,72 +1704,124 @@ class AdminController extends Controller
     public function posterPresentationSettings()
     {
         $settings = \App\Models\SiteSetting::where('group', 'poster_presentation')->pluck('value', 'key')->toArray();
-        return view('admin.poster_presentation.index', compact('settings'));
+        $guidelines = [];
+        if (!empty($settings['poster_guidelines_json'])) {
+            $guidelines = json_decode($settings['poster_guidelines_json'], true) ?: [];
+        }
+        return view('admin.poster_presentation.index', compact('settings', 'guidelines'));
     }
 
     public function updatePosterPresentationSettings(Request $request)
     {
-        $settings = $request->except(['_token']);
+        $settings = $request->except(['_token', 'poster_guideline_items']);
         foreach ($settings as $key => $value) {
             \App\Models\SiteSetting::updateOrCreate(
                 ['key' => $key],
                 ['value' => is_array($value) ? json_encode($value) : $value, 'group' => 'poster_presentation']
             );
         }
+
+        if ($request->has('poster_guideline_items')) {
+            $items = array_values(array_filter(array_map('trim', $request->input('poster_guideline_items', [])), 'strlen'));
+            \App\Models\SiteSetting::updateOrCreate(
+                ['key' => 'poster_guidelines_json'],
+                ['value' => json_encode($items), 'group' => 'poster_presentation']
+            );
+        }
+
         return back()->with('success', 'Poster Presentation content updated successfully.');
     }
 
     public function oralPresentationSettings()
     {
         $settings = \App\Models\SiteSetting::where('group', 'oral_presentation')->pluck('value', 'key')->toArray();
-        return view('admin.oral_presentation.index', compact('settings'));
+        $guidelines = [];
+        if (!empty($settings['oral_guidelines_json'])) {
+            $guidelines = json_decode($settings['oral_guidelines_json'], true) ?: [];
+        }
+        return view('admin.oral_presentation.index', compact('settings', 'guidelines'));
     }
 
     public function updateOralPresentationSettings(Request $request)
     {
-        $settings = $request->except(['_token']);
+        $settings = $request->except(['_token', 'oral_guideline_items']);
         foreach ($settings as $key => $value) {
             \App\Models\SiteSetting::updateOrCreate(
                 ['key' => $key],
                 ['value' => is_array($value) ? json_encode($value) : $value, 'group' => 'oral_presentation']
             );
         }
+
+        if ($request->has('oral_guideline_items')) {
+            $items = array_values(array_filter(array_map('trim', $request->input('oral_guideline_items', [])), 'strlen'));
+            \App\Models\SiteSetting::updateOrCreate(
+                ['key' => 'oral_guidelines_json'],
+                ['value' => json_encode($items), 'group' => 'oral_presentation']
+            );
+        }
+
         return back()->with('success', 'Oral Presentation content updated successfully.');
     }
 
     public function innovationPitchSettings()
     {
         $settings = \App\Models\SiteSetting::where('group', 'innovation_pitch')->pluck('value', 'key')->toArray();
-        return view('admin.innovation_pitch.index', compact('settings'));
+        $guidelines = [];
+        if (!empty($settings['pitch_guidelines_json'])) {
+            $guidelines = json_decode($settings['pitch_guidelines_json'], true) ?: [];
+        }
+        return view('admin.innovation_pitch.index', compact('settings', 'guidelines'));
     }
 
     public function updateInnovationPitchSettings(Request $request)
     {
-        $settings = $request->except(['_token']);
+        $settings = $request->except(['_token', 'pitch_guideline_items']);
         foreach ($settings as $key => $value) {
             \App\Models\SiteSetting::updateOrCreate(
                 ['key' => $key],
                 ['value' => is_array($value) ? json_encode($value) : $value, 'group' => 'innovation_pitch']
             );
         }
+
+        if ($request->has('pitch_guideline_items')) {
+            $items = array_values(array_filter(array_map('trim', $request->input('pitch_guideline_items', [])), 'strlen'));
+            \App\Models\SiteSetting::updateOrCreate(
+                ['key' => 'pitch_guidelines_json'],
+                ['value' => json_encode($items), 'group' => 'innovation_pitch']
+            );
+        }
+
         return back()->with('success', 'Innovation Pitch content updated successfully.');
     }
 
     public function hackathonSettings()
     {
         $settings = \App\Models\SiteSetting::where('group', 'hackathon')->pluck('value', 'key')->toArray();
-        return view('admin.hackathon.index', compact('settings'));
+        $guidelines = [];
+        if (!empty($settings['hackathon_guidelines_json'])) {
+            $guidelines = json_decode($settings['hackathon_guidelines_json'], true) ?: [];
+        }
+        return view('admin.hackathon.index', compact('settings', 'guidelines'));
     }
 
     public function updateHackathonSettings(Request $request)
     {
-        $settings = $request->except(['_token']);
+        $settings = $request->except(['_token', 'hackathon_guideline_items']);
         foreach ($settings as $key => $value) {
             \App\Models\SiteSetting::updateOrCreate(
                 ['key' => $key],
                 ['value' => is_array($value) ? json_encode($value) : $value, 'group' => 'hackathon']
             );
         }
+
+        if ($request->has('hackathon_guideline_items')) {
+            $items = array_values(array_filter(array_map('trim', $request->input('hackathon_guideline_items', [])), 'strlen'));
+            \App\Models\SiteSetting::updateOrCreate(
+                ['key' => 'hackathon_guidelines_json'],
+                ['value' => json_encode($items), 'group' => 'hackathon']
+            );
+        }
+
         return back()->with('success', 'Hackathon content updated successfully.');
     }
 

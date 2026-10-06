@@ -154,14 +154,24 @@
             <i class="fa-solid fa-file-word" style="color: #00A896;"></i> Submission Guidelines
         </div>
 
+        @php
+            $oralItems = !empty($oralSettings['oral_guidelines_json']) ? json_decode($oralSettings['oral_guidelines_json'], true) : null;
+        @endphp
+
         <ul class="guideline-list">
-            <li><i class="fa-solid fa-circle-check"></i> Submit the abstract in MS-Word format. The abstract should be <strong>250–300 words</strong> in length.</li>
-            <li><i class="fa-solid fa-circle-check"></i> Author names with institutional affiliations are to be provided immediately below the title.</li>
-            <li><i class="fa-solid fa-circle-check"></i> Provide the email ID of the corresponding author.</li>
-            <li><i class="fa-solid fa-circle-check"></i> Presenting author is to be marked with <strong>#</strong> and corresponding author with <strong>*</strong></li>
-            <li><i class="fa-solid fa-circle-check"></i> Include <strong>5 to 6 keywords</strong> at the end of the abstract.</li>
-            <li><i class="fa-solid fa-circle-check"></i> Upload the Abstract using the designated Google Form submission portal.</li>
-            <li><i class="fa-solid fa-circle-check"></i> Abstracts will be considered only after receipt of registration fee.</li>
+            @if(!empty($oralItems) && is_array($oralItems))
+                @foreach($oralItems as $item)
+                    <li><i class="fa-solid fa-circle-check"></i> {!! $item !!}</li>
+                @endforeach
+            @else
+                <li><i class="fa-solid fa-circle-check"></i> Submit the abstract in MS-Word format. The abstract should be <strong>250–300 words</strong> in length.</li>
+                <li><i class="fa-solid fa-circle-check"></i> Author names with institutional affiliations are to be provided immediately below the title.</li>
+                <li><i class="fa-solid fa-circle-check"></i> Provide the email ID of the corresponding author.</li>
+                <li><i class="fa-solid fa-circle-check"></i> Presenting author is to be marked with <strong>#</strong> and corresponding author with <strong>*</strong></li>
+                <li><i class="fa-solid fa-circle-check"></i> Include <strong>5 to 6 keywords</strong> at the end of the abstract.</li>
+                <li><i class="fa-solid fa-circle-check"></i> Upload the Abstract using the designated Google Form submission portal.</li>
+                <li><i class="fa-solid fa-circle-check"></i> Abstracts will be considered only after receipt of registration fee.</li>
+            @endif
         </ul>
 
         <!-- Formatting Card -->

@@ -154,7 +154,17 @@
             <i class="fa-solid fa-clipboard-check" style="color: #00A896;"></i> Evaluation Criteria & Submission Details
         </div>
 
-        @if($guidelines)
+        @php
+            $pitchItems = !empty($pitchSettings['pitch_guidelines_json']) ? json_decode($pitchSettings['pitch_guidelines_json'], true) : null;
+        @endphp
+
+        @if(!empty($pitchItems) && is_array($pitchItems))
+            <ul class="guideline-list">
+                @foreach($pitchItems as $item)
+                    <li><i class="fa-solid fa-circle-check"></i> {!! $item !!}</li>
+                @endforeach
+            </ul>
+        @elseif($guidelines)
             <div style="background: #f8fafc; border-radius: 12px; padding: 25px; border: 1px solid #e2e8f0; line-height: 1.8; color: #334155; font-size: 1rem; white-space: pre-line;">
                 {!! nl2br(e($guidelines)) !!}
             </div>
