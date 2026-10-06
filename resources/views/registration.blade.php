@@ -206,7 +206,7 @@
                 <!-- Personal Info Grid -->
                 <div class="reg-form-grid">
                     @php
-                        $formFields = \App\Models\RegistrationField::orderBy('sort_order')->get();
+                        $formFields = \App\Models\RegistrationField::where('name', '!=', 'interested_in')->orderBy('sort_order')->get();
                     @endphp
                     @foreach($formFields as $field)
                         <div class="form-group" style="grid-column: {{ $field->grid_column === 'span 12' ? '1 / -1' : $field->grid_column }};">

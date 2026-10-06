@@ -511,6 +511,8 @@ Route::get('/sync-db-settings', function () {
         \Illuminate\Support\Facades\Artisan::call('config:clear');
         \Illuminate\Support\Facades\Artisan::call('route:clear');
         
+        \App\Models\RegistrationField::where('name', 'interested_in')->delete();
+
         $seeder = new \Database\Seeders\SiteSettingSeeder();
         $seeder->run();
 

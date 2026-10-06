@@ -93,17 +93,6 @@ class RegistrationFieldSeeder extends Seeder
                 'grid_column' => 'span 4',
                 'sort_order' => 8,
             ],
-            // Interested in field will be populated from DB in view dynamically, but we define the field here
-            [
-                'name' => 'interested_in',
-                'label' => 'Interested In',
-                'type' => 'dynamic_select', // special type that we can handle in frontend
-                'placeholder' => 'Select Interested In',
-                'is_required' => true,
-                'options' => ['dynamic_interest_options'], // a key to denote this comes from db
-                'grid_column' => 'span 12',
-                'sort_order' => 9,
-            ],
         ];
 
         foreach ($fields as $field) {
