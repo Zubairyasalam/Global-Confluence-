@@ -6,7 +6,7 @@
 @include('sections.navbar')
 
     @php
-        $bannerTitle = \App\Models\SiteSetting::where('group', 'page_banners')->where('key', 'banner_committee_title')->value('value') ?? 'COMMITTEE';
+        $bannerTitle = $settings['committee_hero_title'] ?? \App\Models\SiteSetting::where('group', 'page_banners')->where('key', 'banner_committee_title')->value('value') ?? 'COMMITTEE';
         $bannerImage = \App\Models\SiteSetting::where('group', 'page_banners')->where('key', 'banner_committee_image')->value('value');
     @endphp
     <!-- Page Banner -->

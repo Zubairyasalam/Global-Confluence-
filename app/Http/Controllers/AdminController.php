@@ -710,45 +710,91 @@ class AdminController extends Controller
         return back()->with('success', 'Venue settings updated successfully.');
     }
 
-    // CMS: Deadlines
+    // CMS: Important Deadlines Management
     public function deadlines()
     {
+        $settings = SiteSetting::where('group', 'deadlines')->pluck('value', 'key')->toArray();
         $deadlines = Deadline::orderBy('sort_order')->get();
-        $settings = ['deadlines' => SiteSetting::where('group', 'deadlines')->get()];
-        return view('admin.deadlines.index', compact('deadlines', 'settings'));
+        return view('admin.deadlines.index', compact('settings', 'deadlines'));
+    }
+
+    public function updateDeadlinesHeaderSettings(Request $request)
+    {
+        $keys = ['deadlines_badge', 'deadlines_title', 'deadlines_subtitle'];
+        foreach ($keys as $key) {
+            if ($request->has($key)) {
+                SiteSetting::updateOrCreate(
+                    ['key' => $key],
+                    ['value' => $request->input($key), 'group' => 'deadlines']
+                );
+            }
+        }
+        return back()->with('success', 'Deadlines header settings updated successfully.');
     }
 
     public function storeDeadline(Request $request)
     {
-        $data = $request->validate([
+        $request->validate([
             'title' => 'required|string|max:255',
-            'deadline_date' => 'required|date',
-            'is_active' => 'boolean',
-            'sort_order' => 'integer'
         ]);
+
+        $maxOrder = Deadline::max('sort_order') ?? 0;
         
-        $data['is_active'] = $request->has('is_active');
-        Deadline::create($data);
-        return back()->with('success', 'Deadline added.');
+        Deadline::create([
+            'phase' => $request->input('phase', 'PHASE ' . sprintf('%02d', $maxOrder + 1)),
+            'title' => $request->input('title'),
+            'date_text' => $request->input('date_text', 'TBA'),
+            'deadline_date' => $request->input('deadline_date') ? $request->input('deadline_date') : null,
+            'description' => $request->input('description'),
+            'icon' => $request->input('icon', 'fa-solid fa-file-arrow-up'),
+            'tag_label' => $request->input('tag_label'),
+            'tag_icon' => $request->input('tag_icon', 'fa-solid fa-circle-dot'),
+            'color_theme' => $request->input('color_theme', 'teal'),
+            'sort_order' => $request->input('sort_order', $maxOrder + 1),
+            'is_active' => $request->has('is_active') ? (bool)$request->is_active : true,
+        ]);
+
+        return back()->with('success', 'Deadline card created successfully.');
     }
 
     public function updateDeadline(Request $request, $id)
     {
-        $data = $request->validate([
+        $request->validate([
             'title' => 'required|string|max:255',
-            'deadline_date' => 'required|date',
-            'sort_order' => 'integer'
         ]);
-        
-        $data['is_active'] = $request->has('is_active');
-        Deadline::findOrFail($id)->update($data);
-        return back()->with('success', 'Deadline updated.');
+
+        $deadline = Deadline::findOrFail($id);
+
+        $deadline->update([
+            'phase' => $request->input('phase', $deadline->phase),
+            'title' => $request->input('title'),
+            'date_text' => $request->input('date_text', $deadline->date_text),
+            'deadline_date' => $request->input('deadline_date') ? $request->input('deadline_date') : $deadline->deadline_date,
+            'description' => $request->input('description'),
+            'icon' => $request->input('icon', $deadline->icon),
+            'tag_label' => $request->input('tag_label'),
+            'tag_icon' => $request->input('tag_icon', $deadline->tag_icon),
+            'color_theme' => $request->input('color_theme', $deadline->color_theme),
+            'sort_order' => $request->input('sort_order', $deadline->sort_order),
+            'is_active' => $request->has('is_active') ? (bool)$request->is_active : false,
+        ]);
+
+        return back()->with('success', 'Deadline card updated successfully.');
     }
 
     public function deleteDeadline($id)
     {
         Deadline::findOrFail($id)->delete();
-        return back()->with('success', 'Deadline deleted.');
+        return back()->with('success', 'Deadline card deleted successfully.');
+    }
+
+    public function reorderDeadlines(Request $request)
+    {
+        $request->validate(['order' => 'required|array']);
+        foreach ($request->order as $index => $id) {
+            Deadline::where('id', $id)->update(['sort_order' => $index + 1]);
+        }
+        return response()->json(['success' => true]);
     }
 
     // CMS: Addons
@@ -1153,15 +1199,23 @@ class AdminController extends Controller
 
     public function committee(Request $request)
     {
-        $category = $request->query('category', 'leadership'); // Default to leadership
-        
-        if ($category === 'settings') {
-            $settings = \App\Models\SiteSetting::where('group', 'committee_page')->pluck('value', 'key')->all();
-            return view('admin.committee.settings', compact('settings', 'category'));
-        }
+        $currentTab = $request->query('tab', 'all');
+        $category = $request->query('category', 'leadership');
 
-        $members = \App\Models\CommitteeMember::where('category', $category)->orderBy('sort_order')->get();
-        return view('admin.committee.index', compact('members', 'category'));
+        $leadership = \App\Models\CommitteeMember::where('category', 'leadership')->orderBy('sort_order')->get()->groupBy('subcategory');
+        $organizing = \App\Models\CommitteeMember::where('category', 'organizing_committee')->orderBy('sort_order')->get();
+        $advisory = \App\Models\CommitteeMember::where('category', 'advisory_committee')->orderBy('sort_order')->get();
+        $allMembers = \App\Models\CommitteeMember::orderBy('category')->orderBy('sort_order')->get();
+
+        $settings = \App\Models\SiteSetting::where('group', 'committee_page')->pluck('value', 'key')->toArray();
+        $bannerSettings = \App\Models\SiteSetting::where('group', 'page_banners')->pluck('value', 'key')->toArray();
+        $trackSettings = \App\Models\SiteSetting::where('group', 'schedule')->pluck('value', 'key')->toArray();
+
+        return view('admin.committee.index', compact(
+            'leadership', 'organizing', 'advisory', 'allMembers',
+            'settings', 'bannerSettings', 'trackSettings',
+            'currentTab', 'category'
+        ));
     }
 
     public function updateCommitteeSettings(Request $request)
@@ -1169,11 +1223,11 @@ class AdminController extends Controller
         $settings = $request->except(['_token']);
         foreach ($settings as $key => $value) {
             \App\Models\SiteSetting::updateOrCreate(
-                ['key' => $key, 'group' => 'committee_page'],
-                ['value' => $value]
+                ['key' => $key],
+                ['value' => $value, 'group' => 'committee_page']
             );
         }
-        return back()->with('success', 'Committee Page Settings updated successfully.');
+        return back()->with('success', 'Committee Page settings updated successfully.');
     }
 
     public function storeCommitteeMember(Request $request)
@@ -1370,6 +1424,8 @@ class AdminController extends Controller
         return back()->with('success', 'Award deleted successfully.');
     }
 
+
+
     // CMS: Event Details (Schedule, Deadlines, Venue)
     public function eventDetails()
     {
@@ -1430,55 +1486,49 @@ class AdminController extends Controller
 
     public function updatePreConferenceSettings(Request $request)
     {
-        if ($request->has('pre_conf_preamble')) \App\Models\SiteSetting::updateOrCreate(['key' => 'pre_conf_preamble', 'group' => 'pre_conference'], ['value' => $request->pre_conf_preamble]);
-        if ($request->has('pre_conf_schedule_note')) \App\Models\SiteSetting::updateOrCreate(['key' => 'pre_conf_schedule_note', 'group' => 'pre_conference'], ['value' => $request->pre_conf_schedule_note]);
-        if ($request->has('pre_conf_panel')) \App\Models\SiteSetting::updateOrCreate(['key' => 'pre_conf_panel', 'group' => 'pre_conference'], ['value' => $request->pre_conf_panel]);
+        $fields = [
+            'pre_conf_hero_title',
+            'pre_conf_hero_sub1',
+            'pre_conf_hero_sub2',
+            'pre_conf_hero_sub3',
+            'pre_conf_preamble_title',
+            'pre_conf_preamble_icon',
+            'pre_conf_preamble',
+            'pre_conf_obj_title',
+            'pre_conf_obj_icon',
+        ];
 
+        foreach ($fields as $field) {
+            if ($request->has($field)) {
+                \App\Models\SiteSetting::updateOrCreate(
+                    ['key' => $field, 'group' => 'pre_conference'],
+                    ['value' => $request->input($field)]
+                );
+            }
+        }
+
+        // Save Objectives List
         if ($request->has('pre_conf_obj')) {
             \App\Models\SiteSetting::where('group', 'pre_conference')->where('key', 'like', 'pre_conf_obj_%')->delete();
             $objs = $request->input('pre_conf_obj', []);
             $count = 0;
             foreach ($objs as $obj) {
-                if (!empty($obj)) {
+                if (!empty(trim($obj))) {
                     $count++;
-                    \App\Models\SiteSetting::create(['key' => "pre_conf_obj_{$count}", 'value' => $obj, 'group' => 'pre_conference']);
+                    \App\Models\SiteSetting::create([
+                        'key' => "pre_conf_obj_{$count}",
+                        'value' => trim($obj),
+                        'group' => 'pre_conference'
+                    ]);
                 }
             }
+            \App\Models\SiteSetting::updateOrCreate(
+                ['key' => 'pre_conf_obj_count', 'group' => 'pre_conference'],
+                ['value' => $count]
+            );
         }
 
-        if ($request->has('speaker_names')) {
-            // Store old images just in case we need to keep them when no new file is uploaded
-            $oldImages = \App\Models\SiteSetting::where('group', 'pre_conference')->where('key', 'like', 'pre_conf_speaker_%_image')->pluck('value', 'key')->all();
-            
-            \App\Models\SiteSetting::where('group', 'pre_conference')->where('key', 'like', 'pre_conf_speaker_%')->delete();
-            
-            $names = $request->input('speaker_names', []);
-            $affiliations = $request->input('speaker_affiliations', []);
-            $expertises = $request->input('speaker_expertises', []);
-            $images = $request->file('speaker_images', []);
-            $oldImageInputs = $request->input('old_speaker_images', []);
-
-            $count = 0;
-            foreach ($names as $idx => $name) {
-                if (!empty($name)) {
-                    $count++;
-                    $imagePath = $oldImageInputs[$idx] ?? '';
-                    if (isset($images[$idx])) {
-                        $file = $images[$idx];
-                        $filename = time() . '_' . rand(1000, 9999) . '.' . $file->getClientOriginalExtension();
-                        $file->move(public_path('images/speakers'), $filename);
-                        $imagePath = 'images/speakers/' . $filename;
-                    }
-                    
-                    \App\Models\SiteSetting::create(['key' => "pre_conf_speaker_{$count}_name", 'value' => $name, 'group' => 'pre_conference']);
-                    \App\Models\SiteSetting::create(['key' => "pre_conf_speaker_{$count}_image", 'value' => $imagePath, 'group' => 'pre_conference']);
-                    \App\Models\SiteSetting::create(['key' => "pre_conf_speaker_{$count}_affiliation", 'value' => $affiliations[$idx] ?? '', 'group' => 'pre_conference']);
-                    \App\Models\SiteSetting::create(['key' => "pre_conf_speaker_{$count}_expertise", 'value' => $expertises[$idx] ?? '', 'group' => 'pre_conference']);
-                }
-            }
-        }
-
-        return back()->with('success', 'Pre-Conference Settings updated successfully.');
+        return back()->with('success', 'Pre-Conference Workshop settings updated successfully.');
     }
 
     public function mccMemorialSettings()
@@ -1588,6 +1638,49 @@ class AdminController extends Controller
             );
         }
         return back()->with('success', 'Theme Settings updated successfully.');
+    }
+
+    public function contactSettings()
+    {
+        $settings = \App\Models\SiteSetting::where('group', 'contact')->pluck('value', 'key')->toArray();
+        return view('admin.contact.index', compact('settings'));
+    }
+
+    public function updateContactSettings(Request $request)
+    {
+        $keys = ['contact_hero_title', 'contact_page_title', 'contact_website', 'contact_email'];
+        foreach ($keys as $key) {
+            if ($request->has($key)) {
+                \App\Models\SiteSetting::updateOrCreate(
+                    ['key' => $key, 'group' => 'contact'],
+                    ['value' => $request->input($key)]
+                );
+            }
+        }
+
+        if ($request->has('person_titles')) {
+            \App\Models\SiteSetting::where('group', 'contact')->where('key', 'like', 'contact_person_%')->delete();
+            $titles = $request->input('person_titles', []);
+            $phones = $request->input('person_phones', []);
+            $count = 0;
+            foreach ($titles as $idx => $title) {
+                if (!empty(trim($title))) {
+                    $count++;
+                    \App\Models\SiteSetting::create([
+                        'key' => "contact_person_{$count}_title",
+                        'value' => trim($title),
+                        'group' => 'contact'
+                    ]);
+                    \App\Models\SiteSetting::create([
+                        'key' => "contact_person_{$count}_phone",
+                        'value' => trim($phones[$idx] ?? ''),
+                        'group' => 'contact'
+                    ]);
+                }
+            }
+        }
+
+        return back()->with('success', 'Contact settings updated successfully.');
     }
 
     public function navigationSettings()
@@ -1715,13 +1808,115 @@ class AdminController extends Controller
         return back()->with('success', 'Partner logo deleted successfully.');
     }
 
-    public function reorderPartnerLogos(Request $request)
+    public function stallBookingSettings()
     {
-        $order = $request->input('order', []);
-        foreach ($order as $index => $id) {
-            \App\Models\PartnerLogo::where('id', $id)->update(['sort_order' => $index + 1]);
+        $settings = \App\Models\SiteSetting::where('group', 'custom_pages')->pluck('value', 'key')->toArray();
+        return view('admin.stall_booking.index', compact('settings'));
+    }
+
+    public function updateStallBookingSettings(Request $request)
+    {
+        $keys = ['page_stall_banner_title', 'page_stall_card_title', 'page_stall-booking-and-merchandise'];
+        foreach ($keys as $key) {
+            if ($request->has($key)) {
+                \App\Models\SiteSetting::updateOrCreate(
+                    ['key' => $key, 'group' => 'custom_pages'],
+                    ['value' => $request->input($key)]
+                );
+            }
         }
-        return response()->json(['status' => 'success']);
+        return back()->with('success', 'Stall Booking and Merchandise settings updated successfully.');
+    }
+
+    public function visitSettings()
+    {
+        $settings = \App\Models\SiteSetting::where('group', 'visit')->pluck('value', 'key')->toArray();
+        
+        // Load places list or default 14 items
+        $placesJson = $settings['visit_places_json'] ?? null;
+        if ($placesJson) {
+            $places = json_decode($placesJson, true) ?: [];
+        } else {
+            $places = [
+                ['title' => 'Marina Beach', 'image' => 'images/marina_beach.jpg', 'desc' => 'One of India’s longest urban beaches and an iconic landmark of Chennai.'],
+                ['title' => 'Kapaleeshwarar Temple, Mylapore', 'image' => 'images/kapaleeshwarar_temple.jpg', 'desc' => 'A historic temple showcasing traditional Dravidian architecture.'],
+                ['title' => 'Santhome Basilica', 'image' => 'images/santhome_basilica.jpg', 'desc' => 'A significant Christian heritage site built over the traditional tomb of St. Thomas the Apostle.'],
+                ['title' => 'Fort St. George', 'image' => 'images/fort_st_george.jpg', 'desc' => 'A historic colonial landmark and an important part of Chennai’s history.'],
+                ['title' => 'Government Museum, Egmore', 'image' => 'images/government_museum.jpg', 'desc' => 'Home to an extensive collection of archaeology, art and bronze sculptures.'],
+                ['title' => 'Elliot’s Beach, Besant Nagar', 'image' => 'images/elliots_beach.jpg', 'desc' => 'A popular destination for a relaxing evening by the sea.'],
+                ['title' => 'Guindy National Park', 'image' => 'images/guindy_national_park.jpg', 'desc' => 'A unique urban national park known for its native flora and fauna.'],
+                ['title' => 'Chennai Rail Museum', 'image' => 'images/chennai_rail_museum.jpg', 'desc' => 'Showcasing India’s railway heritage through vintage locomotives and exhibits.'],
+                ['title' => 'DakshinaChitra', 'image' => 'images/dakshinachitra.jpg', 'desc' => 'A cultural museum showcasing the traditional architecture, crafts and lifestyles of South India.'],
+                ['title' => 'Birla Planetarium', 'image' => 'images/birla_planetarium.jpg', 'desc' => 'A popular destination for astronomy and science enthusiasts.'],
+                ['title' => 'Arignar Anna Zoological Park (Vandalur)', 'image' => 'images/arignar_anna_zoological_park.jpg', 'desc' => 'One of India’s largest zoological parks, home to diverse wildlife and natural habitats.'],
+                ['title' => 'Cholamandal Artists’ Village', 'image' => 'images/cholamandal_artists_village.jpg', 'desc' => 'A renowned artists’ community showcasing contemporary Indian art, sculptures and creative works.'],
+                ['title' => 'Theosophical Society, Adyar', 'image' => 'images/theosophical_society.jpg', 'desc' => 'A peaceful heritage space known for its lush greenery, gardens and serene surroundings.'],
+                ['title' => 'Semmozhi Poonga', 'image' => 'images/semmozhi_poonga.jpg', 'desc' => 'A vibrant botanical garden in the heart of Chennai with a wide collection of exotic plants.']
+            ];
+        }
+
+        return view('admin.visit.index', compact('settings', 'places'));
+    }
+
+    public function updateVisitSettings(Request $request)
+    {
+        $keys = ['visit_hero_title', 'visit_section_title', 'visit_section_subtitle'];
+        foreach ($keys as $key) {
+            if ($request->has($key)) {
+                \App\Models\SiteSetting::updateOrCreate(
+                    ['key' => $key, 'group' => 'visit'],
+                    ['value' => $request->input($key)]
+                );
+            }
+        }
+
+        // Process places list
+        $titles = $request->input('place_titles', []);
+        $descs = $request->input('place_descs', []);
+        $existingImages = $request->input('place_existing_images', []);
+        $uploadedImages = $request->file('place_new_images', []);
+
+        $places = [];
+        foreach ($titles as $idx => $title) {
+            if (empty(trim($title))) continue;
+
+            $imgPath = $existingImages[$idx] ?? 'images/marina_beach.jpg';
+            if (isset($uploadedImages[$idx]) && $uploadedImages[$idx]->isValid()) {
+                $file = $uploadedImages[$idx];
+                $filename = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
+                $file->move(public_path('images'), $filename);
+                $imgPath = 'images/' . $filename;
+            }
+
+            $places[] = [
+                'title' => trim($title),
+                'desc' => trim($descs[$idx] ?? ''),
+                'image' => $imgPath
+            ];
+        }
+
+        // Check if adding new place item
+        if ($request->filled('new_place_title')) {
+            $newImgPath = 'images/marina_beach.jpg';
+            if ($request->hasFile('new_place_image') && $request->file('new_place_image')->isValid()) {
+                $file = $request->file('new_place_image');
+                $filename = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
+                $file->move(public_path('images'), $filename);
+                $newImgPath = 'images/' . $filename;
+            }
+            $places[] = [
+                'title' => trim($request->input('new_place_title')),
+                'desc' => trim($request->input('new_place_desc', '')),
+                'image' => $newImgPath
+            ];
+        }
+
+        \App\Models\SiteSetting::updateOrCreate(
+            ['key' => 'visit_places_json', 'group' => 'visit'],
+            ['value' => json_encode(array_values($places))]
+        );
+
+        return back()->with('success', 'Visit and Places of Interest settings updated successfully.');
     }
 }
 

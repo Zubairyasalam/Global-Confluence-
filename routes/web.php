@@ -194,6 +194,12 @@ Route::get('/schedule', function () {
     return view('schedule');
 })->name('schedule');
 
+Route::get('/pre-conference', function () {
+    $settings = \App\Models\SiteSetting::where('group', 'pre_conference')->pluck('value', 'key')->toArray();
+    $bannerSettings = \App\Models\SiteSetting::where('group', 'banner')->pluck('value', 'key')->toArray();
+    return view('pre_conference', compact('settings', 'bannerSettings'));
+})->name('pre-conference');
+
 // Technical Event Pages
 Route::get('/events/oral-presentation', function () {
     return view('events.oral_presentation');
@@ -275,9 +281,17 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::post('/home/guidelines', [AdminController::class, 'updateGuidelinesSettings'])->name('admin.guidelines.update');
     Route::get('/home/event-details', [AdminController::class, 'eventDetails'])->name('admin.event_details');
     Route::post('/home/event-details', [AdminController::class, 'updateEventDetails'])->name('admin.event_details.update');
-    Route::post('/home/event-details/deadlines', [AdminController::class, 'storeDeadline'])->name('admin.deadlines.store');
-    Route::put('/home/event-details/deadlines/{id}', [AdminController::class, 'updateDeadline'])->name('admin.deadlines.update');
-    Route::delete('/home/event-details/deadlines/{id}', [AdminController::class, 'deleteDeadline'])->name('admin.deadlines.delete');
+    Route::post('/home/event-details/deadlines', [AdminController::class, 'storeDeadline'])->name('admin.deadlines.store.legacy');
+    Route::put('/home/event-details/deadlines/{id}', [AdminController::class, 'updateDeadline'])->name('admin.deadlines.update.legacy');
+    Route::delete('/home/event-details/deadlines/{id}', [AdminController::class, 'deleteDeadline'])->name('admin.deadlines.delete.legacy');
+
+    // Dedicated Important Deadlines Management
+    Route::get('/deadlines', [AdminController::class, 'deadlines'])->name('admin.deadlines');
+    Route::post('/deadlines/header', [AdminController::class, 'updateDeadlinesHeaderSettings'])->name('admin.deadlines.header.update');
+    Route::post('/deadlines', [AdminController::class, 'storeDeadline'])->name('admin.deadlines.store');
+    Route::put('/deadlines/{id}', [AdminController::class, 'updateDeadline'])->name('admin.deadlines.update');
+    Route::delete('/deadlines/{id}', [AdminController::class, 'deleteDeadline'])->name('admin.deadlines.delete');
+    Route::post('/deadlines/reorder', [AdminController::class, 'reorderDeadlines'])->name('admin.deadlines.reorder');
 
     // 2. Committee (Already exists, just keep it clean)
     Route::get('/committee', [AdminController::class, 'committee'])->name('admin.committee');
@@ -331,8 +345,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 
 
     // 9. Visit (Renamed from Venue)
-    Route::get('/visit', [AdminController::class, 'venueSettings'])->name('admin.visit');
-    Route::post('/visit', [AdminController::class, 'updateVenueSettings'])->name('admin.venue.update');
+    Route::get('/visit', [AdminController::class, 'visitSettings'])->name('admin.visit');
+    Route::post('/visit', [AdminController::class, 'updateVisitSettings'])->name('admin.venue.update');
 
     // 10. Theme Settings
     Route::get('/theme-settings', [AdminController::class, 'themeSettings'])->name('admin.theme_settings');
@@ -341,6 +355,14 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     // 11. Header & Navigation Settings
     Route::get('/navigation', [AdminController::class, 'navigationSettings'])->name('admin.navigation');
     Route::post('/navigation', [AdminController::class, 'updateNavigationSettings'])->name('admin.navigation.update');
+
+    // 12. Contact Us Settings
+    Route::get('/contact', [AdminController::class, 'contactSettings'])->name('admin.contact');
+    Route::post('/contact', [AdminController::class, 'updateContactSettings'])->name('admin.contact.update');
+
+    // 13. Stall Booking & Merchandise
+    Route::get('/stall-booking', [AdminController::class, 'stallBookingSettings'])->name('admin.stall_booking');
+    Route::post('/stall-booking', [AdminController::class, 'updateStallBookingSettings'])->name('admin.stall_booking.update');
 
 
     // LEGACY BUT NEEDED FOR NOW:
@@ -417,6 +439,36 @@ Route::get('/pre-conference', function () {
 })->name('pre-conference');
 
 Route::get('/mcc-memorial', function () {
-    return view('mcc_memorial');
+    $settings = \App\Models\SiteSetting::where('group', 'mcc_memorial')->pluck('value', 'key')->toArray();
+    $images = [];
+    $files = glob(public_path('images/mcc_memorial_*.*'));
+    foreach ($files as $file) {
+        $images[] = asset('images/' . basename($file));
+    }
+    usort($images, function($a, $b) {
+        preg_match('/mcc_memorial_(\d+)/', $a, $matchA);
+        preg_match('/mcc_memorial_(\d+)/', $b, $matchB);
+        $numA = (int)($matchA[1] ?? 0);
+        $numB = (int)($matchB[1] ?? 0);
+        return $numA <=> $numB;
+    });
+    return view('mcc_memorial', compact('settings', 'images'));
 })->name('mcc-memorial');
+
+Route::get('/contact', function () {
+    $settings = \App\Models\SiteSetting::where('group', 'contact')->pluck('value', 'key')->toArray();
+    return view('contact', compact('settings'));
+})->name('contact');
+
+Route::get('/venue', function () {
+    $settings = \App\Models\SiteSetting::where('group', 'visit')->pluck('value', 'key')->toArray();
+    $placesJson = $settings['visit_places_json'] ?? null;
+    $places = $placesJson ? json_decode($placesJson, true) : null;
+    return view('venue', compact('settings', 'places'));
+})->name('venue');
+
+Route::get('/visit', function () {
+    return redirect()->route('venue');
+})->name('visit');
+
 

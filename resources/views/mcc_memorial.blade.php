@@ -9,7 +9,7 @@
 <div style="background: url('{{ asset('images/hero-bg.png') }}') center center/cover no-repeat; padding: 120px 0 80px 0; position: relative;">
     <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.85);"></div>
     <div class="container" style="position: relative; z-index: 1; text-align: center;">
-        <h1 style="color: #ffffff; font-size: 3rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin: 0;">GLIMPSE OF MCC</h1>
+        <h1 style="color: #ffffff; font-size: 3rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin: 0;">{{ $settings['mcc_memorial_title'] ?? 'GLIMPSE OF MCC' }}</h1>
     </div>
 </div>
 
@@ -18,7 +18,7 @@
         
         <div style="display: flex; justify-content: center; margin-bottom: 50px; text-align: center;">
             <p style="color: #64748b; font-size: 1.1rem; max-width: 100%; margin: 0 auto; line-height: 1.6; font-weight: 500;">
-                Experience a visual journey through the heritage, corridors, and legacy of the Madras Christian College.
+                {{ $settings['mcc_memorial_subtitle'] ?? 'Experience a visual journey through the heritage, corridors, and legacy of the Madras Christian College.' }}
             </p>
         </div>
 

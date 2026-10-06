@@ -329,6 +329,11 @@
                 </a>
             </li>
             <li>
+                <a href="{{ route('admin.deadlines') }}" class="{{ request()->routeIs('admin.deadlines') ? 'active' : '' }}">
+                    <i class="fa-regular fa-calendar-check"></i> Deadlines
+                </a>
+            </li>
+            <li>
                 <a href="{{ route('admin.awards') }}" class="{{ request()->routeIs('admin.awards') ? 'active' : '' }}">
                     <i class="fa-solid fa-trophy"></i> Awards
                 </a>
@@ -346,6 +351,16 @@
             <li>
                 <a href="{{ route('admin.visit') }}" class="{{ request()->routeIs('admin.visit') ? 'active' : '' }}">
                     <i class="fa-solid fa-map-location-dot"></i> Visit
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('admin.stall_booking') }}" class="{{ request()->routeIs('admin.stall_booking') ? 'active' : '' }}">
+                    <i class="fa-solid fa-store"></i> Stall Booking
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('admin.contact') }}" class="{{ request()->routeIs('admin.contact') ? 'active' : '' }}">
+                    <i class="fa-solid fa-phone"></i> Contact Us
                 </a>
             </li>
             

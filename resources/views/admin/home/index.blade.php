@@ -26,6 +26,9 @@
         <a href="{{ route('admin.guidelines') }}" class="btn" style="text-align: center; padding: 20px; font-size: 1.1rem; background: var(--admin-white); color: var(--admin-sidebar); border: 1px solid var(--admin-border);">
             <i class="fa-solid fa-file-lines" style="font-size: 2rem; display: block; margin-bottom: 10px; color: var(--admin-primary);"></i> Guidelines
         </a>
+        <a href="{{ route('admin.deadlines') }}" class="btn" style="text-align: center; padding: 20px; font-size: 1.1rem; background: var(--admin-white); color: var(--admin-sidebar); border: 1px solid var(--admin-border);">
+            <i class="fa-regular fa-calendar-check" style="font-size: 2rem; display: block; margin-bottom: 10px; color: var(--admin-primary);"></i> Important Deadlines
+        </a>
         <a href="{{ route('admin.event_details') }}" class="btn" style="text-align: center; padding: 20px; font-size: 1.1rem; background: var(--admin-white); color: var(--admin-sidebar); border: 1px solid var(--admin-border);">
             <i class="fa-solid fa-calendar-alt" style="font-size: 2rem; display: block; margin-bottom: 10px; color: var(--admin-primary);"></i> Event Details
         </a>

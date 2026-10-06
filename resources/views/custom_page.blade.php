@@ -33,7 +33,7 @@
 <div class="custom-page-container">
     <div class="custom-page-card">
         <h2 style="font-size: 1.8rem; font-weight: 700; color: #0f172a; margin-bottom: 20px; border-bottom: 2px solid #00A896; padding-bottom: 10px; display: inline-block;">
-            {{ $title ?? 'Custom Page' }}
+            {{ $cardTitle ?? $title ?? 'Custom Page' }}
         </h2>
         <div style="font-size: 1.05rem; line-height: 1.8; color: #475569; margin-top: 15px;">
             {!! $content ?? 'Content for this section will be updated soon. Please check back later!' !!}
@@ -44,3 +44,4 @@
 @include('sections.footer')
 
 @endsection
+
