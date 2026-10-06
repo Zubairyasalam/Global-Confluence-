@@ -47,6 +47,12 @@
                             @endif
                         </div>
                     @endif
+
+                    @if(($settings['nav_publications_show'] ?? '1') == '1')
+                        <div style="border-top: 1px solid var(--border-light);">
+                            <a href="{{ $settings['nav_publications_url'] ?? url('/publications') }}">{{ $settings['nav_publications_label'] ?? 'Publications' }}</a>
+                        </div>
+                    @endif
                 </div>
             </div>
         @endif

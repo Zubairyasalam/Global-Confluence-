@@ -169,8 +169,13 @@ Route::get('/scientific-themes', function () {
 })->name('scientific-themes');
 
 Route::get('/guidelines', function () {
-    return view('guidelines');
+    $settings = \App\Models\SiteSetting::pluck('value', 'key')->toArray();
+    return view('guidelines', compact('settings'));
 })->name('guidelines');
+
+Route::get('/publications', function () {
+    return redirect('/guidelines#publications');
+})->name('publications');
 
 Route::get('/sponsors', function () {
     return view('sponsors');

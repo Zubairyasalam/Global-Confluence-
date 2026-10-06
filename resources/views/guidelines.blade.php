@@ -238,6 +238,43 @@
 
         </div>
 
+        <!-- Publications Section -->
+        <div class="gl-card" id="publications" style="margin-top: 30px; border-top: 4px solid #009688;">
+            <div class="gl-badge">
+                <i class="fa-solid fa-book-open"></i> {{ $settings['publication_badge'] ?? 'SCIENTIFIC PUBLICATIONS' }}
+            </div>
+            <h2 class="gl-title" style="margin-bottom: 16px;">{{ $settings['publication_title'] ?? 'Conference Proceedings & Publication Opportunities' }}</h2>
+            <p style="color: #64748b; font-size: 0.95rem; line-height: 1.6; margin-bottom: 24px;">
+                {{ $settings['publication_desc'] ?? 'All peer-reviewed and accepted abstracts and selected full-length research papers presented at the Global One Health Confluence will be published in indexed conference proceedings and partnered reputed journals.' }}
+            </p>
+            <div class="gl-grid-abstract" style="margin-bottom: 0;">
+                <div class="gl-list-item">
+                    <i class="fa-solid fa-circle-check gl-icon-check"></i>
+                    <div class="gl-item-text">
+                        <strong>Indexed Proceedings:</strong> All accepted abstracts will be compiled in the official Conference Abstract Book with ISBN.
+                    </div>
+                </div>
+                <div class="gl-list-item">
+                    <i class="fa-solid fa-circle-check gl-icon-check"></i>
+                    <div class="gl-item-text">
+                        <strong>Peer-Reviewed Journals:</strong> Outstanding papers will be recommended for fast-track publication in Scopus / WoS indexed partner journals.
+                    </div>
+                </div>
+                <div class="gl-list-item">
+                    <i class="fa-solid fa-circle-check gl-icon-check"></i>
+                    <div class="gl-item-text">
+                        <strong>Best Paper Awards:</strong> Exceptional presentations across each track will receive certificates of merit and special feature recognition.
+                    </div>
+                </div>
+                <div class="gl-list-item">
+                    <i class="fa-solid fa-circle-check gl-icon-check"></i>
+                    <div class="gl-item-text">
+                        <strong>Plagiarism Policy:</strong> Submissions must adhere to ethical standards with similarity index below 15% excluding references.
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 

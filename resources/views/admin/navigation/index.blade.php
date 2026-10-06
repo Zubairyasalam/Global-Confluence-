@@ -260,6 +260,25 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Sub-option 3: Publications -->
+                <div class="form-row" style="margin-top: 14px;">
+                    <div class="form-group">
+                        <label>Item 3 Label (Publications)</label>
+                        <input type="text" name="nav_publications_label" value="{{ $settings['nav_publications_label'] ?? 'Publications' }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Item 3 Target URL</label>
+                        <input type="text" name="nav_publications_url" value="{{ $settings['nav_publications_url'] ?? '/guidelines#publications' }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select name="nav_publications_show">
+                            <option value="1" {{ ($settings['nav_publications_show'] ?? '1') == '1' ? 'selected' : '' }}>Visible</option>
+                            <option value="0" {{ ($settings['nav_publications_show'] ?? '1') == '0' ? 'selected' : '' }}>Hidden</option>
+                        </select>
+                    </div>
+                </div>
             </div>
         </div>
 
