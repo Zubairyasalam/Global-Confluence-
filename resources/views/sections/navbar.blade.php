@@ -123,11 +123,6 @@
             <a href="{{ $settings['nav_contact_url'] ?? route('contact') }}">{{ $settings['nav_contact_label'] ?? 'Contact Us' }}</a>
         @endif
     </div>
-    
-    <!-- Header Action Button (CTA) -->
-    @if(($settings['nav_register_show'] ?? '1') == '1')
-        <a href="{{ $settings['nav_register_url'] ?? route('registration') }}" class="btn btn-green btn-register-nav">{{ $settings['nav_register_label'] ?? 'REGISTER' }} <i class="fa-solid fa-arrow-right"></i></a>
-    @endif
 </nav>
 
 <!-- Mobile Announcement Banner (below navbar on mobile only) -->
