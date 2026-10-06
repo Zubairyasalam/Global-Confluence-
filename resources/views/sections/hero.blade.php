@@ -73,7 +73,7 @@
 
             @if(($settings['hero_btn2_show'] ?? '1') != '0')
                 <a href="{{ url($settings['hero_btn2_link'] ?? route('awards')) }}" class="btn btn-green" style="box-shadow: 0 4px 15px rgba(0, 168, 150, 0.3); display: inline-flex; align-items: center; gap: 8px;">
-                    {{ !empty($settings['hero_btn2_text']) ? $settings['hero_btn2_text'] : 'APPLY NOW' }} <i class="fa-solid fa-arrow-right"></i>
+                    {{ !empty($settings['hero_btn2_text']) ? $settings['hero_btn2_text'] : 'APPLY FOR AWARDS' }} <i class="fa-solid fa-arrow-right"></i>
                 </a>
             @endif
         </div>
