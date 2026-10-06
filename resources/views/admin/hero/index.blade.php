@@ -250,13 +250,23 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Button Text</label>
+                    <label class="form-label">Primary Button 1 (Register) Text</label>
                     <input type="text" name="hero_btn1_text" class="form-control" value="{{ $settings['hero']->where('key', 'hero_btn1_text')->first()->value ?? 'REGISTER NOW' }}">
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Button Link</label>
-                    <input type="text" name="hero_btn1_link" class="form-control" placeholder="e.g. #registration or /register" value="{{ $settings['hero']->where('key', 'hero_btn1_link')->first()->value ?? '' }}">
+                    <label class="form-label">Primary Button 1 Link</label>
+                    <input type="text" name="hero_btn1_link" class="form-control" placeholder="e.g. /registration" value="{{ $settings['hero']->where('key', 'hero_btn1_link')->first()->value ?? '' }}">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Secondary Button 2 (Apply Now) Text</label>
+                    <input type="text" name="hero_btn2_text" class="form-control" value="{{ $settings['hero']->where('key', 'hero_btn2_text')->first()->value ?? 'APPLY NOW' }}">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Secondary Button 2 Link</label>
+                    <input type="text" name="hero_btn2_link" class="form-control" placeholder="e.g. /awards" value="{{ $settings['hero']->where('key', 'hero_btn2_link')->first()->value ?? '/awards' }}">
                 </div>
 
                 <div class="form-group" style="grid-column: 1 / -1;">

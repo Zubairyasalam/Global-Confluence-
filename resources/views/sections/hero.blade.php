@@ -11,7 +11,7 @@
                 {{ $settings['hero_institution_type'] ?? 'Autonomous' }}
             </div>
             <div style="font-size: 0.95rem; color: var(--text-body); margin-top: 4px;">
-                {{ $settings['hero_institution_address'] ?? 'Tambaram East, Chennai – 600059, Tamil Nadu, India' }}
+                {{ $settings['hero_institution_address'] ?? 'Madras Christian College, Tambaram, Chennai' }}
             </div>
         </div>
 
@@ -64,11 +64,17 @@
         </div>
 
         <!-- Call to Action -->
-        <div class="hero-actions">
-            @if(!empty($settings['hero_btn1_text']))
-            <a href="{{ url($settings['hero_btn1_link'] ?? route('registration')) }}" class="btn btn-navy">{{ $settings['hero_btn1_text'] }}</a>
-            @else
-            <a href="{{ route('registration') }}" class="btn btn-navy">REGISTER NOW</a>
+        <div class="hero-actions" style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+            @if(($settings['hero_btn1_show'] ?? '1') != '0')
+                <a href="{{ url($settings['hero_btn1_link'] ?? route('registration')) }}" class="btn btn-navy">
+                    {{ !empty($settings['hero_btn1_text']) ? $settings['hero_btn1_text'] : 'REGISTER NOW' }}
+                </a>
+            @endif
+
+            @if(($settings['hero_btn2_show'] ?? '1') != '0')
+                <a href="{{ url($settings['hero_btn2_link'] ?? route('awards')) }}" class="btn btn-green" style="box-shadow: 0 4px 15px rgba(0, 168, 150, 0.3); display: inline-flex; align-items: center; gap: 8px;">
+                    {{ !empty($settings['hero_btn2_text']) ? $settings['hero_btn2_text'] : 'APPLY NOW' }} <i class="fa-solid fa-arrow-right"></i>
+                </a>
             @endif
         </div>
     </div>
