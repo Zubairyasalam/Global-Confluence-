@@ -1220,14 +1220,56 @@ class AdminController extends Controller
 
     public function updateCommitteeSettings(Request $request)
     {
-        $settings = $request->except(['_token']);
+        $settings = $request->except(['_token', 'track_names', 'track_colors', 'track_topics', 'track_adjudicators', 'track_staffs', 'sched_tracks_title', 'sched_tracks_sub']);
         foreach ($settings as $key => $value) {
             \App\Models\SiteSetting::updateOrCreate(
                 ['key' => $key],
                 ['value' => $value, 'group' => 'committee_page']
             );
         }
-        return back()->with('success', 'Committee Page settings updated successfully.');
+
+        // Handle Track-Wise Incharge Title & Subtitle
+        if ($request->has('sched_tracks_title')) {
+            \App\Models\SiteSetting::updateOrCreate(
+                ['key' => 'sched_tracks_title'],
+                ['value' => $request->sched_tracks_title, 'group' => 'schedule']
+            );
+        }
+        if ($request->has('sched_tracks_sub')) {
+            \App\Models\SiteSetting::updateOrCreate(
+                ['key' => 'sched_tracks_sub'],
+                ['value' => $request->sched_tracks_sub, 'group' => 'schedule']
+            );
+        }
+
+        // Handle Track-Wise Incharges array
+        if ($request->has('track_names')) {
+            \App\Models\SiteSetting::where('group', 'schedule')->where('key', 'like', 'track\_%\_%')->delete();
+            $names = $request->track_names;
+            $colors = $request->track_colors ?? [];
+            $topics = $request->track_topics ?? [];
+            $adjudicators = $request->track_adjudicators ?? [];
+            $staffs = $request->track_staffs ?? [];
+
+            $count = 0;
+            foreach ($names as $idx => $name) {
+                if (!empty(trim($name))) {
+                    $count++;
+                    \App\Models\SiteSetting::updateOrCreate(['key' => "track_{$count}_name"], ['value' => $name, 'group' => 'schedule']);
+                    \App\Models\SiteSetting::updateOrCreate(['key' => "track_{$count}_topic"], ['value' => $topics[$idx] ?? '', 'group' => 'schedule']);
+                    \App\Models\SiteSetting::updateOrCreate(['key' => "track_{$count}_color"], ['value' => $colors[$idx] ?? '#009688', 'group' => 'schedule']);
+                    if (isset($adjudicators[$idx])) {
+                        \App\Models\SiteSetting::updateOrCreate(['key' => "track_{$count}_adjudicator"], ['value' => $adjudicators[$idx], 'group' => 'schedule']);
+                    }
+                    if (isset($staffs[$idx])) {
+                        \App\Models\SiteSetting::updateOrCreate(['key' => "track_{$count}_staff"], ['value' => $staffs[$idx], 'group' => 'schedule']);
+                    }
+                }
+            }
+            \App\Models\SiteSetting::updateOrCreate(['key' => 'track_count'], ['value' => $count, 'group' => 'schedule']);
+        }
+
+        return back()->with('success', 'Committee and Track Incharge settings updated successfully.');
     }
 
     public function storeCommitteeMember(Request $request)

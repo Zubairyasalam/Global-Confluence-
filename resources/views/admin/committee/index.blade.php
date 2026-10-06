@@ -324,11 +324,14 @@
 
             <!-- 4. TRACK-WISE INCHARGE SECTION -->
             <div class="prev-section-title">
-                <h2>Track-Wise Incharge</h2>
+                <h2>{{ $trackSettings['sched_tracks_title'] ?? 'Track-Wise Incharge' }}</h2>
                 <div class="prev-line"></div>
+                <p style="color: #64748b; font-size: 0.88rem; margin: 4px 0 20px 0;">
+                    {{ $trackSettings['sched_tracks_sub'] ?? 'Parallel technical tracks covering specialized domains of Global One Health Confluence 2026.' }}
+                </p>
             </div>
             <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 40px;">
-                @for($t = 1; $t <= 2; $t++)
+                @for($t = 1; $t <= 20; $t++)
                     @if(isset($trackSettings['track_' . $t . '_name']))
                         <div style="background: #ffffff; border-left: 5px solid {{ $trackSettings['track_' . $t . '_color'] ?? '#009688' }}; border-radius: 10px; padding: 18px 22px; border: 1px solid #e2e8f0; border-left-width: 5px;">
                             <h4 style="color: {{ $trackSettings['track_' . $t . '_color'] ?? '#009688' }}; margin: 0 0 6px 0; font-size: 1.05rem; font-weight: 800;">
@@ -337,15 +340,27 @@
                             <p style="margin: 0 0 12px 0; font-size: 0.95rem; font-weight: 700; color: #0f172a;">
                                 {{ $trackSettings['track_' . $t . '_topic'] ?? '' }}
                             </p>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 0.82rem;">
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; font-size: 0.82rem;">
+                                @if(!empty($trackSettings['track_' . $t . '_adjudicator']))
                                 <div style="background: #f8fafc; padding: 10px 14px; border-radius: 8px; border: 1px solid #e2e8f0;">
-                                    <strong style="color: #009688; display: block; margin-bottom: 3px; font-size: 0.75rem; text-transform: uppercase;">Chairperson</strong>
-                                    {{ $trackSettings['track_' . $t . '_adjudicator'] ?? 'Not assigned' }}
+                                    <strong style="color: #009688; display: block; margin-bottom: 3px; font-size: 0.75rem; text-transform: uppercase;">
+                                        <i class="fa-solid fa-user-tie"></i> Adjudicator
+                                    </strong>
+                                    <div style="color: #0f172a; font-weight: 600; line-height: 1.4;">
+                                        {!! nl2br(e($trackSettings['track_' . $t . '_adjudicator'])) !!}
+                                    </div>
                                 </div>
+                                @endif
+                                @if(!empty($trackSettings['track_' . $t . '_staff']))
                                 <div style="background: #f8fafc; padding: 10px 14px; border-radius: 8px; border: 1px solid #e2e8f0;">
-                                    <strong style="color: #475569; display: block; margin-bottom: 3px; font-size: 0.75rem; text-transform: uppercase;">Staff Incharge</strong>
-                                    {{ $trackSettings['track_' . $t . '_staff'] ?? 'Not assigned' }}
+                                    <strong style="color: #475569; display: block; margin-bottom: 3px; font-size: 0.75rem; text-transform: uppercase;">
+                                        <i class="fa-solid fa-users"></i> Staff Incharge
+                                    </strong>
+                                    <div style="color: #0f172a; font-weight: 600; line-height: 1.4;">
+                                        {!! nl2br(e($trackSettings['track_' . $t . '_staff'])) !!}
+                                    </div>
                                 </div>
+                                @endif
                             </div>
                         </div>
                     @endif
@@ -371,7 +386,10 @@
             <i class="fa-solid fa-user-plus"></i> 2. Add New Member
         </button>
         <button type="button" class="tab-btn" onclick="switchAdminTab('tab-page-settings', this)">
-            <i class="fa-solid fa-sliders"></i> 3. Page Titles & Text Settings
+            <i class="fa-solid fa-sliders"></i> 3. Page Titles &amp; Text Settings
+        </button>
+        <button type="button" class="tab-btn" onclick="switchAdminTab('tab-tracks', this)">
+            <i class="fa-solid fa-layer-group"></i> 4. Track-Wise Incharges
         </button>
     </div>
 
@@ -532,6 +550,92 @@
         </form>
     </div>
 
+    <!-- TAB 4: TRACK-WISE INCHARGES -->
+    <div id="tab-tracks" class="admin-card-section" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px;">
+            <div>
+                <h3 style="margin: 0 0 4px 0; font-size: 1.25rem; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-layer-group" style="color: #00A896;"></i> Track-Wise Incharges Management
+                </h3>
+                <p style="margin: 0; color: #64748b; font-size: 0.88rem;">
+                    Configure the technical tracks, adjudicators, and staff incharges shown on both Committee and Schedule pages.
+                </p>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button type="button" onclick="addTrackRow()" style="background: #00A896; color: #ffffff; border: none; padding: 9px 18px; border-radius: 8px; font-weight: 700; font-size: 0.88rem; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                    <i class="fa-solid fa-plus"></i> Add Track
+                </button>
+                <a href="{{ route('admin.schedule') }}" target="_blank" style="background: #f1f5f9; color: #0f172a; border: 1px solid #cbd5e1; padding: 9px 16px; border-radius: 8px; font-weight: 700; font-size: 0.88rem; text-decoration: none; display: flex; align-items: center; gap: 6px;">
+                    <i class="fa-solid fa-calendar-days"></i> Open in Schedule CMS
+                </a>
+            </div>
+        </div>
+
+        <form action="{{ route('admin.committee.settings.update') }}" method="POST">
+            @csrf
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                <div>
+                    <label class="form-label">Track Section Heading</label>
+                    <input type="text" name="sched_tracks_title" class="form-input" value="{{ $trackSettings['sched_tracks_title'] ?? 'TRACK-WISE INCHARGE' }}">
+                </div>
+                <div>
+                    <label class="form-label">Track Section Description</label>
+                    <input type="text" name="sched_tracks_sub" class="form-input" value="{{ $trackSettings['sched_tracks_sub'] ?? 'Parallel technical tracks covering specialized domains of Global One Health Confluence 2026.' }}">
+                </div>
+            </div>
+
+            <div id="committee-tracks-wrapper" style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 25px;">
+                @for($i = 1; $i <= 20; $i++)
+                    @if(isset($trackSettings['track_' . $i . '_name']))
+                    <div class="track-card-item" style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-left: 5px solid {{ $trackSettings['track_' . $i . '_color'] ?? '#009688' }}; border-radius: 12px; padding: 20px; position: relative;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                            <span style="font-weight: 800; color: #0f172a; font-size: 0.95rem; display: flex; align-items: center; gap: 8px;">
+                                <i class="fa-solid fa-layer-group" style="color: {{ $trackSettings['track_' . $i . '_color'] ?? '#009688' }};"></i> Track #{{ $i }}
+                            </span>
+                            <button type="button" onclick="this.closest('.track-card-item').remove()" style="background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; padding: 5px 12px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                                <i class="fa-solid fa-trash"></i> Delete Track
+                            </button>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1.2fr 1fr 2fr; gap: 15px; margin-bottom: 15px;">
+                            <div>
+                                <label class="form-label">Track Name</label>
+                                <input type="text" name="track_names[]" class="form-input" value="{{ $trackSettings['track_' . $i . '_name'] }}" placeholder="e.g. Track I">
+                            </div>
+                            <div>
+                                <label class="form-label">Color Code</label>
+                                <input type="text" name="track_colors[]" class="form-input" value="{{ $trackSettings['track_' . $i . '_color'] ?? '#009688' }}" placeholder="#009688">
+                            </div>
+                            <div>
+                                <label class="form-label">Theme / Domain Topic</label>
+                                <input type="text" name="track_topics[]" class="form-input" value="{{ $trackSettings['track_' . $i . '_topic'] ?? '' }}" placeholder="Track topic or specialized domain">
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div>
+                                <label class="form-label"><i class="fa-solid fa-user-tie" style="color: #00A896;"></i> Adjudicator (Separate multiple with &amp;)</label>
+                                <textarea name="track_adjudicators[]" rows="2" class="form-input" placeholder="e.g. Dr. Ananthi Rachel Livingstone, Head of the Dept.">{{ $trackSettings['track_' . $i . '_adjudicator'] ?? '' }}</textarea>
+                            </div>
+                            <div>
+                                <label class="form-label"><i class="fa-solid fa-users" style="color: #475569;"></i> Staff Incharge (Separate multiple with &amp;)</label>
+                                <textarea name="track_staffs[]" rows="2" class="form-input" placeholder="e.g. Dr.S. Niren Andrew &amp; Mrs.Adline Jennefa Daniel">{{ $trackSettings['track_' . $i . '_staff'] ?? '' }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+                @endfor
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <button type="button" onclick="addTrackRow()" style="background: #e0f2fe; color: #0284c7; border: 1px solid #bae6fd; padding: 10px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                    <i class="fa-solid fa-plus"></i> Add Another Track
+                </button>
+                <button type="submit" class="btn" style="background: linear-gradient(135deg, #00A896, #028090); color: #ffffff; padding: 13px 32px; border-radius: 10px; font-weight: 800; font-size: 1rem; border: none; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 168, 150, 0.35); display: inline-flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-floppy-disk"></i> Save Track Incharges
+                </button>
+            </div>
+        </form>
+    </div>
+
 </div>
 
 <!-- EDIT MODAL -->
@@ -598,11 +702,13 @@ function switchAdminTab(tabId, btn) {
     document.getElementById('tab-members').style.display = 'none';
     document.getElementById('tab-add-member').style.display = 'none';
     document.getElementById('tab-page-settings').style.display = 'none';
+    const tabTracks = document.getElementById('tab-tracks');
+    if (tabTracks) tabTracks.style.display = 'none';
     
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     
     document.getElementById(tabId).style.display = 'block';
-    btn.classList.add('active');
+    if (btn) btn.classList.add('active');
 }
 
 function filterMembersByCategory(cat) {
@@ -658,6 +764,48 @@ function openEditModal(member) {
 
 function closeEditModal() {
     document.getElementById('editModal').style.display = 'none';
+}
+
+function addTrackRow() {
+    const wrapper = document.getElementById('committee-tracks-wrapper');
+    const div = document.createElement('div');
+    div.className = 'track-card-item';
+    div.style = 'background: #f8fafc; border: 1.5px solid #e2e8f0; border-left: 5px solid #009688; border-radius: 12px; padding: 20px; position: relative;';
+    div.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+            <span style="font-weight: 800; color: #0f172a; font-size: 0.95rem; display: flex; align-items: center; gap: 8px;">
+                <i class="fa-solid fa-layer-group" style="color: #00A896;"></i> New Track Item
+            </span>
+            <button type="button" onclick="this.closest('.track-card-item').remove()" style="background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; padding: 5px 12px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                <i class="fa-solid fa-trash"></i> Delete Track
+            </button>
+        </div>
+        <div style="display: grid; grid-template-columns: 1.2fr 1fr 2fr; gap: 15px; margin-bottom: 15px;">
+            <div>
+                <label class="form-label">Track Name</label>
+                <input type="text" name="track_names[]" class="form-input" placeholder="e.g. Track VII">
+            </div>
+            <div>
+                <label class="form-label">Color Code</label>
+                <input type="text" name="track_colors[]" class="form-input" value="#009688" placeholder="#009688">
+            </div>
+            <div>
+                <label class="form-label">Theme / Domain Topic</label>
+                <input type="text" name="track_topics[]" class="form-input" placeholder="Track topic or specialized domain">
+            </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <div>
+                <label class="form-label"><i class="fa-solid fa-user-tie" style="color: #00A896;"></i> Adjudicator (Separate multiple with &amp;)</label>
+                <textarea name="track_adjudicators[]" rows="2" class="form-input" placeholder="e.g. Dr. Name, Head of Dept."></textarea>
+            </div>
+            <div>
+                <label class="form-label"><i class="fa-solid fa-users" style="color: #475569;"></i> Staff Incharge (Separate multiple with &amp;)</label>
+                <textarea name="track_staffs[]" rows="2" class="form-input" placeholder="e.g. Dr. Staff One &amp; Dr. Staff Two"></textarea>
+            </div>
+        </div>
+    `;
+    wrapper.appendChild(div);
 }
 </script>
 @endsection
