@@ -11,9 +11,6 @@
         <a href="{{ route('admin.hero') }}" class="btn" style="text-align: center; padding: 20px; font-size: 1.1rem; background: var(--admin-white); color: var(--admin-sidebar); border: 1px solid var(--admin-border);">
             <i class="fa-solid fa-image" style="font-size: 2rem; display: block; margin-bottom: 10px; color: var(--admin-primary);"></i> Hero Section
         </a>
-        <a href="{{ route('admin.partner_logos') }}" class="btn" style="text-align: center; padding: 20px; font-size: 1.1rem; background: var(--admin-white); color: var(--admin-sidebar); border: 1px solid var(--admin-border);">
-            <i class="fa-solid fa-handshake" style="font-size: 2rem; display: block; margin-bottom: 10px; color: var(--admin-primary);"></i> Partner Logos Strip
-        </a>
         <a href="{{ route('admin.about_organizer') }}" class="btn" style="text-align: center; padding: 20px; font-size: 1.1rem; background: var(--admin-white); color: var(--admin-sidebar); border: 1px solid var(--admin-border);">
             <i class="fa-solid fa-building-user" style="font-size: 2rem; display: block; margin-bottom: 10px; color: var(--admin-primary);"></i> About Organizers
         </a>
@@ -43,6 +40,9 @@
         </a>
         <a href="{{ route('admin.awards') }}" class="btn" style="text-align: center; padding: 20px; font-size: 1.1rem; background: var(--admin-white); color: var(--admin-sidebar); border: 1px solid var(--admin-border);">
             <i class="fa-solid fa-trophy" style="font-size: 2rem; display: block; margin-bottom: 10px; color: var(--admin-primary);"></i> Awards
+        </a>
+        <a href="{{ route('admin.partner_logos') }}" class="btn" style="text-align: center; padding: 20px; font-size: 1.1rem; background: var(--admin-white); color: var(--admin-sidebar); border: 1px solid var(--admin-border);">
+            <i class="fa-solid fa-handshake" style="font-size: 2rem; display: block; margin-bottom: 10px; color: var(--admin-primary);"></i> Partner & Accreditation Logos
         </a>
     </div>
 </div>

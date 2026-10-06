@@ -5,6 +5,7 @@
     @include('sections.topbar')
     @include('sections.navbar')
     @include('sections.hero')
+    @include('sections.partner-strip')
     @include('sections.about-mcc')
     @include('sections.about-dept')
     @include('sections.about')

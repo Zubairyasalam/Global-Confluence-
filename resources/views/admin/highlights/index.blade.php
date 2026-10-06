@@ -169,16 +169,16 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="form-label">Publication Option 1 (ISBN Book Proceedings)</label>
-            <input type="text" name="pub_item_1" class="form-control" value="{{ $settings['pub_item_1'] ?? 'All the Presentation will be published as a conference proceedings in ISBN indexed book' }}">
+            <label class="form-label">Publication Option 1</label>
+            <input type="text" name="pub_item_1" class="form-control" value="{{ $settings['pub_item_1'] ?? 'Scopus-indexed journals' }}">
         </div>
         <div class="form-group">
-            <label class="form-label">Publication Option 2 (Scopus / WoS Journals)</label>
-            <input type="text" name="pub_item_2" class="form-control" value="{{ $settings['pub_item_2'] ?? 'Quality presentation will be peer reviewed and considered for further publication in selected Scopus/ WoS indexed journals' }}">
+            <label class="form-label">Publication Option 2</label>
+            <input type="text" name="pub_item_2" class="form-control" value="{{ $settings['pub_item_2'] ?? 'Edited ISBN conference proceedings' }}">
         </div>
         <div class="form-group">
-            <label class="form-label">Announcement Note (Highlighted Badge)</label>
-            <input type="text" name="pub_note" class="form-control" value="{{ $settings['pub_note'] ?? 'Journal list will be updated soon' }}">
+            <label class="form-label">Publication Option 3</label>
+            <input type="text" name="pub_item_3" class="form-control" value="{{ $settings['pub_item_3'] ?? 'Special issues with partnering international journals (subject to review)' }}">
         </div>
     </div>
 

@@ -66,14 +66,14 @@
         <!-- Call to Action -->
         <div class="hero-actions" style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
             @if(($settings['hero_btn1_show'] ?? '1') != '0')
-                <a href="{{ !empty($settings['hero_btn1_link']) ? url($settings['hero_btn1_link']) : url('/registration') }}" class="btn btn-navy">
+                <a href="{{ url($settings['hero_btn1_link'] ?? route('registration')) }}" class="btn btn-navy">
                     {{ !empty($settings['hero_btn1_text']) ? $settings['hero_btn1_text'] : 'REGISTER NOW' }}
                 </a>
             @endif
 
             @if(($settings['hero_btn2_show'] ?? '1') != '0')
-                <a href="{{ !empty($settings['hero_btn2_link']) ? url($settings['hero_btn2_link']) : url('/awards') }}" class="btn btn-green" style="box-shadow: 0 4px 15px rgba(0, 168, 150, 0.3); display: inline-flex; align-items: center; gap: 8px;">
-                    {{ !empty($settings['hero_btn2_text']) ? $settings['hero_btn2_text'] : 'APPLY FOR AWARDS' }} <i class="fa-solid fa-arrow-right"></i>
+                <a href="{{ url($settings['hero_btn2_link'] ?? route('awards')) }}" class="btn btn-green" style="box-shadow: 0 4px 15px rgba(0, 168, 150, 0.3); display: inline-flex; align-items: center; gap: 8px;">
+                    {{ !empty($settings['hero_btn2_text']) ? $settings['hero_btn2_text'] : 'APPLY NOW' }} <i class="fa-solid fa-arrow-right"></i>
                 </a>
             @endif
         </div>

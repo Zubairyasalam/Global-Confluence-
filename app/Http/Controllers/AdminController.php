@@ -1945,19 +1945,7 @@ class AdminController extends Controller
     public function partnerLogosSettings()
     {
         $logos = \App\Models\PartnerLogo::orderBy('sort_order')->get();
-        $settings = \App\Models\SiteSetting::where('group', 'partner_strip')->orWhereIn('key', ['partner_strip_show', 'partner_strip_title'])->pluck('value', 'key')->toArray();
-        return view('admin.partner_logos.index', compact('logos', 'settings'));
-    }
-
-    public function updatePartnerStripSettings(Request $request)
-    {
-        if ($request->has('partner_strip_show')) {
-            \App\Models\SiteSetting::updateOrCreate(['key' => 'partner_strip_show'], ['value' => $request->partner_strip_show, 'group' => 'partner_strip']);
-        }
-        if ($request->has('partner_strip_title')) {
-            \App\Models\SiteSetting::updateOrCreate(['key' => 'partner_strip_title'], ['value' => $request->partner_strip_title, 'group' => 'partner_strip']);
-        }
-        return back()->with('success', 'Partner logos strip display settings updated successfully.');
+        return view('admin.partner_logos.index', compact('logos'));
     }
 
     public function storePartnerLogo(Request $request)

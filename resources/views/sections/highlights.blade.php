@@ -117,26 +117,27 @@
                         {{ $highlightsSettings['pub_subtitle'] ?? 'Selected peer-reviewed manuscripts will be considered for publication in:' }}
                     </p>
                     
-                    <div style="display: flex; flex-direction: column; align-items: center; gap: 16px; max-width: 800px; margin: 0 auto 30px;">
-                        <div style="width: 100%; background: rgba(255,255,255,0.04); backdrop-filter: blur(10px); padding: 18px 24px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.12); font-weight: 600; color: #f8fafc; display: flex; align-items: flex-start; text-align: left; gap: 14px; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"
-                             onmouseover="this.style.background='rgba(255,255,255,0.08)'; this.style.borderColor='rgba(56,189,248,0.5)'; this.style.transform='translateY(-2px)';"
-                             onmouseout="this.style.background='rgba(255,255,255,0.04)'; this.style.borderColor='rgba(255,255,255,0.12)'; this.style.transform='translateY(0)';">
-                            <i class="fa-solid fa-circle-check" style="color: #38bdf8; font-size: 1.25rem; margin-top: 3px; flex-shrink: 0;"></i>
-                            <span style="letter-spacing: 0.3px; line-height: 1.5; font-size: 1.05rem;">{{ $highlightsSettings['pub_item_1'] ?? 'All the Presentation will be published as a conference proceedings in ISBN indexed book' }}</span>
+                    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
+                        <div style="background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); padding: 18px 26px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); font-weight: 600; color: #f8fafc; display: flex; align-items: center; gap: 14px; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.1);"
+                             onmouseover="this.style.background='rgba(255,255,255,0.08)'; this.style.borderColor='rgba(56,189,248,0.5)'; this.style.transform='translateY(-4px)';"
+                             onmouseout="this.style.background='rgba(255,255,255,0.03)'; this.style.borderColor='rgba(255,255,255,0.1)'; this.style.transform='translateY(0)';">
+                            <i class="fa-solid fa-book-journal-whills" style="color: #38bdf8; font-size: 1.3rem;"></i>
+                            <span style="letter-spacing: 0.3px;">{{ $highlightsSettings['pub_item_1'] ?? 'Scopus-indexed journals' }}</span>
                         </div>
 
-                        <div style="width: 100%; background: rgba(255,255,255,0.04); backdrop-filter: blur(10px); padding: 18px 24px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.12); font-weight: 600; color: #f8fafc; display: flex; align-items: flex-start; text-align: left; gap: 14px; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"
-                             onmouseover="this.style.background='rgba(255,255,255,0.08)'; this.style.borderColor='rgba(56,189,248,0.5)'; this.style.transform='translateY(-2px)';"
-                             onmouseout="this.style.background='rgba(255,255,255,0.04)'; this.style.borderColor='rgba(255,255,255,0.12)'; this.style.transform='translateY(0)';">
-                            <i class="fa-solid fa-circle-check" style="color: #38bdf8; font-size: 1.25rem; margin-top: 3px; flex-shrink: 0;"></i>
-                            <span style="letter-spacing: 0.3px; line-height: 1.5; font-size: 1.05rem;">{{ $highlightsSettings['pub_item_2'] ?? 'Quality presentation will be peer reviewed and considered for further publication in selected Scopus/ WoS indexed journals' }}</span>
+                        <div style="background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); padding: 18px 26px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); font-weight: 600; color: #f8fafc; display: flex; align-items: center; gap: 14px; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.1);"
+                             onmouseover="this.style.background='rgba(255,255,255,0.08)'; this.style.borderColor='rgba(56,189,248,0.5)'; this.style.transform='translateY(-4px)';"
+                             onmouseout="this.style.background='rgba(255,255,255,0.03)'; this.style.borderColor='rgba(255,255,255,0.1)'; this.style.transform='translateY(0)';">
+                            <i class="fa-solid fa-book" style="color: #38bdf8; font-size: 1.3rem;"></i>
+                            <span style="letter-spacing: 0.3px;">{{ $highlightsSettings['pub_item_2'] ?? 'Edited ISBN conference proceedings' }}</span>
                         </div>
-                    </div>
 
-                    <!-- Announcement Note -->
-                    <div style="display: inline-flex; align-items: center; gap: 12px; background: rgba(56,189,248,0.1); border: 1px dashed rgba(56,189,248,0.4); border-radius: 50px; padding: 10px 24px; color: #e0f2fe; font-size: 0.98rem; font-weight: 600;">
-                        <i class="fa-solid fa-bell" style="color: #38bdf8;"></i>
-                        <span>{{ $highlightsSettings['pub_note'] ?? 'Journal list will be updated soon' }}</span>
+                        <div style="background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); padding: 18px 26px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); font-weight: 600; color: #f8fafc; display: flex; align-items: center; gap: 14px; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.1);"
+                             onmouseover="this.style.background='rgba(255,255,255,0.08)'; this.style.borderColor='rgba(56,189,248,0.5)'; this.style.transform='translateY(-4px)';"
+                             onmouseout="this.style.background='rgba(255,255,255,0.03)'; this.style.borderColor='rgba(255,255,255,0.1)'; this.style.transform='translateY(0)';">
+                            <i class="fa-solid fa-globe" style="color: #38bdf8; font-size: 1.3rem;"></i>
+                            <span style="letter-spacing: 0.3px;">{{ $highlightsSettings['pub_item_3'] ?? 'Special issues with partnering international journals (subject to peer review)' }}</span>
+                        </div>
                     </div>
                 </div>
             </div>

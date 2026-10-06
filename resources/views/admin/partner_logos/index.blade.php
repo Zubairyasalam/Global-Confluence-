@@ -19,34 +19,6 @@
         </div>
     @endif
 
-    <!-- Home Page Strip Display Settings -->
-    <div class="card" style="margin-bottom: 25px; padding: 20px 25px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px;">
-        <h4 style="margin: 0 0 15px 0; color: #1e293b; font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 8px;">
-            <i class="fa-solid fa-sliders" style="color: #00A896;"></i> Below-Hero Logo Strip Display Settings
-        </h4>
-        <form method="POST" action="{{ route('admin.partner_logos.strip_settings') }}">
-            @csrf
-            <div style="display: grid; grid-template-columns: 1fr 2fr auto; gap: 20px; align-items: flex-end;">
-                <div>
-                    <label style="display: block; font-weight: 700; color: #334155; margin-bottom: 6px; font-size: 0.9rem;">Display Status</label>
-                    <select name="partner_strip_show" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem;">
-                        <option value="1" {{ ($settings['partner_strip_show'] ?? '1') == '1' ? 'selected' : '' }}>Show Strip on Home Page</option>
-                        <option value="0" {{ ($settings['partner_strip_show'] ?? '1') == '0' ? 'selected' : '' }}>Hide Strip</option>
-                    </select>
-                </div>
-                <div>
-                    <label style="display: block; font-weight: 700; color: #334155; margin-bottom: 6px; font-size: 0.9rem;">Optional Section Badge / Label</label>
-                    <input type="text" name="partner_strip_title" value="{{ $settings['partner_strip_title'] ?? '' }}" placeholder="e.g. Collaborating Institutions (Leave blank for clean logo-only strip)" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem;">
-                </div>
-                <div>
-                    <button type="submit" class="btn" style="background: #0f172a; color: #ffffff; padding: 10px 20px; border-radius: 8px; font-weight: 700; font-size: 0.95rem; white-space: nowrap;">
-                        <i class="fa-solid fa-floppy-disk"></i> Save Settings
-                    </button>
-                </div>
-            </div>
-        </form>
-    </div>
-
     <div class="card" style="padding: 0; overflow: hidden;">
         <div style="padding: 20px 25px; border-bottom: 1px solid #e2e8f0; background: #f8fafc; display: flex; justify-content: space-between; align-items: center;">
             <span style="font-weight: 700; color: #1e293b; font-size: 1.05rem;"><i class="fa-solid fa-grip-vertical" style="color: #00a896; margin-right: 8px;"></i> Active Partner Logos ({{ $logos->count() }})</span>

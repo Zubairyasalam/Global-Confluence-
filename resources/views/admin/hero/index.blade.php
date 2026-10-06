@@ -260,8 +260,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Secondary Button 2 (Apply for Awards) Text</label>
-                    <input type="text" name="hero_btn2_text" class="form-control" value="{{ $settings['hero']->where('key', 'hero_btn2_text')->first()->value ?? 'APPLY FOR AWARDS' }}">
+                    <label class="form-label">Secondary Button 2 (Apply Now) Text</label>
+                    <input type="text" name="hero_btn2_text" class="form-control" value="{{ $settings['hero']->where('key', 'hero_btn2_text')->first()->value ?? 'APPLY NOW' }}">
                 </div>
 
                 <div class="form-group">

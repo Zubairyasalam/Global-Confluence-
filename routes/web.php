@@ -264,7 +264,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 
     // Partner Logos CMS
     Route::get('/partner-logos', [AdminController::class, 'partnerLogosSettings'])->name('admin.partner_logos');
-    Route::post('/partner-logos/strip-settings', [AdminController::class, 'updatePartnerStripSettings'])->name('admin.partner_logos.strip_settings');
     Route::post('/partner-logos', [AdminController::class, 'storePartnerLogo'])->name('admin.partner_logos.store');
     Route::put('/partner-logos/{id}', [AdminController::class, 'updatePartnerLogo'])->name('admin.partner_logos.update');
     Route::delete('/partner-logos/{id}', [AdminController::class, 'destroyPartnerLogo'])->name('admin.partner_logos.destroy');
