@@ -309,6 +309,11 @@
                 </a>
             </li>
             <li>
+                <a href="{{ route('admin.partner_logos') }}" class="{{ request()->routeIs('admin.partner_logos') ? 'active' : '' }}">
+                    <i class="fa-solid fa-handshake"></i> Partner Logos Strip
+                </a>
+            </li>
+            <li>
                 <a href="{{ route('admin.committee') }}" class="{{ request()->routeIs('admin.committee') ? 'active' : '' }}">
                     <i class="fa-solid fa-users-gear"></i> Committee
                 </a>
