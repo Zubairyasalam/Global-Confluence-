@@ -2702,6 +2702,70 @@ Presentations and Best Innovation Pitch',
   ),
   330 => 
   array (
+    'key' => 'pre_conf_hero_title',
+    'value' => 'PRE-CONFERENCE WORKSHOP',
+    'type' => 'text',
+    'group' => 'pre_conference',
+    'label' => NULL,
+  ),
+  3301 => 
+  array (
+    'key' => 'pre_conf_hero_sub1',
+    'value' => 'Pre-Conference Consultative Workshop on',
+    'type' => 'text',
+    'group' => 'pre_conference',
+    'label' => NULL,
+  ),
+  3302 => 
+  array (
+    'key' => 'pre_conf_hero_sub2',
+    'value' => 'GLOBAL ONE HEALTH CONFLUENCE 2026',
+    'type' => 'text',
+    'group' => 'pre_conference',
+    'label' => NULL,
+  ),
+  3303 => 
+  array (
+    'key' => 'pre_conf_hero_sub3',
+    'value' => 'Bridging Microbes, Molecules & Mankind for Sustainability',
+    'type' => 'text',
+    'group' => 'pre_conference',
+    'label' => NULL,
+  ),
+  3304 => 
+  array (
+    'key' => 'pre_conf_preamble_title',
+    'value' => 'PREAMBLE',
+    'type' => 'text',
+    'group' => 'pre_conference',
+    'label' => NULL,
+  ),
+  3305 => 
+  array (
+    'key' => 'pre_conf_preamble_icon',
+    'value' => 'fa-solid fa-book-open',
+    'type' => 'text',
+    'group' => 'pre_conference',
+    'label' => NULL,
+  ),
+  3306 => 
+  array (
+    'key' => 'pre_conf_obj_title',
+    'value' => 'KEY OBJECTIVES',
+    'type' => 'text',
+    'group' => 'pre_conference',
+    'label' => NULL,
+  ),
+  3307 => 
+  array (
+    'key' => 'pre_conf_obj_icon',
+    'value' => 'fa-regular fa-compass',
+    'type' => 'text',
+    'group' => 'pre_conference',
+    'label' => NULL,
+  ),
+  3308 => 
+  array (
     'key' => 'pre_conf_preamble',
     'value' => 'The Pre-Conference Consultation of Global One Health Confluence 2026 aims to bring together eminent experts, academicians, researchers, healthcare professionals, policymakers and resource persons from diverse disciplines to provide focused and meaningful inputs for the scientific, thematic and collaborative planning of the conference. The consultation will facilitate interdisciplinary dialogue on key One Health priorities, including antimicrobial resistance, infectious and zoonotic diseases, veterinary and public health, environmental and planetary health, food and agricultural sustainability, Siddha and Indian Knowledge Systems (IKS), biotechnology, nanotechnology, innovation, public health and policy governance. It will provide an opportunity to identify emerging challenges, regional priorities and research needs relevant to Tamil Nadu and to develop scientifically relevant sessions, lectures, panel discussions and collaborative activities for GOHC 2026. The consultation will further encourage the exchange of expertise, experiences and innovative ideas among participating institutions and stakeholders, while strengthening academia–industry–healthcare–government partnerships and identifying opportunities for joint research, knowledge exchange, capacity building and translational initiatives. The inputs and recommendations emerging from the consultation will contribute towards shaping a comprehensive and impactful conference programme aligned with the theme "Bridging Microbes, Molecules & Mankind for Sustainability", while promoting integrated, evidence-based and sustainable approaches to human, animal and environmental health.',
     'type' => 'text',
