@@ -320,42 +320,77 @@
         <div class="card-header">
             <div class="card-title">
                 <i class="fa-solid fa-book-open"></i>
-                4. Scientific Publications Block
+                4. Scientific Publications & Proceedings Block
             </div>
             <button type="button" class="btn-add" onclick="addPubItem()">
-                <i class="fa-solid fa-plus"></i> Add Channel Card
+                <i class="fa-solid fa-plus"></i> Add Publication Point
             </button>
         </div>
 
-        <div class="form-group">
-            <label class="form-label">Section Heading Title</label>
-            <input type="text" name="pub_title" class="form-control" value="{{ $settings['pub_title'] ?? 'Scientific Publications' }}">
+        <div class="grid-2">
+            <div class="form-group">
+                <label class="form-label">Badge Tag</label>
+                <input type="text" name="pub_tag" class="form-control" value="{{ $settings['pub_tag'] ?? 'SCIENTIFIC PUBLICATIONS' }}">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Section Heading Title</label>
+                <input type="text" name="pub_title" class="form-control" value="{{ $settings['pub_title'] ?? 'Conference Proceedings & Publication Opportunities' }}">
+            </div>
         </div>
 
         <div class="form-group">
-            <label class="form-label">Section Subtitle / Description</label>
-            <textarea name="pub_desc" class="form-control" rows="2">{{ $settings['pub_desc'] ?? 'Selected peer-reviewed manuscripts will be considered for publication in our partnering international journals and indexed proceedings, offering global visibility for your research.' }}</textarea>
+            <label class="form-label">Announcement / Notice Note (Highlighted Box)</label>
+            <input type="text" name="pub_note" class="form-control" value="{{ $settings['pub_note'] ?? 'Journal list will be updated soon' }}">
         </div>
+
+        <h4 style="font-size: 1rem; color: #1e293b; margin: 20px 0 12px; font-weight: 700;">Publication Details & Instructions</h4>
 
         <div id="pub-items-wrapper">
-            @for($i = 1; $i <= 20; $i++)
-                @if(isset($settings['pub_' . $i . '_title']))
+            @php
+                $hasPubItems = false;
+                for($i = 1; $i <= 10; $i++) {
+                    if(!empty($settings['pub_item_' . $i])) {
+                        $hasPubItems = true;
+                        break;
+                    }
+                }
+            @endphp
+
+            @if($hasPubItems)
+                @for($i = 1; $i <= 10; $i++)
+                    @if(!empty($settings['pub_item_' . $i]))
+                    <div class="card-box-item">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <div class="badge-item"><i class="fa-solid fa-circle-check"></i> Publication Point #{{ $i }}</div>
+                            <button type="button" class="btn-delete-item" onclick="this.closest('.card-box-item').remove()"><i class="fa-solid fa-trash"></i> Delete</button>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <input type="text" name="pub_items[]" class="form-control" value="{{ $settings['pub_item_' . $i] }}">
+                        </div>
+                    </div>
+                    @endif
+                @endfor
+            @else
+                <!-- Default points -->
                 <div class="card-box-item">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                        <div class="badge-item"><i class="fa-solid fa-newspaper"></i> Publication Channel</div>
+                        <div class="badge-item"><i class="fa-solid fa-circle-check"></i> Publication Point #1</div>
                         <button type="button" class="btn-delete-item" onclick="this.closest('.card-box-item').remove()"><i class="fa-solid fa-trash"></i> Delete</button>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">Journal / Channel Title</label>
-                        <input type="text" name="pub_titles[]" class="form-control" value="{{ $settings['pub_' . $i . '_title'] }}">
-                    </div>
                     <div class="form-group" style="margin-bottom: 0;">
-                        <label class="form-label">Description</label>
-                        <textarea name="pub_descs[]" class="form-control" rows="2">{{ $settings['pub_' . $i . '_desc'] ?? '' }}</textarea>
+                        <input type="text" name="pub_items[]" class="form-control" value="All the Presentation will be published as a conference proceedings in ISBN indexed book">
                     </div>
                 </div>
-                @endif
-            @endfor
+                <div class="card-box-item">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <div class="badge-item"><i class="fa-solid fa-circle-check"></i> Publication Point #2</div>
+                        <button type="button" class="btn-delete-item" onclick="this.closest('.card-box-item').remove()"><i class="fa-solid fa-trash"></i> Delete</button>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <input type="text" name="pub_items[]" class="form-control" value="Quality presentation will be peer reviewed and considered for further publication in selected Scopus/ WoS indexed journals">
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
 
@@ -414,16 +449,11 @@ function addPubItem() {
     const html = `
     <div class="card-box-item">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <div class="badge-item"><i class="fa-solid fa-newspaper"></i> New Publication Channel</div>
+            <div class="badge-item"><i class="fa-solid fa-circle-check"></i> New Publication Point</div>
             <button type="button" class="btn-delete-item" onclick="this.closest('.card-box-item').remove()"><i class="fa-solid fa-trash"></i> Delete</button>
         </div>
-        <div class="form-group">
-            <label class="form-label">Journal / Channel Title</label>
-            <input type="text" name="pub_titles[]" class="form-control" placeholder="Title">
-        </div>
         <div class="form-group" style="margin-bottom: 0;">
-            <label class="form-label">Description</label>
-            <textarea name="pub_descs[]" class="form-control" rows="2" placeholder="Description"></textarea>
+            <input type="text" name="pub_items[]" class="form-control" placeholder="Enter publication detail or instruction point">
         </div>
     </div>`;
     document.getElementById('pub-items-wrapper').insertAdjacentHTML('beforeend', html);

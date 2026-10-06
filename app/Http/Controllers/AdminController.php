@@ -378,7 +378,23 @@ class AdminController extends Controller
             SiteSetting::updateOrCreate(['key' => 'poster_count'], ['value' => $count, 'group' => 'guidelines']);
         }
 
-        // 4. Scientific Publication Cards
+        // 4. Scientific Publication Bullet Items & Settings
+        if ($request->has('pub_tag')) SiteSetting::updateOrCreate(['key' => 'pub_tag'], ['value' => $request->pub_tag, 'group' => 'guidelines']);
+        if ($request->has('pub_note')) SiteSetting::updateOrCreate(['key' => 'pub_note'], ['value' => $request->pub_note, 'group' => 'guidelines']);
+
+        if ($request->has('pub_items')) {
+            SiteSetting::where('group', 'guidelines')->where('key', 'like', 'pub\_item\_%')->delete();
+            $items = $request->input('pub_items', []);
+            $count = 0;
+            foreach ($items as $item) {
+                if (!empty($item)) {
+                    $count++;
+                    SiteSetting::updateOrCreate(['key' => "pub_item_{$count}"], ['value' => $item, 'group' => 'guidelines']);
+                }
+            }
+            SiteSetting::updateOrCreate(['key' => 'pub_count'], ['value' => $count, 'group' => 'guidelines']);
+        }
+
         if ($request->has('pub_titles')) {
             SiteSetting::where('group', 'guidelines')->where(function($q) {
                 $q->where('key', 'like', 'pub\_%\_title')->orWhere('key', 'like', 'pub\_%\_desc');

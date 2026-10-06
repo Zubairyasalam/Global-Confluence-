@@ -241,36 +241,60 @@
         <!-- Publications Section -->
         <div class="gl-card" id="publications" style="margin-top: 30px; border-top: 4px solid #009688;">
             <div class="gl-badge">
-                <i class="fa-solid fa-book-open"></i> {{ $settings['publication_badge'] ?? 'SCIENTIFIC PUBLICATIONS' }}
+                <i class="fa-solid fa-book-open"></i> {{ $settings['pub_tag'] ?? ($settings['publication_badge'] ?? 'SCIENTIFIC PUBLICATIONS') }}
             </div>
-            <h2 class="gl-title" style="margin-bottom: 16px;">{{ $settings['publication_title'] ?? 'Conference Proceedings & Publication Opportunities' }}</h2>
-            <p style="color: #64748b; font-size: 0.95rem; line-height: 1.6; margin-bottom: 24px;">
-                {{ $settings['publication_desc'] ?? 'All peer-reviewed and accepted abstracts and selected full-length research papers presented at the Global One Health Confluence will be published in indexed conference proceedings and partnered reputed journals.' }}
-            </p>
-            <div class="gl-grid-abstract" style="margin-bottom: 0;">
-                <div class="gl-list-item">
-                    <i class="fa-solid fa-circle-check gl-icon-check"></i>
-                    <div class="gl-item-text">
-                        <strong>Indexed Proceedings:</strong> All accepted abstracts will be compiled in the official Conference Abstract Book with ISBN.
+            <h2 class="gl-title" style="margin-bottom: 24px;">{{ $settings['pub_title'] ?? 'Conference Proceedings & Publication Opportunities' }}</h2>
+
+            <div class="gl-list-vertical" style="margin-bottom: 25px;">
+                @php
+                    $pubCount = $settings['pub_count'] ?? 0;
+                    $hasCustomPubItems = false;
+                    for($i = 1; $i <= 10; $i++) {
+                        if(!empty($settings['pub_item_' . $i])) {
+                            $hasCustomPubItems = true;
+                            break;
+                        }
+                    }
+                @endphp
+
+                @if($hasCustomPubItems)
+                    @for($i = 1; $i <= 10; $i++)
+                        @if(!empty($settings['pub_item_' . $i]))
+                        <div class="gl-list-item" style="font-size: 1rem;">
+                            <i class="fa-solid fa-circle-check gl-icon-check" style="font-size: 1.25rem;"></i>
+                            <div class="gl-item-text" style="font-size: 1rem; color: #1e293b; font-weight: 500;">
+                                {!! $settings['pub_item_' . $i] !!}
+                            </div>
+                        </div>
+                        @endif
+                    @endfor
+                @else
+                    <!-- Default Official Requirements -->
+                    <div class="gl-list-item" style="font-size: 1rem;">
+                        <i class="fa-solid fa-circle-check gl-icon-check" style="font-size: 1.25rem;"></i>
+                        <div class="gl-item-text" style="font-size: 1rem; color: #1e293b; font-weight: 500;">
+                            <strong>1.</strong> All the Presentation will be published as a conference proceedings in ISBN indexed book
+                        </div>
                     </div>
+                    <div class="gl-list-item" style="font-size: 1rem;">
+                        <i class="fa-solid fa-circle-check gl-icon-check" style="font-size: 1.25rem;"></i>
+                        <div class="gl-item-text" style="font-size: 1rem; color: #1e293b; font-weight: 500;">
+                            <strong>2.</strong> Quality presentation will be peer reviewed and considered for further publication in selected Scopus/ WoS indexed journals
+                        </div>
+                    </div>
+                @endif
+            </div>
+
+            <!-- Journal List Notice -->
+            <div style="background: linear-gradient(135deg, #e6f7f5 0%, #f0fdfa 100%); border: 1.5px dashed #009688; border-radius: 12px; padding: 18px 24px; display: flex; align-items: center; gap: 14px;">
+                <div style="width: 40px; height: 40px; border-radius: 50%; background: #009688; color: #ffffff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 1.1rem;">
+                    <i class="fa-solid fa-bell"></i>
                 </div>
-                <div class="gl-list-item">
-                    <i class="fa-solid fa-circle-check gl-icon-check"></i>
-                    <div class="gl-item-text">
-                        <strong>Peer-Reviewed Journals:</strong> Outstanding papers will be recommended for fast-track publication in Scopus / WoS indexed partner journals.
-                    </div>
-                </div>
-                <div class="gl-list-item">
-                    <i class="fa-solid fa-circle-check gl-icon-check"></i>
-                    <div class="gl-item-text">
-                        <strong>Best Paper Awards:</strong> Exceptional presentations across each track will receive certificates of merit and special feature recognition.
-                    </div>
-                </div>
-                <div class="gl-list-item">
-                    <i class="fa-solid fa-circle-check gl-icon-check"></i>
-                    <div class="gl-item-text">
-                        <strong>Plagiarism Policy:</strong> Submissions must adhere to ethical standards with similarity index below 15% excluding references.
-                    </div>
+                <div>
+                    <h5 style="margin: 0 0 3px 0; color: #00796b; font-weight: 700; font-size: 0.98rem; text-transform: uppercase; letter-spacing: 0.5px;">Announcement</h5>
+                    <p style="margin: 0; color: #334155; font-size: 0.95rem; font-weight: 600;">
+                        {{ $settings['pub_note'] ?? 'Journal list will be updated soon' }}
+                    </p>
                 </div>
             </div>
         </div>
