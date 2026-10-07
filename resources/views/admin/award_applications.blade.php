@@ -31,7 +31,7 @@
                     @if(count($applications) > 0)
                         @foreach($applications as $app)
                             <tr style="border-bottom: 1px solid var(--admin-border); transition: background 0.2s;">
-                                <td style="padding: 16px; color: #94a3b8; font-weight: 600; font-size: 0.9rem;">{{ $app->id }}</td>
+                                <td style="padding: 16px; color: #94a3b8; font-weight: 700; font-size: 0.9rem;">{{ $loop->iteration }}</td>
 
                                 <td style="padding: 16px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{{ $app->award_name }}">
                                     <span style="font-weight: 700; color: var(--admin-sidebar); font-size: 0.95rem;">{{ $app->award_name }}</span>

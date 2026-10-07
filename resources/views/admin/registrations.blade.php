@@ -44,7 +44,7 @@
                                 $totalFee = (float)($reg->total_amount ?: ($reg->reg_category ?: 0));
                             @endphp
                             <tr style="border-bottom: 1px solid var(--admin-border); transition: background 0.2s;">
-                                <td style="padding: 15px; color: var(--admin-text); font-weight: 700;">#{{ $reg->id }}</td>
+                                <td style="padding: 15px; color: var(--admin-text); font-weight: 700;">{{ $loop->iteration }}</td>
                                 <td style="padding: 15px;">
                                     <div style="font-weight: 700; color: var(--admin-sidebar); font-size: 0.98rem;">
                                         {{ $reg->title ? $reg->title . ' ' : '' }}{{ $reg->name }}
@@ -53,17 +53,16 @@
                                         @endif
                                     </div>
                                     <div style="font-size: 0.85rem; color: #475569; margin-top: 3px;">
-                                        <i class="fa-regular fa-envelope" style="margin-right: 4px; color: #00a896;"></i> {{ $reg->email }}
+                                        {{ $reg->email }}
                                     </div>
                                     <div style="font-size: 0.85rem; color: #475569;">
-                                        <i class="fa-solid fa-phone" style="margin-right: 4px; color: #00a896;"></i> {{ $reg->phone ?: 'N/A' }}
+                                        {{ $reg->phone ?: 'N/A' }}
                                     </div>
                                 </td>
                                 <td style="padding: 15px; color: var(--admin-text);">
                                     <div style="font-weight: 600; color: #1e293b;">{{ $reg->organization ?: 'N/A' }}</div>
                                     @if(!empty($reg->city) || !empty($reg->country))
                                         <div style="font-size: 0.82rem; color: #64748b; margin-top: 2px;">
-                                            <i class="fa-solid fa-location-dot" style="margin-right: 4px; color: #ef4444;"></i>
                                             {{ implode(', ', array_filter([$reg->city, $reg->country])) }}
                                             @if(!empty($reg->postal_code)) ({{ $reg->postal_code }}) @endif
                                         </div>
@@ -94,18 +93,18 @@
                                 <td style="padding: 15px;">
                                     <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
                                         @if($idCardFile)
-                                            <span title="ID Card Uploaded" style="background: #e0f2fe; color: #0369a1; padding: 3px 7px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
-                                                <i class="fa-solid fa-id-card"></i> ID Card
+                                            <span title="ID Card Uploaded" style="background: #e0f2fe; color: #0369a1; padding: 3px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; display: inline-block;">
+                                                ID Card
                                             </span>
                                         @endif
                                         @if($abstractFile)
-                                            <span title="Abstract Document Uploaded" style="background: #f0fdf4; color: #15803d; padding: 3px 7px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
-                                                <i class="fa-solid fa-file-lines"></i> Abstract
+                                            <span title="Abstract Document Uploaded" style="background: #f0fdf4; color: #15803d; padding: 3px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; display: inline-block;">
+                                                Abstract
                                             </span>
                                         @endif
                                         @if(!empty($formData['payment_receipt_file']))
-                                            <span title="Payment Receipt Uploaded" style="background: #fef3c7; color: #b45309; padding: 3px 7px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
-                                                <i class="fa-solid fa-receipt"></i> Receipt
+                                            <span title="Payment Receipt Uploaded" style="background: #fef3c7; color: #b45309; padding: 3px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; display: inline-block;">
+                                                Receipt
                                             </span>
                                         @endif
                                         @if(!$idCardFile && !$abstractFile && empty($formData['payment_receipt_file']))
@@ -119,11 +118,11 @@
                                         <button class="btn view-btn" 
                                             data-reg="{{ json_encode($reg) }}"
                                             data-date="{{ $reg->created_at->format('M d, Y h:i A') }}"
-                                            style="background: #00a896; color: #ffffff; padding: 7px 14px; border-radius: 6px; border: none; cursor: pointer; font-weight: 700; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 6px;">
-                                            <i class="fa-solid fa-eye"></i> View CRM
+                                            style="background: #00a896; color: #ffffff; padding: 7px 14px; border-radius: 6px; border: none; cursor: pointer; font-weight: 700; font-size: 0.85rem; display: inline-flex; align-items: center;">
+                                            View CRM
                                         </button>
-                                        <button type="button" onclick="openDeleteModal('{{ route('admin.registrations.destroy', $reg->id) }}')" class="btn" style="background: #fee2e2; color: #ef4444; border: none; padding: 7px 12px; border-radius: 6px; cursor: pointer; transition: background 0.3s; font-weight: 600; font-size: 0.85rem;" onmouseover="this.style.background='#fca5a5'" onmouseout="this.style.background='#fee2e2'">
-                                            <i class="fa-regular fa-trash-can"></i>
+                                        <button type="button" onclick="openDeleteModal('{{ route('admin.registrations.destroy', $reg->id) }}')" class="btn" style="background: #fee2e2; color: #ef4444; border: none; padding: 7px 12px; border-radius: 6px; cursor: pointer; transition: background 0.3s; font-weight: 700; font-size: 0.82rem;" onmouseover="this.style.background='#fca5a5'" onmouseout="this.style.background='#fee2e2'" title="Delete">
+                                            Delete
                                         </button>
                                     </div>
                                 </td>
