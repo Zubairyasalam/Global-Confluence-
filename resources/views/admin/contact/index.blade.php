@@ -102,7 +102,8 @@
                     {{ $settings['contact_page_title'] ?? 'Contact Us' }}
                 </h2>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 30px;">
+                <!-- Official Website & Email Grid -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 20px;">
                     <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 18px 20px; display: flex; align-items: center; gap: 14px;">
                         <div style="width: 42px; height: 42px; background: #e6f7f5; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #00A896; font-size: 1.2rem; flex-shrink: 0;">
                             <i class="fa-solid fa-globe"></i>
@@ -121,6 +122,21 @@
                             <strong style="display: block; color: #1e293b; font-size: 0.92rem;">Official Email</strong>
                             <span style="color: #00A896; font-weight: 600; font-size: 0.88rem;">{{ $settings['contact_email'] ?? 'gohc2026@gmail.com' }}</span>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Foreign Students & Accommodation Preview -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 25px;">
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-left: 4px solid #028090; border-radius: 12px; padding: 18px 20px;">
+                        <strong style="display: block; color: #0f172a; font-size: 1rem; margin-bottom: 4px;">{{ $settings['contact_foreign_title'] ?? 'Foreign Students' }}</strong>
+                        <p style="color: #475569; font-size: 0.88rem; margin: 0 0 8px 0;">{{ $settings['contact_foreign_note'] ?? 'Kindly contact Dean IP regarding Visa' }}</p>
+                        <span style="color: #028090; font-weight: 700; font-size: 0.88rem;"><i class="fa-solid fa-envelope"></i> {{ $settings['contact_foreign_email'] ?? 'deanip@mcc.edu.in' }}</span>
+                    </div>
+
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-left: 4px solid #00A896; border-radius: 12px; padding: 18px 20px;">
+                        <strong style="display: block; color: #0f172a; font-size: 1rem; margin-bottom: 4px;">{{ $settings['contact_accom_title'] ?? 'Accommodation' }}</strong>
+                        <p style="color: #475569; font-size: 0.88rem; margin: 0 0 8px 0;">{{ $settings['contact_accom_note'] ?? 'Will be updated soon' }}</p>
+                        <span style="color: #64748b; font-size: 0.8rem; font-weight: 600;"><i class="fa-solid fa-clock"></i> Updates coming soon</span>
                     </div>
                 </div>
 
@@ -196,12 +212,60 @@
                 </div>
             </div>
 
+            <!-- Foreign Students & Accommodation Assistance -->
+            <div class="admin-card-section">
+                <h3 style="margin: 0 0 18px 0; font-size: 1.25rem; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-passport" style="color: #00A896;"></i> 2. Foreign Students & Accommodation Information
+                </h3>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <!-- Foreign Students Group -->
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-left: 4px solid #028090; border-radius: 12px; padding: 20px;">
+                        <h4 style="margin: 0 0 15px 0; font-size: 1.05rem; font-weight: 700; color: #0f172a;">
+                            <i class="fa-solid fa-globe" style="color: #028090;"></i> Foreign Students (Visa Assistance)
+                        </h4>
+                        
+                        <div style="margin-bottom: 14px;">
+                            <label class="form-label">Section Title</label>
+                            <input type="text" name="contact_foreign_title" value="{{ $settings['contact_foreign_title'] ?? 'Foreign Students' }}" class="form-input" required>
+                        </div>
+                        
+                        <div style="margin-bottom: 14px;">
+                            <label class="form-label">Visa Assistance Note / Message</label>
+                            <input type="text" name="contact_foreign_note" value="{{ $settings['contact_foreign_note'] ?? 'Kindly contact Dean IP regarding Visa' }}" class="form-input" required>
+                        </div>
+
+                        <div>
+                            <label class="form-label">Contact Email (Dean IP)</label>
+                            <input type="email" name="contact_foreign_email" value="{{ $settings['contact_foreign_email'] ?? 'deanip@mcc.edu.in' }}" class="form-input" required>
+                        </div>
+                    </div>
+
+                    <!-- Accommodation Group -->
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-left: 4px solid #00A896; border-radius: 12px; padding: 20px;">
+                        <h4 style="margin: 0 0 15px 0; font-size: 1.05rem; font-weight: 700; color: #0f172a;">
+                            <i class="fa-solid fa-hotel" style="color: #00A896;"></i> Accommodation Details
+                        </h4>
+
+                        <div style="margin-bottom: 14px;">
+                            <label class="form-label">Section Title</label>
+                            <input type="text" name="contact_accom_title" value="{{ $settings['contact_accom_title'] ?? 'Accommodation' }}" class="form-input" required>
+                        </div>
+
+                        <div>
+                            <label class="form-label">Accommodation Status / Note</label>
+                            <input type="text" name="contact_accom_note" value="{{ $settings['contact_accom_note'] ?? 'Will be updated soon' }}" class="form-input" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Contact Persons List -->
             <div class="admin-card-section">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 10px;">
                     <div>
                         <h3 style="margin: 0 0 4px 0; font-size: 1.25rem; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 8px;">
-                            <i class="fa-solid fa-address-book" style="color: #00A896;"></i> 2. Contact Persons List
+                            <i class="fa-solid fa-address-book" style="color: #00A896;"></i> 3. Contact Persons List
                         </h3>
                         <p style="color: #64748b; font-size: 0.9rem; margin: 0;">Add, edit, or remove specific contact designations and phone numbers.</p>
                     </div>

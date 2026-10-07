@@ -67,6 +67,19 @@ class RegistrationController extends Controller
             $fieldsData['id_card_original_name'] = $file->getClientOriginalName();
         }
 
+        // Handle Payment Receipt file upload
+        if ($request->hasFile('payment_receipt_file')) {
+            $file = $request->file('payment_receipt_file');
+            $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $extension = $file->getClientOriginalExtension();
+            $cleanName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $originalName);
+            $filename = time() . '_receipt_' . $cleanName . '.' . $extension;
+            
+            $path = $file->storeAs('receipts', $filename, 'public');
+            $fieldsData['payment_receipt_file'] = $path;
+            $fieldsData['payment_receipt_original_name'] = $file->getClientOriginalName();
+        }
+
         $registration->form_data = $fieldsData;
         
         $registration->title = $fieldsData['title'] ?? null;
@@ -83,7 +96,15 @@ class RegistrationController extends Controller
         $registration->reg_category = $request->input('reg_category');
         $registration->payment_method = !empty($fieldsData['transaction_id']) ? ('Txn: ' . $fieldsData['transaction_id']) : 'N/A';
 
-        $registration->category_name = $request->input('reg_category_name', 'Registration');
+        $catName = $request->input('reg_category_name');
+        if (!$catName) {
+            $catPriceNum = (int)$request->input('reg_category');
+            $matchingFee = \App\Models\RegistrationFee::all()->first(function($f) use ($catPriceNum) {
+                return (int)str_replace(',', '', $f->price_inr) === $catPriceNum;
+            });
+            $catName = $matchingFee ? $matchingFee->category_name : 'Registration';
+        }
+        $registration->category_name = $catName;
         $registration->total_amount = $totalAmount;
         $registration->addons = $addons;
         $registration->payment_status = 'completed'; // auto complete for demo purposes

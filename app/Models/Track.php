@@ -8,6 +8,8 @@ class Track extends Model
 {
     protected $fillable = [
         'title',
+        'badge',
+        'description',
         'bullet_points',
         'sort_order'
     ];

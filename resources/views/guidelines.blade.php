@@ -5,230 +5,201 @@
 @include('sections.topbar')
 @include('sections.navbar')
 
-    @php
-        $bannerTitle = \App\Models\SiteSetting::where('group', 'page_banners')->where('key', 'banner_publications_title')->value('value') ?? (\App\Models\SiteSetting::where('group', 'page_banners')->where('key', 'banner_guidelines_title')->value('value') ?? 'PUBLICATIONS');
-        $bannerImage = \App\Models\SiteSetting::where('group', 'page_banners')->where('key', 'banner_publications_image')->value('value') ?? \App\Models\SiteSetting::where('group', 'page_banners')->where('key', 'banner_guidelines_image')->value('value');
-    @endphp
-    <!-- Page Banner -->
-    <div class="page-banner" style="{{ $bannerImage ? "background-image: linear-gradient(rgba(10, 25, 47, 0.7), rgba(10, 25, 47, 0.8)), url('" . asset($bannerImage) . "');" : '' }}">
-        <div class="page-banner-content">
-            <h1 style="text-transform: uppercase;">{{ $bannerTitle }}</h1>
-        </div>
-    </div>
+@php
+    $bannerTitle = $settings['banner_publications_title'] ?? ($settings['banner_guidelines_title'] ?? 'PUBLICATIONS');
+    $pubTag = $settings['pub_tag'] ?? 'SCIENTIFIC PUBLICATIONS';
+    $pubTitle = $settings['pub_title'] ?? 'Scientific Publications';
+    $pubNote = $settings['pub_note'] ?? 'Journal list will be updated soon';
+    $pubAnnounceTitle = $settings['pub_announce_title'] ?? 'ANNOUNCEMENT';
 
-<style>
-    .guidelines-page-bg {
-        background: #f8fafc;
-        padding: 60px 20px;
-        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    $hasCustomPubItems = false;
+    $customPubItems = [];
+    for ($i = 1; $i <= 20; $i++) {
+        if (!empty($settings['pub_item_' . $i])) {
+            $customPubItems[] = $settings['pub_item_' . $i];
+            $hasCustomPubItems = true;
+        }
     }
 
-    .guidelines-container {
-        max-width: 1200px;
+    $defaultPubItems = [
+        'All the Presentation will be published as a conference proceedings in ISBN indexed book',
+        'Quality presentation will be peer reviewed and considered for further publication in selected Scopus/ WoS indexed journals'
+    ];
+
+    $displayItems = $hasCustomPubItems ? $customPubItems : $defaultPubItems;
+@endphp
+
+<!-- Page Banner -->
+<div class="page-banner" style="background: linear-gradient(135deg, #0a192f 0%, #0f172a 50%, #112240 100%); padding: 65px 20px 60px; text-align: center; color: #fff; position: relative;">
+    <div class="page-banner-content" style="max-width: 900px; margin: 0 auto; position: relative; z-index: 5;">
+        <h1 style="text-transform: uppercase; font-size: 2.3rem; font-weight: 800; letter-spacing: 1.5px; color: #ffffff !important; margin: 0; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">
+            {{ $bannerTitle }}
+        </h1>
+    </div>
+</div>
+
+<style>
+    .publications-page-wrap {
+        background: #f8fafc;
+        padding: 50px 20px 80px;
+        min-height: 450px;
+        font-family: 'Poppins', 'Inter', system-ui, sans-serif;
+    }
+
+    .publications-container {
+        max-width: 950px;
         margin: 0 auto;
     }
 
-    .gl-card {
+    .pub-main-card {
         background: #ffffff;
         border-radius: 16px;
-        padding: 40px;
-        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
-        margin-bottom: 30px;
         border: 1px solid #e2e8f0;
+        border-top: 4px solid #00A896;
+        border-bottom: 4px solid #00A896;
+        padding: 45px 40px;
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
-    /* Top Abstract Card */
-    .gl-card-primary {
-        border-bottom: 4px solid #009688;
+    .pub-main-card:hover {
+        box-shadow: 0 15px 40px rgba(0, 168, 150, 0.1);
     }
 
-    .gl-badge {
+    .pub-badge-tag {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
+        gap: 8px;
         background: #e6f7f5;
-        color: #009688;
-        padding: 6px 14px;
+        color: #00A896;
+        padding: 6px 16px;
         border-radius: 50px;
-        font-size: 0.75rem;
+        font-size: 0.8rem;
         font-weight: 800;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-bottom: 20px;
+        letter-spacing: 0.8px;
+        margin-bottom: 18px;
     }
 
-    .gl-title {
-        font-size: 1.6rem;
+    .pub-card-title {
+        font-size: 1.7rem;
         font-weight: 800;
         color: #0f172a;
-        margin: 0 0 30px 0;
+        margin: 0 0 26px 0;
+        letter-spacing: -0.3px;
     }
 
-    .gl-grid-abstract {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 25px 40px;
-        margin-bottom: 40px;
+    .pub-list {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin-bottom: 30px;
     }
 
-    .gl-list-item {
+    .pub-item {
         display: flex;
         align-items: flex-start;
-        gap: 12px;
+        gap: 14px;
     }
 
-    .gl-icon-check {
-        color: #009688;
-        font-size: 1.1rem;
+    .pub-check-icon {
+        color: #00A896;
+        font-size: 1.3rem;
         margin-top: 2px;
         flex-shrink: 0;
     }
 
-    .gl-item-text {
-        font-size: 0.9rem;
-        color: #475569;
-        line-height: 1.6;
-    }
-
-    .gl-item-text strong {
-        color: #1e293b;
-        font-weight: 700;
-    }
-
-    .gl-btn-submit {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        background: #009688;
-        color: #ffffff;
-        padding: 12px 28px;
-        border-radius: 50px;
-        font-weight: 700;
-        font-size: 0.95rem;
-        text-decoration: none;
-        transition: background 0.2s, transform 0.2s;
-    }
-
-    .gl-btn-submit:hover {
-        background: #00796b;
-        transform: translateY(-2px);
-        color: #ffffff;
-    }
-
-    .gl-btn-wrapper {
-        text-align: center;
-    }
-
-    /* Bottom 2 Cards Grid */
-    .gl-split-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 30px;
-    }
-
-    @media (max-width: 850px) {
-        .gl-split-grid {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    .gl-list-vertical {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-    }
-
-    .gl-dim-box {
-        background: #f1f5f9;
-        border: 1px solid #e2e8f0;
-        border-radius: 8px;
-        padding: 20px;
-        margin-top: 30px;
-    }
-
-    .gl-dim-label {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 0.75rem;
-        font-weight: 800;
-        color: #0f172a;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-bottom: 6px;
-    }
-
-    .gl-dim-value {
-        font-size: 0.95rem;
-        color: #475569;
+    .pub-item-text {
+        font-size: 1.02rem;
+        color: #334155;
+        line-height: 1.65;
         font-weight: 500;
-        margin: 0;
     }
 
+    /* Announcement Box matching screenshot */
+    .pub-announcement-box {
+        background: #f0fdfa;
+        border: 1.5px dashed #00A896;
+        border-radius: 12px;
+        padding: 16px 22px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-top: 10px;
+    }
+
+    .pub-bell-circle {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: #00A896;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 1.15rem;
+        box-shadow: 0 4px 10px rgba(0, 168, 150, 0.25);
+    }
+
+    .pub-announce-heading {
+        margin: 0 0 2px 0;
+        color: #00A896;
+        font-weight: 800;
+        font-size: 0.88rem;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+    }
+
+    .pub-announce-text {
+        margin: 0;
+        color: #334155;
+        font-size: 0.95rem;
+        font-weight: 500;
+    }
 </style>
 
-<div class="guidelines-page-bg">
-    <div class="guidelines-container">
+<div class="publications-page-wrap">
+    <div class="publications-container">
 
-        <!-- Publications Section -->
-        <div class="gl-card gl-card-primary" id="publications" style="margin-top: 0; border-top: 4px solid #009688;">
-            <div class="gl-badge">
-                <i class="fa-solid fa-book-open"></i> {{ $settings['pub_tag'] ?? ($settings['publication_badge'] ?? 'SCIENTIFIC PUBLICATIONS') }}
-            </div>
-            <h2 class="gl-title" style="margin-bottom: 24px;">{{ $settings['pub_title'] ?? 'Conference Proceedings & Publication Opportunities' }}</h2>
+        <!-- Scientific Publications Card -->
+        <div class="pub-main-card">
+            
+            @if(!empty($pubTag))
+                <div class="pub-badge-tag">
+                    <i class="fa-solid fa-book-open"></i> {{ $pubTag }}
+                </div>
+            @endif
 
-            <div class="gl-list-vertical" style="margin-bottom: 25px;">
-                @php
-                    $pubCount = $settings['pub_count'] ?? 0;
-                    $hasCustomPubItems = false;
-                    for($i = 1; $i <= 10; $i++) {
-                        if(!empty($settings['pub_item_' . $i])) {
-                            $hasCustomPubItems = true;
-                            break;
-                        }
-                    }
-                @endphp
+            <h2 class="pub-card-title">
+                {{ $pubTitle }}
+            </h2>
 
-                @if($hasCustomPubItems)
-                    @for($i = 1; $i <= 10; $i++)
-                        @if(!empty($settings['pub_item_' . $i]))
-                        <div class="gl-list-item" style="font-size: 1rem;">
-                            <i class="fa-solid fa-circle-check gl-icon-check" style="font-size: 1.25rem;"></i>
-                            <div class="gl-item-text" style="font-size: 1rem; color: #1e293b; font-weight: 500;">
-                                {!! $settings['pub_item_' . $i] !!}
-                            </div>
-                        </div>
-                        @endif
-                    @endfor
-                @else
-                    <!-- Default Official Requirements -->
-                    <div class="gl-list-item" style="font-size: 1rem;">
-                        <i class="fa-solid fa-circle-check gl-icon-check" style="font-size: 1.25rem;"></i>
-                        <div class="gl-item-text" style="font-size: 1rem; color: #1e293b; font-weight: 500;">
-                            <strong>1.</strong> All the Presentation will be published as a conference proceedings in ISBN indexed book
+            <!-- Bullet Points List -->
+            <div class="pub-list">
+                @foreach($displayItems as $item)
+                    <div class="pub-item">
+                        <i class="fa-solid fa-circle-check pub-check-icon"></i>
+                        <div class="pub-item-text">
+                            {!! $item !!}
                         </div>
                     </div>
-                    <div class="gl-list-item" style="font-size: 1rem;">
-                        <i class="fa-solid fa-circle-check gl-icon-check" style="font-size: 1.25rem;"></i>
-                        <div class="gl-item-text" style="font-size: 1rem; color: #1e293b; font-weight: 500;">
-                            <strong>2.</strong> Quality presentation will be peer reviewed and considered for further publication in selected Scopus/ WoS indexed journals
-                        </div>
-                    </div>
-                @endif
+                @endforeach
             </div>
 
-            <!-- Journal List Notice -->
-            <div style="background: linear-gradient(135deg, #e6f7f5 0%, #f0fdfa 100%); border: 1.5px dashed #009688; border-radius: 12px; padding: 18px 24px; display: flex; align-items: center; gap: 14px;">
-                <div style="width: 40px; height: 40px; border-radius: 50%; background: #009688; color: #ffffff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 1.1rem;">
-                    <i class="fa-solid fa-bell"></i>
+            <!-- Announcement Notice Box -->
+            @if(!empty($pubNote))
+                <div class="pub-announcement-box">
+                    <div class="pub-bell-circle">
+                        <i class="fa-solid fa-bell"></i>
+                    </div>
+                    <div>
+                        <h5 class="pub-announce-heading">{{ $pubAnnounceTitle }}</h5>
+                        <p class="pub-announce-text">{{ $pubNote }}</p>
+                    </div>
                 </div>
-                <div>
-                    <h5 style="margin: 0 0 3px 0; color: #00796b; font-weight: 700; font-size: 0.98rem; text-transform: uppercase; letter-spacing: 0.5px;">Announcement</h5>
-                    <p style="margin: 0; color: #334155; font-size: 0.95rem; font-weight: 600;">
-                        {{ $settings['pub_note'] ?? 'Journal list will be updated soon' }}
-                    </p>
-                </div>
-            </div>
+            @endif
+
         </div>
 
     </div>

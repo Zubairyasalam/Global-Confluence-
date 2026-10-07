@@ -327,6 +327,7 @@ class AdminController extends Controller
     public function updateGuidelinesSettings(Request $request)
     {
         // Section titles & static fields
+        if ($request->has('banner_publications_title')) SiteSetting::updateOrCreate(['key' => 'banner_publications_title'], ['value' => $request->banner_publications_title, 'group' => 'guidelines']);
         if ($request->has('abstract_tag')) SiteSetting::updateOrCreate(['key' => 'abstract_tag'], ['value' => $request->abstract_tag, 'group' => 'guidelines']);
         if ($request->has('abstract_title')) SiteSetting::updateOrCreate(['key' => 'abstract_title'], ['value' => $request->abstract_title, 'group' => 'guidelines']);
         if ($request->has('oral_title')) SiteSetting::updateOrCreate(['key' => 'oral_title'], ['value' => $request->oral_title, 'group' => 'guidelines']);
@@ -334,6 +335,9 @@ class AdminController extends Controller
         if ($request->has('poster_dim_label')) SiteSetting::updateOrCreate(['key' => 'poster_dim_label'], ['value' => $request->poster_dim_label, 'group' => 'guidelines']);
         if ($request->has('poster_dim_val')) SiteSetting::updateOrCreate(['key' => 'poster_dim_val'], ['value' => $request->poster_dim_val, 'group' => 'guidelines']);
         if ($request->has('pub_title')) SiteSetting::updateOrCreate(['key' => 'pub_title'], ['value' => $request->pub_title, 'group' => 'guidelines']);
+        if ($request->has('pub_tag')) SiteSetting::updateOrCreate(['key' => 'pub_tag'], ['value' => $request->pub_tag, 'group' => 'guidelines']);
+        if ($request->has('pub_announce_title')) SiteSetting::updateOrCreate(['key' => 'pub_announce_title'], ['value' => $request->pub_announce_title, 'group' => 'guidelines']);
+        if ($request->has('pub_note')) SiteSetting::updateOrCreate(['key' => 'pub_note'], ['value' => $request->pub_note, 'group' => 'guidelines']);
         if ($request->has('pub_desc')) SiteSetting::updateOrCreate(['key' => 'pub_desc'], ['value' => $request->pub_desc, 'group' => 'guidelines']);
 
         // 1. Abstract Bullet Items
@@ -586,38 +590,54 @@ class AdminController extends Controller
         return back()->with('success', 'Option deleted successfully.');
     }
 
-    // CMS: Programs & Themes (Workshop & Thrust Areas)
+    // CMS: Programs & Themes (Scientific Tracks & Thrust Areas)
     public function programsSettings()
     {
-        $settings = SiteSetting::whereIn('group', ['workshop', 'thrust_areas'])->get()->groupBy('group');
+        $settings = SiteSetting::whereIn('group', ['tracks_page', 'workshop', 'thrust_areas'])->pluck('value', 'key')->toArray();
         $tracks = \App\Models\Track::orderBy('sort_order')->get();
-        return view('admin.programs.index', compact('settings', 'tracks'));
+        $references = isset($settings['tracks_references_json']) ? json_decode($settings['tracks_references_json'], true) : [];
+        return view('admin.programs.index', compact('settings', 'tracks', 'references'));
     }
 
     public function updateProgramsSettings(Request $request)
     {
-        $data = $request->except('_token');
-        foreach ($data as $key => $value) {
-            // Handle image uploads if present
-            if (str_ends_with($key, '_file')) {
-                if ($request->hasFile($key)) {
-                    $originalKey = str_replace('_file', '', $key);
-                    $file = $request->file($key);
-                    $fileName = time() . '_' . $file->getClientOriginalName();
-                    $file->move(public_path('images/settings'), $fileName);
-                    SiteSetting::where('key', $originalKey)->update(['value' => 'images/settings/' . $fileName]);
-                }
-                continue;
+        $keys = [
+            'tracks_banner_title',
+            'tracks_banner_subtitle',
+            'tracks_section_badge',
+            'tracks_section_title',
+            'tracks_section_desc',
+            'tracks_references_title'
+        ];
+
+        foreach ($keys as $key) {
+            if ($request->has($key)) {
+                SiteSetting::updateOrCreate(
+                    ['key' => $key, 'group' => 'tracks_page'],
+                    ['value' => $request->input($key)]
+                );
             }
-            SiteSetting::where('key', $key)->update(['value' => $value]);
         }
-        return back()->with('success', 'Programs & Themes updated successfully.');
+
+        // Handle dynamic references
+        if ($request->has('references_list')) {
+            $rawRefs = $request->input('references_list', []);
+            $cleanRefs = array_values(array_filter(array_map('trim', (array)$rawRefs), fn($r) => !empty($r)));
+            SiteSetting::updateOrCreate(
+                ['key' => 'tracks_references_json', 'group' => 'tracks_page'],
+                ['value' => json_encode($cleanRefs)]
+            );
+        }
+
+        return back()->with('success', 'Scientific Tracks & Themes content updated successfully.');
     }
 
     public function storeTrack(Request $request)
     {
         $data = $request->validate([
             'title' => 'required|string|max:255',
+            'badge' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
             'sort_order' => 'integer',
             'bullet_points' => 'nullable|array'
         ]);
@@ -639,6 +659,8 @@ class AdminController extends Controller
         $track = \App\Models\Track::findOrFail($id);
         $data = $request->validate([
             'title' => 'required|string|max:255',
+            'badge' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
             'sort_order' => 'integer',
             'bullet_points' => 'nullable|array'
         ]);
@@ -1028,15 +1050,23 @@ class AdminController extends Controller
     public function storeSpeaker(Request $request)
     {
         $data = $request->validate([
-            'type' => 'required|string|in:keynote,distinguished',
+            'type' => 'required|string|in:keynote,distinguished,pre_conference',
             'name' => 'required|string|max:255',
             'h_index' => 'nullable|string|max:50',
-            'university' => 'required|string|max:255',
-            'country' => 'required|string|max:255',
-            'title' => 'nullable|string', // Some invited speakers might not have titles
+            'university' => 'nullable|string',
+            'country' => 'nullable|string|max:255',
+            'title' => 'nullable|string',
+            'field' => 'nullable|string',
             'sort_order' => 'required|integer',
-            'image' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
         ]);
+
+        if (empty($data['country'])) {
+            $data['country'] = 'India';
+        }
+        if (empty($data['university'])) {
+            $data['university'] = '-';
+        }
 
         if ($request->hasFile('image')) {
             $imageName = time().'.'.$request->image->extension();  
@@ -1053,27 +1083,28 @@ class AdminController extends Controller
         $speaker = \App\Models\Speaker::findOrFail($id);
         
         $data = $request->validate([
-            'type' => 'required|string|in:keynote,distinguished',
+            'type' => 'required|string|in:keynote,distinguished,pre_conference',
             'name' => 'required|string|max:255',
             'h_index' => 'nullable|string|max:50',
-            'university' => 'required|string|max:255',
-            'country' => 'required|string|max:255',
+            'university' => 'nullable|string',
+            'country' => 'nullable|string|max:255',
             'title' => 'nullable|string',
+            'field' => 'nullable|string',
             'sort_order' => 'required|integer',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
         ]);
+
+        if (empty($data['country'])) {
+            $data['country'] = 'India';
+        }
+        if (empty($data['university'])) {
+            $data['university'] = '-';
+        }
 
         if ($request->hasFile('image')) {
             $imageName = time().'.'.$request->image->extension();  
             $request->image->move(public_path('images/speakers'), $imageName);
             $data['image_path'] = 'images/speakers/' . $imageName;
-            
-            // Optionally delete old image
-            if ($speaker->image_path && file_exists(public_path($speaker->image_path))) {
-                // To avoid deleting default seeded images, we could add logic here, 
-                // but for now let's just leave old files or delete them.
-                // unlink(public_path($speaker->image_path));
-            }
         }
 
         $speaker->update($data);
@@ -1405,13 +1436,17 @@ class AdminController extends Controller
     // --- Awards CMS ---
     public function awards()
     {
-        $settings = \App\Models\SiteSetting::whereIn('group', ['awards_page', 'awards'])->pluck('value', 'key')->all();
+        $settings = \App\Models\SiteSetting::whereIn('group', ['awards_page', 'awards', 'page_banners'])->pluck('value', 'key')->all();
         $awards = \App\Models\Award::orderBy('sort_order')->get();
         return view('admin.awards.index', compact('settings', 'awards'));
     }
 
     public function updateAwardsSettings(Request $request)
     {
+        if ($request->has('awards_banner_title')) {
+            \App\Models\SiteSetting::updateOrCreate(['key' => 'banner_awards_title', 'group' => 'page_banners'], ['value' => $request->awards_banner_title]);
+            \App\Models\SiteSetting::updateOrCreate(['key' => 'awards_banner_title', 'group' => 'awards_page'], ['value' => $request->awards_banner_title]);
+        }
         if ($request->has('awards_section_title')) \App\Models\SiteSetting::updateOrCreate(['key' => 'awards_section_title'], ['value' => $request->awards_section_title, 'group' => 'awards_page']);
         if ($request->has('awards_section_sub')) \App\Models\SiteSetting::updateOrCreate(['key' => 'awards_section_sub'], ['value' => $request->awards_section_sub, 'group' => 'awards_page']);
         if ($request->has('awards_footer_icon')) \App\Models\SiteSetting::updateOrCreate(['key' => 'awards_footer_icon'], ['value' => $request->awards_footer_icon, 'group' => 'awards_page']);
@@ -1419,26 +1454,33 @@ class AdminController extends Controller
 
         if ($request->has('award_titles')) {
             \App\Models\SiteSetting::where('group', 'awards_page')->where(function($q) {
-                $q->where('key', 'like', 'award\_%\_title')->orWhere('key', 'like', 'award\_%\_amount')->orWhere('key', 'like', 'award\_%\_icon');
+                $q->where('key', 'like', 'award\_%\_title')
+                  ->orWhere('key', 'like', 'award\_%\_amount')
+                  ->orWhere('key', 'like', 'award\_%\_icon')
+                  ->orWhere('key', 'like', 'award\_%\_proforma');
             })->delete();
 
             $titles = $request->input('award_titles', []);
             $amounts = $request->input('award_amounts', []);
             $icons = $request->input('award_icons', []);
+            $proformas = $request->input('award_proformas', []);
 
             $count = 0;
             foreach ($titles as $idx => $title) {
-                if (!empty($title)) {
+                if (!empty(trim($title))) {
                     $count++;
-                    \App\Models\SiteSetting::updateOrCreate(['key' => "award_{$count}_title"], ['value' => $title, 'group' => 'awards_page']);
-                    \App\Models\SiteSetting::updateOrCreate(['key' => "award_{$count}_amount"], ['value' => $amounts[$idx] ?? '', 'group' => 'awards_page']);
-                    \App\Models\SiteSetting::updateOrCreate(['key' => "award_{$count}_icon"], ['value' => $icons[$idx] ?? 'fa-solid fa-award', 'group' => 'awards_page']);
+                    \App\Models\SiteSetting::updateOrCreate(['key' => "award_{$count}_title", 'group' => 'awards_page'], ['value' => trim($title)]);
+                    \App\Models\SiteSetting::updateOrCreate(['key' => "award_{$count}_amount", 'group' => 'awards_page'], ['value' => trim($amounts[$idx] ?? '')]);
+                    \App\Models\SiteSetting::updateOrCreate(['key' => "award_{$count}_icon", 'group' => 'awards_page'], ['value' => trim($icons[$idx] ?? 'fa-solid fa-award')]);
+                    if (isset($proformas[$idx])) {
+                        \App\Models\SiteSetting::updateOrCreate(['key' => "award_{$count}_proforma", 'group' => 'awards_page'], ['value' => trim($proformas[$idx])]);
+                    }
                 }
             }
-            \App\Models\SiteSetting::updateOrCreate(['key' => 'awards_count'], ['value' => $count, 'group' => 'awards_page']);
+            \App\Models\SiteSetting::updateOrCreate(['key' => 'awards_count', 'group' => 'awards_page'], ['value' => $count]);
         }
 
-        return back()->with('success', 'Awards settings updated successfully.');
+        return back()->with('success', 'Conference Awards settings updated successfully.');
     }
 
     public function storeAward(Request $request)
@@ -2014,21 +2056,117 @@ class AdminController extends Controller
 
     public function stallBookingSettings()
     {
-        $settings = \App\Models\SiteSetting::where('group', 'custom_pages')->pluck('value', 'key')->toArray();
-        return view('admin.stall_booking.index', compact('settings'));
+        $settings = \App\Models\SiteSetting::where('group', 'stall_booking')->pluck('value', 'key')->toArray();
+        $brochures = isset($settings['stall_brochures_json']) ? json_decode($settings['stall_brochures_json'], true) : [];
+        $sponsors = isset($settings['stall_sponsors_json']) ? json_decode($settings['stall_sponsors_json'], true) : [];
+        return view('admin.stall_booking.index', compact('settings', 'brochures', 'sponsors'));
     }
 
     public function updateStallBookingSettings(Request $request)
     {
-        $keys = ['page_stall_banner_title', 'page_stall_card_title', 'page_stall-booking-and-merchandise'];
+        $keys = [
+            'stall_banner_title',
+            'stall_banner_subtitle',
+            'stall_sponsors_badge',
+            'stall_sponsors_title',
+            'stall_cta_text',
+            'stall_cta_btn_label',
+            'stall_cta_btn_url'
+        ];
         foreach ($keys as $key) {
             if ($request->has($key)) {
                 \App\Models\SiteSetting::updateOrCreate(
-                    ['key' => $key, 'group' => 'custom_pages'],
+                    ['key' => $key, 'group' => 'stall_booking'],
                     ['value' => $request->input($key)]
                 );
             }
         }
+
+        // Process Brochures
+        $bTitles = $request->input('brochure_titles', []);
+        $bExistingImages = $request->input('brochure_existing_images', []);
+        $bUploadedFiles = $request->file('brochure_files', []);
+
+        $brochures = [];
+        foreach ($bTitles as $idx => $title) {
+            if (empty(trim($title))) continue;
+
+            $imgPath = $bExistingImages[$idx] ?? 'images/stall_booking/stall_brochure_1.jpg';
+            if (isset($bUploadedFiles[$idx]) && $bUploadedFiles[$idx]->isValid()) {
+                $file = $bUploadedFiles[$idx];
+                $filename = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
+                $file->move(public_path('images/stall_booking'), $filename);
+                $imgPath = 'images/stall_booking/' . $filename;
+            }
+
+            $brochures[] = [
+                'title' => trim($title),
+                'image' => $imgPath
+            ];
+        }
+
+        // Check if adding a new brochure
+        if ($request->filled('new_brochure_title') && $request->hasFile('new_brochure_file')) {
+            $file = $request->file('new_brochure_file');
+            if ($file->isValid()) {
+                $filename = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
+                $file->move(public_path('images/stall_booking'), $filename);
+                $brochures[] = [
+                    'title' => trim($request->input('new_brochure_title')),
+                    'image' => 'images/stall_booking/' . $filename
+                ];
+            }
+        }
+
+        \App\Models\SiteSetting::updateOrCreate(
+            ['key' => 'stall_brochures_json', 'group' => 'stall_booking'],
+            ['value' => json_encode(array_values($brochures))]
+        );
+
+        // Process Sponsors
+        $sNames = $request->input('sponsor_names', []);
+        $sLinks = $request->input('sponsor_links', []);
+        $sExistingLogos = $request->input('sponsor_existing_logos', []);
+        $sUploadedFiles = $request->file('sponsor_files', []);
+
+        $sponsors = [];
+        foreach ($sNames as $idx => $name) {
+            if (empty(trim($name))) continue;
+
+            $logoPath = $sExistingLogos[$idx] ?? 'images/sponsors/anderson_logo.svg';
+            if (isset($sUploadedFiles[$idx]) && $sUploadedFiles[$idx]->isValid()) {
+                $file = $sUploadedFiles[$idx];
+                $filename = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
+                $file->move(public_path('images/sponsors'), $filename);
+                $logoPath = 'images/sponsors/' . $filename;
+            }
+
+            $sponsors[] = [
+                'name' => trim($name),
+                'link' => trim($sLinks[$idx] ?? '#'),
+                'logo' => $logoPath
+            ];
+        }
+
+        // Check if adding a new sponsor
+        if ($request->filled('new_sponsor_name') && $request->hasFile('new_sponsor_file')) {
+            $file = $request->file('new_sponsor_file');
+            if ($file->isValid()) {
+                $filename = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
+                $file->move(public_path('images/sponsors'), $filename);
+                $sponsors[] = [
+                    'name' => trim($request->input('new_sponsor_name')),
+                    'link' => trim($request->input('new_sponsor_link', '#')),
+                    'logo' => 'images/sponsors/' . $filename
+                ];
+            }
+        }
+
+        \App\Models\SiteSetting::updateOrCreate(
+            ['key' => 'stall_sponsors_json', 'group' => 'stall_booking'],
+            ['value' => json_encode(array_values($sponsors))]
+        );
+
         return back()->with('success', 'Stall Booking and Merchandise settings updated successfully.');
     }
 

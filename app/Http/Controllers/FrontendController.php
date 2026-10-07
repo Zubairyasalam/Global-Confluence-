@@ -24,6 +24,29 @@ class FrontendController extends Controller
             return view('contact', compact('settings'));
         }
 
+        if ($slug === 'oral-presentation') {
+            return view('events.oral_presentation');
+        }
+
+        if ($slug === 'poster-presentation') {
+            return view('events.poster_presentation');
+        }
+
+        if ($slug === 'innovation-pitch' || $slug === 'innovator-pitch' || $slug === 'innovators-pitch') {
+            return view('events.innovation_pitch');
+        }
+
+        if ($slug === 'hackathon' || $slug === 'hackathon-challenge') {
+            return view('events.hackathon');
+        }
+
+        if ($slug === 'stall-booking-and-merchandise' || $slug === 'stall-booking' || $slug === 'stall-booking-merchandise') {
+            $settings = \App\Models\SiteSetting::where('group', 'stall_booking')->pluck('value', 'key')->toArray();
+            $brochures = isset($settings['stall_brochures_json']) ? json_decode($settings['stall_brochures_json'], true) : [];
+            $sponsors = isset($settings['stall_sponsors_json']) ? json_decode($settings['stall_sponsors_json'], true) : [];
+            return view('stall_booking', compact('settings', 'brochures', 'sponsors'));
+        }
+
         $formattedTitle = ucwords(str_replace('-', ' ', $slug));
         $content = \App\Models\SiteSetting::where('group', 'custom_pages')->where('key', 'page_' . $slug)->value('value');
         $bannerTitle = \App\Models\SiteSetting::where('group', 'custom_pages')->where('key', 'page_stall_banner_title')->value('value');

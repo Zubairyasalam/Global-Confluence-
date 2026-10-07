@@ -17,27 +17,39 @@
     <style>
         .whatsapp-float {
             position: fixed;
-            width: 60px;
-            height: 60px;
-            bottom: 40px;
-            left: 40px;
-            background-color: #25d366;
+            width: 68px;
+            height: 68px;
+            bottom: 35px;
+            left: 35px;
+            background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
             color: #FFF;
-            border-radius: 50px;
+            border-radius: 50%;
             text-align: center;
-            font-size: 32px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            font-size: 42px;
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.5);
             z-index: 1000;
             display: flex;
             align-items: center;
             justify-content: center;
             text-decoration: none;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: pulse-green 2.5s infinite;
+        }
+        .whatsapp-float i {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
         }
         .whatsapp-float:hover {
-            transform: scale(1.1);
+            transform: scale(1.15) translateY(-4px);
             color: #FFF;
-            box-shadow: 0 6px 14px rgba(0,0,0,0.2);
+            box-shadow: 0 12px 30px rgba(37, 211, 102, 0.7);
+        }
+        @keyframes pulse-green {
+            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.65); }
+            70% { box-shadow: 0 0 0 18px rgba(37, 211, 102, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
         }
     </style>
 </head>

@@ -518,7 +518,15 @@
                                         <i class="fa-solid fa-user-tie" style="margin-right: 8px;"></i> Adjudicator
                                     </strong>
                                     <div style="color: #0f172a; font-weight: 700; line-height: 1.6; font-size: 1.05rem;">
-                                        {!! implode('<div style="color: #009688; font-weight: 800; margin: 4px 0;">&amp;</div>', array_map('trim', explode('&', nl2br(e($tAdjudicator))))) !!}
+                                        @php
+                                            $adjItems = array_values(array_filter(array_map('trim', preg_split('/\s*(?:&amp;|&)\s*/i', $tAdjudicator))));
+                                        @endphp
+                                        @foreach($adjItems as $idx => $item)
+                                            @if($idx > 0)
+                                                <div style="color: #009688; font-weight: 800; margin: 4px 0;">&amp;</div>
+                                            @endif
+                                            <div>{!! nl2br(e($item)) !!}</div>
+                                        @endforeach
                                     </div>
                                 </div>
                             @endif
@@ -528,7 +536,15 @@
                                         <i class="fa-solid fa-users" style="margin-right: 8px;"></i> Staff Incharge
                                     </strong>
                                     <div style="color: #0f172a; font-weight: 700; line-height: 1.6; font-size: 1.05rem;">
-                                        {!! implode('<div style="color: #009688; font-weight: 800; margin: 4px 0;">&amp;</div>', array_map('trim', explode('&', nl2br(e($tStaff))))) !!}
+                                        @php
+                                            $staffItems = array_values(array_filter(array_map('trim', preg_split('/\s*(?:&amp;|&)\s*/i', $tStaff))));
+                                        @endphp
+                                        @foreach($staffItems as $idx => $item)
+                                            @if($idx > 0)
+                                                <div style="color: #009688; font-weight: 800; margin: 4px 0;">&amp;</div>
+                                            @endif
+                                            <div>{!! nl2br(e($item)) !!}</div>
+                                        @endforeach
                                     </div>
                                 </div>
                             @endif

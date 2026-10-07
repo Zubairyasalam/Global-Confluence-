@@ -44,6 +44,7 @@
         <a href="{{ route('admin.partner_logos') }}" class="btn" style="text-align: center; padding: 20px; font-size: 1.1rem; background: var(--admin-white); color: var(--admin-sidebar); border: 1px solid var(--admin-border);">
             <i class="fa-solid fa-handshake" style="font-size: 2rem; display: block; margin-bottom: 10px; color: var(--admin-primary);"></i> Partner & Accreditation Logos
         </a>
+
     </div>
 </div>
 @endsection

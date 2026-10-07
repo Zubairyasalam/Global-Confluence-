@@ -13,7 +13,7 @@
         :root {
             --admin-bg: #f4f7fb;
             --admin-sidebar: #0f172a;
-            --admin-sidebar-hover: rgba(255, 255, 255, 0.05);
+            --admin-sidebar-hover: rgba(255, 255, 255, 0.06);
             --admin-primary: #00A896;
             --admin-text: #475569;
             --admin-white: #ffffff;
@@ -37,7 +37,7 @@
 
         /* Sidebar */
         .sidebar {
-            width: 260px;
+            width: 270px;
             background: linear-gradient(180deg, var(--admin-sidebar) 0%, #1e293b 100%);
             color: #94a3b8;
             display: flex;
@@ -73,10 +73,10 @@
 
         .nav-links {
             list-style: none;
-            padding: 20px 0;
+            padding: 15px 0 30px;
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 3px;
             overflow-y: auto;
             flex: 1;
         }
@@ -101,38 +101,140 @@
             background-color: rgba(0, 0, 0, 0.2);
         }
 
-        .nav-links li a {
+        .nav-links li a.nav-item-link {
             display: flex;
             align-items: center;
-            gap: 15px;
-            padding: 12px 25px;
+            gap: 12px;
+            padding: 11px 22px;
             color: #cbd5e1;
             text-decoration: none;
             font-weight: 500;
             transition: all 0.2s ease;
-            font-size: 0.95rem;
+            font-size: 0.92rem;
+            border-left: 4px solid transparent;
         }
 
-        .nav-links li a:hover, .nav-links li a.active {
+        .nav-links li a.nav-item-link:hover, .nav-links li a.nav-item-link.active {
             background-color: var(--admin-sidebar-hover);
             color: #fff;
             border-left: 4px solid var(--admin-primary);
         }
-        .nav-links li a:hover {
-            padding-left: 30px;
+        .nav-links li a.nav-item-link:hover {
+            padding-left: 26px;
         }
 
-        .nav-links li a i {
-            font-size: 1.2rem;
-            width: 24px;
+        .nav-links li a.nav-item-link i {
+            font-size: 1.15rem;
+            width: 22px;
             text-align: center;
+        }
+
+        /* Dropdown Category in Sidebar */
+        .nav-item-dropdown {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .nav-dropdown-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 11px 22px;
+            color: #cbd5e1;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.92rem;
+            cursor: pointer;
+            border-left: 4px solid transparent;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .nav-dropdown-toggle:hover, .nav-item-dropdown.open .nav-dropdown-toggle {
+            background-color: var(--admin-sidebar-hover);
+            color: #fff;
+        }
+
+        .nav-item-dropdown.open .nav-dropdown-toggle {
+            border-left-color: var(--admin-primary);
+        }
+
+        .nav-dropdown-toggle .toggle-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-dropdown-toggle .toggle-left i {
+            font-size: 1.15rem;
+            width: 22px;
+            text-align: center;
+        }
+
+        .nav-dropdown-toggle .chevron {
+            font-size: 0.72rem;
+            transition: transform 0.25s ease;
+            color: #94a3b8;
+        }
+
+        .nav-item-dropdown.open .nav-dropdown-toggle .chevron {
+            transform: rotate(180deg);
+            color: var(--admin-primary);
+        }
+
+        .sub-nav-links {
+            list-style: none;
+            padding: 4px 0 6px 0;
+            background: rgba(15, 23, 42, 0.4);
+            display: none;
+        }
+
+        .nav-item-dropdown.open .sub-nav-links {
+            display: block;
+        }
+
+        .sub-nav-links li a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 20px 8px 45px;
+            font-size: 0.86rem;
+            color: #94a3b8;
+            text-decoration: none;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        .sub-nav-links li a:hover, .sub-nav-links li a.active {
+            color: #38bdf8;
+            background-color: rgba(255, 255, 255, 0.04);
+            border-left-color: #38bdf8;
+            padding-left: 50px;
+        }
+
+        .sub-nav-links li a i {
+            font-size: 0.8rem;
+            width: 14px;
+            text-align: center;
+        }
+
+        .sidebar-section-header {
+            padding: 16px 22px 6px;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            font-weight: 800;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         /* Main Content */
         .main-content {
             flex: 1;
             min-width: 0;
-            margin-left: 260px;
+            margin-left: 270px;
             display: flex;
             flex-direction: column;
             background-color: var(--admin-bg);
@@ -279,137 +381,210 @@
         <div class="sidebar-header">
             <img src="{{ asset('images/MMC-LOGO-2.jpg') }}" alt="MMC Logo" style="height: 70px; width: auto; object-fit: contain; mix-blend-mode: multiply;">
         </div>
+        
         <ul class="nav-links">
+            <!-- 0. Dashboard & Data Records -->
             <li>
-                <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                <a href="{{ route('admin.dashboard') }}" class="nav-item-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                     <i class="fa-solid fa-chart-pie"></i> Dashboard
                 </a>
             </li>
-            
-            <li style="padding: 15px 25px 5px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; color: #64748b; margin-top: 10px;">
-                Records
-            </li>
             <li>
-                <a href="{{ route('admin.registrations') }}" class="{{ request()->routeIs('admin.registrations') ? 'active' : '' }}">
-                    Registrations
+                <a href="{{ route('admin.registrations') }}" class="nav-item-link {{ request()->routeIs('admin.registrations') ? 'active' : '' }}">
+                    <i class="fa-solid fa-users"></i> Registered Attendees
                 </a>
             </li>
             <li>
-                <a href="{{ route('admin.award_applications') }}" class="{{ request()->routeIs('admin.award_applications') ? 'active' : '' }}">
-                    Award Applications
+                <a href="{{ route('admin.submissions') }}" class="nav-item-link {{ request()->routeIs('admin.submissions') ? 'active' : '' }}">
+                    <i class="fa-solid fa-file-arrow-up"></i> Paper Submissions
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('admin.award_applications') }}" class="nav-item-link {{ request()->routeIs('admin.award_applications') ? 'active' : '' }}">
+                    <i class="fa-solid fa-file-lines"></i> Award Applications
                 </a>
             </li>
 
-            <li style="padding: 15px 25px 5px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; color: #64748b; margin-top: 10px;">
-                Website Pages
+            <!-- SECTION: MAIN NAVIGATION PAGES (Arranged exactly as Frontend UI) -->
+            <li class="sidebar-section-header">
+                <i class="fa-solid fa-layer-group" style="font-size: 0.75rem;"></i> Navigation Pages
             </li>
+
+            <!-- 1. Home -->
             <li>
-                <a href="{{ route('admin.home') }}" class="{{ request()->routeIs('admin.home') || request()->is('admin/home/*') ? 'active' : '' }}">
-                    <i class="fa-solid fa-house"></i> Home
+                <a href="{{ route('admin.home') }}" class="nav-item-link {{ request()->routeIs('admin.home') || request()->is('admin/home*') ? 'active' : '' }}">
+                    <i class="fa-solid fa-house"></i> 1. Home
+                </a>
+            </li>
+
+            <!-- 2. Technical Events (Dropdown matching UI exactly) -->
+            @php
+                $isTechEventsActive = request()->routeIs('admin.tracks') 
+                    || request()->routeIs('admin.oral_presentation') 
+                    || request()->routeIs('admin.poster_presentation') 
+                    || request()->routeIs('admin.innovation_pitch') 
+                    || request()->routeIs('admin.hackathon') 
+                    || request()->routeIs('admin.guidelines');
+            @endphp
+            <li class="nav-item-dropdown {{ $isTechEventsActive ? 'open' : '' }}">
+                <div class="nav-dropdown-toggle" onclick="toggleNavDropdown(this)">
+                    <div class="toggle-left">
+                        <i class="fa-solid fa-calendar-check"></i> 2. Technical Events
+                    </div>
+                    <i class="fa-solid fa-chevron-down chevron"></i>
+                </div>
+                <ul class="sub-nav-links">
+                    <li>
+                        <a href="{{ route('admin.tracks') }}" class="{{ request()->routeIs('admin.tracks') ? 'active' : '' }}">
+                            <i class="fa-solid fa-flask"></i> Tracks
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.oral_presentation') }}" class="{{ request()->routeIs('admin.oral_presentation') ? 'active' : '' }}">
+                            <i class="fa-solid fa-microphone-lines"></i> Oral Presentation
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.poster_presentation') }}" class="{{ request()->routeIs('admin.poster_presentation') ? 'active' : '' }}">
+                            <i class="fa-solid fa-image"></i> Poster Presentation
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.innovation_pitch') }}" class="{{ request()->routeIs('admin.innovation_pitch') ? 'active' : '' }}">
+                            <i class="fa-solid fa-lightbulb"></i> Innovation Pitch
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.hackathon') }}" class="{{ request()->routeIs('admin.hackathon') ? 'active' : '' }}">
+                            <i class="fa-solid fa-code"></i> Hackathon
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.guidelines') }}" class="{{ request()->routeIs('admin.guidelines') ? 'active' : '' }}">
+                            <i class="fa-solid fa-book-open"></i> Publications
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <!-- 3. Registrations -->
+            <li>
+                <a href="{{ route('admin.fees') }}" class="nav-item-link {{ request()->routeIs('admin.fees') ? 'active' : '' }}">
+                    <i class="fa-solid fa-id-card"></i> 3. Registrations
+                </a>
+            </li>
+
+            <!-- 4. Speakers -->
+            <li>
+                <a href="{{ route('admin.experts') }}" class="nav-item-link {{ request()->routeIs('admin.experts') ? 'active' : '' }}">
+                    <i class="fa-solid fa-user-tie"></i> 4. Speakers
+                </a>
+            </li>
+
+            <!-- 5. Distinguished Awards -->
+            <li>
+                <a href="{{ route('admin.awards') }}" class="nav-item-link {{ request()->routeIs('admin.awards') ? 'active' : '' }}">
+                    <i class="fa-solid fa-trophy"></i> 5. Distinguished Awards
+                </a>
+            </li>
+
+            <!-- 6. Committee -->
+            <li>
+                <a href="{{ route('admin.committee') }}" class="nav-item-link {{ request()->routeIs('admin.committee') ? 'active' : '' }}">
+                    <i class="fa-solid fa-users-gear"></i> 6. Committee
+                </a>
+            </li>
+
+            <!-- 7. Pre-Conference -->
+            <li>
+                <a href="{{ route('admin.pre_conference') }}" class="nav-item-link {{ request()->routeIs('admin.pre_conference') ? 'active' : '' }}">
+                    <i class="fa-solid fa-person-chalkboard"></i> 7. Pre-Conference
+                </a>
+            </li>
+
+            <!-- 8. Stall Booking and Merchandise -->
+            <li>
+                <a href="{{ route('admin.stall_booking') }}" class="nav-item-link {{ request()->routeIs('admin.stall_booking') ? 'active' : '' }}">
+                    <i class="fa-solid fa-store"></i> 8. Stall Booking & Merchandise
+                </a>
+            </li>
+
+            <!-- 9. Glimpse of MCC (Dropdown matching UI) -->
+            @php
+                $isMccActive = request()->routeIs('admin.mcc_memorial') || request()->routeIs('admin.visit');
+            @endphp
+            <li class="nav-item-dropdown {{ $isMccActive ? 'open' : '' }}">
+                <div class="nav-dropdown-toggle" onclick="toggleNavDropdown(this)">
+                    <div class="toggle-left">
+                        <i class="fa-solid fa-landmark"></i> 9. Glimpse of MCC
+                    </div>
+                    <i class="fa-solid fa-chevron-down chevron"></i>
+                </div>
+                <ul class="sub-nav-links">
+                    <li>
+                        <a href="{{ route('admin.mcc_memorial') }}" class="{{ request()->routeIs('admin.mcc_memorial') ? 'active' : '' }}">
+                            <i class="fa-solid fa-images"></i> MCC Gallery
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.visit') }}" class="{{ request()->routeIs('admin.visit') ? 'active' : '' }}">
+                            <i class="fa-solid fa-map-location-dot"></i> Places to Visit
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <!-- 10. Contact Us -->
+            <li>
+                <a href="{{ route('admin.contact') }}" class="nav-item-link {{ request()->routeIs('admin.contact') ? 'active' : '' }}">
+                    <i class="fa-solid fa-phone"></i> 10. Contact Us
+                </a>
+            </li>
+
+            <!-- SECTION: SCHEDULE & DEADLINES -->
+            <li class="sidebar-section-header" style="margin-top: 10px;">
+                <i class="fa-solid fa-calendar-days" style="font-size: 0.75rem;"></i> Schedule &amp; Deadlines
+            </li>
+
+            <li>
+                <a href="{{ route('admin.schedule') }}" class="nav-item-link {{ request()->routeIs('admin.schedule') ? 'active' : '' }}">
+                    <i class="fa-solid fa-calendar-days"></i> Conference Schedule
                 </a>
             </li>
             <li>
-                <a href="{{ route('admin.committee') }}" class="{{ request()->routeIs('admin.committee') ? 'active' : '' }}">
-                    <i class="fa-solid fa-users-gear"></i> Committee
+                <a href="{{ route('admin.deadlines') }}" class="nav-item-link {{ request()->routeIs('admin.deadlines') ? 'active' : '' }}">
+                    <i class="fa-regular fa-clock"></i> Important Deadlines
                 </a>
             </li>
-            <li>
-                <a href="{{ route('admin.experts') }}" class="{{ request()->routeIs('admin.experts') ? 'active' : '' }}">
-                    <i class="fa-solid fa-user-tie"></i> Experts
-                </a>
+
+            <!-- SECTION: SITE SETTINGS & CONFIGURATION -->
+            <li class="sidebar-section-header" style="margin-top: 10px;">
+                <i class="fa-solid fa-gears" style="font-size: 0.75rem;"></i> Site Configuration
             </li>
+
             <li>
-                <a href="{{ route('admin.tracks') }}" class="{{ request()->routeIs('admin.tracks') ? 'active' : '' }}">
-                    <i class="fa-solid fa-flask"></i> Tracks
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('admin.oral_presentation') }}" class="{{ request()->routeIs('admin.oral_presentation') ? 'active' : '' }}">
-                    <i class="fa-solid fa-microphone-lines"></i> Oral Presentation
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('admin.poster_presentation') }}" class="{{ request()->routeIs('admin.poster_presentation') ? 'active' : '' }}">
-                    <i class="fa-solid fa-image"></i> Poster Presentation
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('admin.innovation_pitch') }}" class="{{ request()->routeIs('admin.innovation_pitch') ? 'active' : '' }}">
-                    <i class="fa-solid fa-lightbulb"></i> Innovation Pitch
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('admin.hackathon') }}" class="{{ request()->routeIs('admin.hackathon') ? 'active' : '' }}">
-                    <i class="fa-solid fa-code"></i> Hackathon
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('admin.schedule') }}" class="{{ request()->routeIs('admin.schedule') ? 'active' : '' }}">
-                    <i class="fa-solid fa-calendar-days"></i> Schedule
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('admin.deadlines') }}" class="{{ request()->routeIs('admin.deadlines') ? 'active' : '' }}">
-                    <i class="fa-regular fa-calendar-check"></i> Deadlines
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('admin.awards') }}" class="{{ request()->routeIs('admin.awards') ? 'active' : '' }}">
-                    <i class="fa-solid fa-trophy"></i> Awards
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('admin.pre_conference') }}" class="{{ request()->routeIs('admin.pre_conference') ? 'active' : '' }}">
-                    <i class="fa-solid fa-person-chalkboard"></i> Pre-Conference
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('admin.mcc_memorial') }}" class="{{ request()->routeIs('admin.mcc_memorial') ? 'active' : '' }}">
-                    <i class="fa-solid fa-landmark"></i> Glimpse of MCC
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('admin.visit') }}" class="{{ request()->routeIs('admin.visit') ? 'active' : '' }}">
-                    <i class="fa-solid fa-map-location-dot"></i> Visit
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('admin.stall_booking') }}" class="{{ request()->routeIs('admin.stall_booking') ? 'active' : '' }}">
-                    <i class="fa-solid fa-store"></i> Stall Booking
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('admin.contact') }}" class="{{ request()->routeIs('admin.contact') ? 'active' : '' }}">
-                    <i class="fa-solid fa-phone"></i> Contact Us
-                </a>
-            </li>
-            
-            <li style="padding: 15px 25px 5px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; color: #64748b; margin-top: 10px;">
-                Settings
-            </li>
-            <li>
-                <a href="{{ route('admin.topbar') }}" class="{{ request()->routeIs('admin.topbar') ? 'active' : '' }}">
+                <a href="{{ route('admin.topbar') }}" class="nav-item-link {{ request()->routeIs('admin.topbar') ? 'active' : '' }}">
                     <i class="fa-solid fa-bullhorn"></i> Topbar &amp; Ticker
                 </a>
             </li>
             <li>
-                <a href="{{ route('admin.navigation') }}" class="{{ request()->routeIs('admin.navigation') ? 'active' : '' }}">
-                    <i class="fa-solid fa-bars-staggered"></i> Header Navigation
+                <a href="{{ route('admin.navigation') }}" class="nav-item-link {{ request()->routeIs('admin.navigation') ? 'active' : '' }}">
+                    <i class="fa-solid fa-bars-staggered"></i> Header Navigation Menu
                 </a>
             </li>
             <li>
-                <a href="{{ route('admin.partner_logos') }}" class="{{ request()->routeIs('admin.partner_logos') ? 'active' : '' }}">
+                <a href="{{ route('admin.partner_logos') }}" class="nav-item-link {{ request()->routeIs('admin.partner_logos') ? 'active' : '' }}">
                     <i class="fa-solid fa-handshake"></i> Partner Logos
                 </a>
             </li>
             <li>
-                <a href="{{ route('admin.theme_settings') }}" class="{{ request()->routeIs('admin.theme_settings') ? 'active' : '' }}">
+                <a href="{{ route('admin.theme_settings') }}" class="nav-item-link {{ request()->routeIs('admin.theme_settings') ? 'active' : '' }}">
                     <i class="fa-solid fa-palette"></i> Theme Settings
                 </a>
             </li>
 
             <li>
-                <a href="/" target="_blank">
+                <a href="/" target="_blank" class="nav-item-link" style="color: #38bdf8; font-weight: 600;">
                     <i class="fa-solid fa-arrow-up-right-from-square"></i> View Live Site
                 </a>
             </li>
@@ -438,13 +613,13 @@
             .topbar-logout-text {
                 display: none;
             }
-            /* Globally fix flex containers that squish on mobile */
             div[style*="display: flex;"][style*="justify-content: space-between"] {
                 flex-wrap: wrap !important;
                 gap: 15px !important;
             }
         }
     </style>
+
     <!-- Main Content -->
     <main class="main-content">
         <header class="topbar">
@@ -486,6 +661,11 @@
             } else {
                 overlay.classList.remove('show');
             }
+        }
+
+        function toggleNavDropdown(toggleEl) {
+            const dropdown = toggleEl.closest('.nav-item-dropdown');
+            dropdown.classList.toggle('open');
         }
     </script>
 </body>

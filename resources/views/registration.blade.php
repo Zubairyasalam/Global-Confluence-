@@ -336,6 +336,7 @@
                 <div class="section-divider" style="margin: 40px 0;"></div>
 
                 <input type="hidden" name="participation_mode" value="offline">
+                <input type="hidden" name="reg_category_name" id="reg_category_name" value="">
 
                 <!-- Registration Category -->
                 <div class="reg-section-title" style="margin-bottom: 25px;">
@@ -360,13 +361,13 @@
                                        required style="width: 22px; height: 22px; accent-color: var(--teal-accent);">
                                 <span style="font-weight: 700; font-size: 1.15rem; color: var(--navy-dark);">{{ $fee->category_name }}</span>
                             </div>
-                            <strong class="cat-price-display" style="font-size: 1.3rem; color: var(--teal-accent); display: none;">{{ number_format($offlineVal) }} INR</strong>
+                            <strong class="cat-price-display" style="font-size: 1.3rem; color: var(--teal-accent);">{{ number_format($offlineVal) }} INR</strong>
                         </label>
                     @endforeach
                 </div>
 
                 <!-- Payment QR Section -->
-                <div id="payment-qr-section" style="display: none; background: #0f172a; padding: 40px; border-radius: 12px; margin-bottom: 40px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+                <div id="payment-qr-section" style="background: #0f172a; padding: 40px; border-radius: 12px; margin-bottom: 40px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
                     <h4 style="color: #ffffff; font-size: 1.35rem; font-weight: 700; margin-top: 0; margin-bottom: 25px;">Scan to Pay</h4>
                     <div style="background: #ffffff; display: inline-block; padding: 20px; border-radius: 10px; margin-bottom: 25px;">
                         <img src="{{ asset('images/payment_qr_final.png') }}" alt="Payment QR Code" style="max-width: 280px; width: 100%; display: block;">
@@ -418,12 +419,33 @@
                 </div>
 
 
-                <div id="payment-details-section" style="display: none; background: #fff; padding: 30px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 35px; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
-                    <h3 style="margin-top: 0; margin-bottom: 20px; color: var(--navy-dark); font-size: 1.25rem;">Payment Verification</h3>
-                    <p style="color: #64748b; font-size: 0.95rem; margin-bottom: 20px;">Please complete the payment using the QR code or link above, and enter your Transaction / Reference ID here.</p>
-                    <div class="form-group">
-                        <label style="font-weight: 700; color: var(--navy-dark); margin-bottom: 10px; display: block;">Transaction ID / Reference Number <span style="color: #ef4444;">*</span></label>
-                        <input type="text" name="fields[transaction_id]" id="transaction_id" class="form-control" placeholder="Enter your transaction ID" style="border: 2px solid #e2e8f0; padding: 12px 15px; border-radius: 8px; width: 100%;">
+                <div id="payment-details-section" style="background: #ffffff; padding: 35px 30px; border-radius: 14px; border: 1.5px solid #d1e5f0; margin-bottom: 35px; box-shadow: 0 6px 20px rgba(15, 23, 42, 0.04);">
+                    <h3 style="margin-top: 0; margin-bottom: 8px; color: var(--navy-dark); font-size: 1.3rem; font-weight: 800; display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-file-invoice-dollar" style="color: var(--teal-accent);"></i> Payment Verification
+                    </h3>
+                    <p style="color: #64748b; font-size: 0.95rem; margin-bottom: 25px;">Please complete the payment using the QR code or link above, then enter your Transaction ID and upload the payment receipt.</p>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr; gap: 20px;">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label style="font-weight: 700; color: var(--navy-dark); margin-bottom: 8px; display: block; font-size: 1rem;">
+                                Transaction ID / Reference Number <span style="color: #ef4444;">*</span>
+                            </label>
+                            <input type="text" name="fields[transaction_id]" id="transaction_id" required class="form-control" placeholder="Enter UPI / Bank Reference / UTR Number" style="border: 1.5px solid #cbd5e1; padding: 14px 16px; border-radius: 8px; width: 100%; font-size: 0.95rem;">
+                        </div>
+
+                        <!-- Payment Receipt File Upload -->
+                        <div class="form-group file-upload-group" style="margin-bottom: 0;">
+                            <label style="font-weight: 700; color: var(--navy-dark); margin-bottom: 8px; display: block; font-size: 1rem;">
+                                Payment Receipt / Screenshot <span style="font-weight: normal; color: #64748b; font-size: 0.88rem;">(Proof of completed transaction)</span> <span style="color: #ef4444;">*</span>
+                            </label>
+                            <label for="payment_receipt_file" class="file-upload-label" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px 20px; border: 2px dashed var(--teal-accent); border-radius: 12px; background: #f0fdfa; cursor: pointer; transition: all 0.3s ease; text-align: center;" onmouseover="this.style.background='#e6f9f6'" onmouseout="this.style.background='#f0fdfa'">
+                                <i class="fa-solid fa-receipt" style="font-size: 2.5rem; color: var(--teal-accent); margin-bottom: 10px;"></i>
+                                <span style="font-weight: 700; font-size: 1.1rem; color: var(--navy-dark); margin-bottom: 4px;">Click to Upload Payment Receipt</span>
+                                <span style="font-size: 0.88rem; color: #64748b;">Supported formats: JPG, PNG, PDF (Max size: 5MB)</span>
+                                <span id="receipt-file-chosen" style="margin-top: 12px; font-weight: 700; color: var(--teal-accent); font-size: 0.95rem; display: none; background: rgba(0, 168, 150, 0.15); padding: 6px 14px; border-radius: 6px;"></span>
+                            </label>
+                            <input type="file" name="payment_receipt_file" id="payment_receipt_file" accept=".jpg,.jpeg,.png,.pdf" required style="display: none;" onchange="document.getElementById('receipt-file-chosen').innerText = this.files[0] ? this.files[0].name : ''; document.getElementById('receipt-file-chosen').style.display = this.files[0] ? 'inline-block' : 'none';">
+                        </div>
                     </div>
                 </div>
 
@@ -564,15 +586,13 @@
                     sumCatName.innerText = catName + ' Registration';
                     sumCatPrice.innerText = catPrice.toLocaleString() + ' INR';
                     total += catPrice;
-                    document.getElementById('payment-qr-section').style.display = 'block';
-                    document.getElementById('payment-details-section').style.display = 'block';
-                    document.getElementById('transaction_id').setAttribute('required', 'required');
+                    const catNameInput = document.getElementById('reg_category_name');
+                    if (catNameInput) catNameInput.value = catName;
                 } else {
                     sumCatName.innerText = 'Select a Category';
                     sumCatPrice.innerText = '0 INR';
-                    document.getElementById('payment-qr-section').style.display = 'none';
-                    document.getElementById('payment-details-section').style.display = 'none';
-                    document.getElementById('transaction_id').removeAttribute('required');
+                    const catNameInput = document.getElementById('reg_category_name');
+                    if (catNameInput) catNameInput.value = '';
                 }
 
                 // Handle dynamic addons summary
@@ -688,7 +708,16 @@
                                 }
                             }
                             presentationSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            return;
                         }
+                    }
+
+                    // Show loading state on submit button
+                    const submitBtn = form.querySelector('button[type="submit"]');
+                    if (submitBtn) {
+                        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting Registration...';
+                        submitBtn.style.opacity = '0.85';
+                        submitBtn.style.pointerEvents = 'none';
                     }
                 });
 

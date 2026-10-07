@@ -140,7 +140,8 @@ Route::get('/keynote-speakers', function () {
 
 Route::get('/distinguished-speakers', function () {
     $speakers = \App\Models\Speaker::where('type', 'distinguished')->orderBy('sort_order')->get();
-    return view('distinguished-speakers', compact('speakers'));
+    $preConferenceSpeakers = \App\Models\Speaker::where('type', 'pre_conference')->orderBy('sort_order')->get();
+    return view('distinguished-speakers', compact('speakers', 'preConferenceSpeakers'));
 })->name('distinguished-speakers');
 
 Route::get('/committee', function () {
@@ -165,7 +166,8 @@ Route::get('/topics', function () {
 
 Route::get('/scientific-themes', function () {
     $tracks = \App\Models\Track::orderBy('sort_order')->get();
-    return view('scientific-themes', compact('tracks'));
+    $settings = \App\Models\SiteSetting::where('group', 'tracks_page')->pluck('value', 'key')->toArray();
+    return view('scientific-themes', compact('tracks', 'settings'));
 })->name('scientific-themes');
 
 Route::get('/guidelines', function () {
@@ -183,7 +185,8 @@ Route::get('/sponsors', function () {
 })->name('sponsors');
 
 Route::get('/awards', function () {
-    return view('awards');
+    $settings = \App\Models\SiteSetting::whereIn('group', ['awards_page', 'awards', 'page_banners'])->pluck('value', 'key')->all();
+    return view('awards', compact('settings'));
 })->name('awards');
 
 Route::get('/key-dates', function () {
@@ -235,6 +238,19 @@ Route::get('/hackathon', function () {
     return view('events.hackathon');
 })->name('hackathon');
 
+Route::get('/stall-booking-and-merchandise', function () {
+    $settings = \App\Models\SiteSetting::where('group', 'stall_booking')->pluck('value', 'key')->toArray();
+    $brochures = isset($settings['stall_brochures_json']) ? json_decode($settings['stall_brochures_json'], true) : [];
+    $sponsors = isset($settings['stall_sponsors_json']) ? json_decode($settings['stall_sponsors_json'], true) : [];
+    return view('stall_booking', compact('settings', 'brochures', 'sponsors'));
+})->name('stall_booking_and_merchandise');
+Route::get('/stall-booking', function () {
+    $settings = \App\Models\SiteSetting::where('group', 'stall_booking')->pluck('value', 'key')->toArray();
+    $brochures = isset($settings['stall_brochures_json']) ? json_decode($settings['stall_brochures_json'], true) : [];
+    $sponsors = isset($settings['stall_sponsors_json']) ? json_decode($settings['stall_sponsors_json'], true) : [];
+    return view('stall_booking', compact('settings', 'brochures', 'sponsors'));
+})->name('stall_booking');
+
 Route::post('/api/submit-paper', [PaperSubmissionController::class, 'store'])->name('api.submit_paper');
 Route::post('/api/register', [RegistrationController::class, 'store']);
 
@@ -262,7 +278,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::delete('/addons/{id}', [AdminController::class, 'deleteAddon'])->name('admin.addons.delete');
 
 
-    // Partner Logos CMS
+    // Partner & Accreditation Logos CMS
     Route::get('/partner-logos', [AdminController::class, 'partnerLogosSettings'])->name('admin.partner_logos');
     Route::post('/partner-logos', [AdminController::class, 'storePartnerLogo'])->name('admin.partner_logos.store');
     Route::put('/partner-logos/{id}', [AdminController::class, 'updatePartnerLogo'])->name('admin.partner_logos.update');

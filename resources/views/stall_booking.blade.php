@@ -1,0 +1,206 @@
+@extends('layouts.app')
+
+@section('content')
+
+@include('sections.topbar')
+@include('sections.navbar')
+
+@php
+    $bannerTitle = $settings['stall_banner_title'] ?? 'STALL BOOKING AND MERCHANDISE';
+    $bannerSubtitle = $settings['stall_banner_subtitle'] ?? 'Partnership Avenues, Tariff Details & Sponsorship Opportunities | Global One Health Confluence 2026';
+    
+    // Default brochures if none configured
+    $brochureList = !empty($brochures) ? $brochures : [
+        ['title' => 'Partnership Avenues for Analytical Service Providers', 'image' => 'images/stall_booking/stall_brochure_1.jpg'],
+        ['title' => 'Tariff Details & Sponsorship Opportunities (Matrix)', 'image' => 'images/stall_booking/stall_brochure_2.png'],
+        ['title' => 'Partnership Avenues for Hospitals & Health Sectors', 'image' => 'images/stall_booking/stall_brochure_3.png'],
+        ['title' => 'Tariff Details & Sponsorship Opportunities (Contact & Notes)', 'image' => 'images/stall_booking/stall_brochure_4.png'],
+    ];
+
+    // Default sponsors if none configured
+    $sponsorList = !empty($sponsors) ? $sponsors : [
+        ['name' => 'Anderson Diagnostics & Labs', 'logo' => 'images/sponsors/anderson_logo.svg', 'link' => 'https://andersondiagnostics.com'],
+        ['name' => 'Sponsorship Partner', 'logo' => 'images/sponsors/sponsor_logo_1.jpg', 'link' => '#'],
+    ];
+
+    $sponsorsBadge = $settings['stall_sponsors_badge'] ?? 'Proudly Supported By';
+    $sponsorsTitle = $settings['stall_sponsors_title'] ?? 'Our Sponsors & Industry Partners';
+    $ctaText = $settings['stall_cta_text'] ?? 'Interested in partnering or booking an exhibition stall?';
+    $ctaBtnLabel = $settings['stall_cta_btn_label'] ?? 'Contact Sponsorship Committee';
+    $ctaBtnUrl = $settings['stall_cta_btn_url'] ?? route('contact');
+@endphp
+
+<!-- Page Banner -->
+<div class="page-banner" style="background: linear-gradient(135deg, #0a192f 0%, #0f172a 50%, #112240 100%); padding: 65px 20px 60px; text-align: center; color: #fff; position: relative;">
+    <div class="page-banner-content" style="max-width: 900px; margin: 0 auto; position: relative; z-index: 5;">
+        <h1 style="text-transform: uppercase; font-size: 2.2rem; font-weight: 800; letter-spacing: 1.5px; color: #ffffff !important; margin: 0 0 10px 0; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">
+            {{ $bannerTitle }}
+        </h1>
+        @if(!empty($bannerSubtitle))
+            <p style="color: #cbd5e1; font-size: 1.05rem; margin: 0; font-weight: 400;">
+                {{ $bannerSubtitle }}
+            </p>
+        @endif
+    </div>
+</div>
+
+<style>
+    .stall-booking-container {
+        padding: 50px 20px 70px;
+        max-width: 1000px;
+        margin: 0 auto;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .brochure-card {
+        background: #ffffff;
+        border-radius: 16px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+        padding: 20px;
+        margin-bottom: 40px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .brochure-card:hover {
+        box-shadow: 0 15px 40px rgba(0, 168, 150, 0.12);
+    }
+
+    .brochure-img {
+        width: 100%;
+        height: auto;
+        border-radius: 12px;
+        display: block;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .brochure-actions {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 12px;
+        margin-top: 15px;
+        padding-top: 12px;
+        border-top: 1px solid #f1f5f9;
+        flex-wrap: wrap;
+    }
+
+    .btn-view-full {
+        background: #f8fafc;
+        color: #0f172a;
+        border: 1px solid #cbd5e1;
+        padding: 8px 18px;
+        border-radius: 8px;
+        font-size: 0.88rem;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.2s;
+    }
+
+    .btn-view-full:hover {
+        background: #00A896;
+        color: #ffffff;
+        border-color: #00A896;
+    }
+
+    .sponsor-card-box {
+        background: #f8fafc;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 20px 35px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 240px;
+        height: 110px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+    .sponsor-card-box:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 168, 150, 0.12);
+        border-color: #00A896;
+    }
+</style>
+
+<div class="stall-booking-container">
+    
+    <!-- Dynamic Brochures List -->
+    @foreach($brochureList as $index => $brochure)
+        @php
+            $imgSrc = asset($brochure['image'] ?? 'images/stall_booking/stall_brochure_1.jpg');
+            $bTitle = $brochure['title'] ?? 'Brochure ' . ($index + 1);
+        @endphp
+        <div class="brochure-card">
+            <img src="{{ $imgSrc }}" alt="{{ $bTitle }}" class="brochure-img" loading="lazy">
+            <div class="brochure-actions">
+                <a href="{{ $imgSrc }}" target="_blank" class="btn-view-full">
+                    <i class="fa-solid fa-up-right-and-down-left-from-center"></i> View Full Resolution
+                </a>
+                <a href="{{ $imgSrc }}" download class="btn-view-full" style="background: #00A896; color: #ffffff; border-color: #00A896;">
+                    <i class="fa-solid fa-download"></i> Download
+                </a>
+            </div>
+        </div>
+    @endforeach
+
+    <!-- Sponsors & Industry Partners Showcase -->
+    <div style="background: #ffffff; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06); padding: 35px 30px; margin-top: 20px;">
+        <div style="text-align: center; margin-bottom: 28px;">
+            @if(!empty($sponsorsBadge))
+                <span style="background: #e6f7f5; color: #00A896; font-size: 0.8rem; font-weight: 800; padding: 4px 14px; border-radius: 20px; text-transform: uppercase; letter-spacing: 1px; display: inline-block; margin-bottom: 8px;">
+                    {{ $sponsorsBadge }}
+                </span>
+            @endif
+            @if(!empty($sponsorsTitle))
+                <h3 style="font-size: 1.6rem; font-weight: 800; color: #0f172a; margin: 0;">
+                    {{ $sponsorsTitle }}
+                </h3>
+            @endif
+        </div>
+
+        @if(!empty($sponsorList))
+            <div style="display: flex; justify-content: center; align-items: center; gap: 30px; flex-wrap: wrap; margin-bottom: 25px;">
+                @foreach($sponsorList as $sponsor)
+                    @php
+                        $sponsorLink = !empty($sponsor['link']) && $sponsor['link'] !== '#' ? $sponsor['link'] : null;
+                        $sponsorLogo = asset($sponsor['logo'] ?? 'images/sponsors/anderson_logo.svg');
+                        $sponsorName = $sponsor['name'] ?? 'Sponsor Partner';
+                    @endphp
+                    @if($sponsorLink)
+                        <a href="{{ $sponsorLink }}" target="_blank" rel="noopener noreferrer" class="sponsor-card-box">
+                            <img src="{{ $sponsorLogo }}" alt="{{ $sponsorName }}" style="max-height: 65px; max-width: 200px; object-fit: contain; border-radius: 6px;">
+                        </a>
+                    @else
+                        <div class="sponsor-card-box">
+                            <img src="{{ $sponsorLogo }}" alt="{{ $sponsorName }}" style="max-height: 65px; max-width: 200px; object-fit: contain; border-radius: 6px;">
+                        </div>
+                    @endif
+                @endforeach
+            </div>
+        @endif
+
+        <div style="text-align: center; padding-top: 15px; border-top: 1px solid #f1f5f9;">
+            @if(!empty($ctaText))
+                <p style="color: #64748b; font-size: 0.95rem; margin: 0 0 15px 0;">
+                    {{ $ctaText }}
+                </p>
+            @endif
+            @if(!empty($ctaBtnLabel))
+                <a href="{{ $ctaBtnUrl }}" style="background: linear-gradient(135deg, #00A896, #028090); color: #ffffff; padding: 12px 30px; border-radius: 30px; font-weight: 700; text-decoration: none; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(0, 168, 150, 0.3);">
+                    <i class="fa-solid fa-handshake"></i> {{ $ctaBtnLabel }}
+                </a>
+            @endif
+        </div>
+    </div>
+
+</div>
+
+@include('sections.footer')
+
+@endsection

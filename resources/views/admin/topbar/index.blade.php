@@ -90,7 +90,7 @@
     .prev-marquee-content {
         display: flex;
         min-width: max-content;
-        animation: prev-marquee-scroll {{ $settings['topbar_speed'] ?? '25' }}s linear infinite;
+        animation: prev-marquee-scroll {{ $settings['topbar_speed'] ?? '55' }}s linear infinite;
         will-change: transform;
     }
 
@@ -149,30 +149,34 @@
         <h4 style="font-size: 1rem; font-weight: 800; color: #0f172a; margin: 0 0 15px 0;">Top Announcement Bar Preview</h4>
 
         <div class="prev-topbar-desktop">
-            <div class="prev-topbar-left">
-                <span><i class="fa-solid fa-phone" style="color: #00A896;"></i> {{ $settings['contact_phone'] ?? '+91 9789582404' }}</span>
-                <span><i class="fa-solid fa-phone" style="color: #00A896;"></i> {{ $settings['contact_phone_2'] ?? '+91 9025596984' }}</span>
-                <span><i class="fa-solid fa-phone" style="color: #00A896;"></i> {{ $settings['contact_phone_3'] ?? '+91 81480 18894' }}</span>
-            </div>
-            <div class="prev-marquee-container">
+            <div class="prev-marquee-container" style="width: 100%; padding-left: 0;">
                 <div class="prev-marquee-content">
                     @php
-                        $mode = $settings['topbar_ticker_mode'] ?? 'deadlines';
+                        $mode = $settings['topbar_ticker_mode'] ?? 'custom';
                         $customItems = [];
                         for($i = 1; $i <= 20; $i++) {
                             if (!empty($settings['topbar_ticker_' . $i])) {
                                 $customItems[] = $settings['topbar_ticker_' . $i];
                             }
                         }
+                        if (empty($customItems)) {
+                            $customItems = [
+                                'All the Presentation will be published as a conference proceedings in ISBN indexed book',
+                                'Quality presentation will be peer reviewed and considered for further publication in selected Scopus/ WoS indexed journals'
+                            ];
+                        }
                     @endphp
 
-                    @if($mode === 'custom' && count($customItems) > 0)
-                        @foreach($customItems as $item)
-                            <span style="margin-right: 50px;">{{ $item }}</span>
-                        @endforeach
-                        @foreach($customItems as $item)
-                            <span style="margin-right: 50px;">{{ $item }}</span>
-                        @endforeach
+                    @if($mode === 'custom' || count($customItems) > 0)
+                        @for($r = 0; $r < 4; $r++)
+                            @foreach($customItems as $item)
+                                <span style="margin-right: 45px; display: inline-flex; align-items: center; gap: 8px;">
+                                    <i class="fa-solid fa-circle" style="color: #00A896; font-size: 0.45rem;"></i>
+                                    <span>{{ $item }}</span>
+                                    <span style="color: rgba(255,255,255,0.25); margin-left: 20px;">|</span>
+                                </span>
+                            @endforeach
+                        @endfor
                     @elseif(isset($deadlines) && count($deadlines) > 0)
                         @foreach($deadlines as $dl)
                             <span style="margin-right: 50px;">{{ $dl->title }}: {{ $dl->deadline_date }}</span>
@@ -181,9 +185,8 @@
                             <span style="margin-right: 50px;">{{ $dl->title }}: {{ $dl->deadline_date }}</span>
                         @endforeach
                     @else
-                        <span style="margin-right: 50px;">Submission of Abstract: 2026-10-07</span>
-                        <span style="margin-right: 50px;">Acceptance of Abstract: 2026-10-15</span>
-                        <span style="margin-right: 50px;">Full Paper Submission: 2026-11-15</span>
+                        <span style="margin-right: 50px;">All the Presentation will be published as a conference proceedings in ISBN indexed book</span>
+                        <span style="margin-right: 50px;">Quality presentation will be peer reviewed and considered for further publication in selected Scopus/ WoS indexed journals</span>
                     @endif
                 </div>
             </div>
@@ -291,7 +294,7 @@
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;">
                     <div>
                         <label class="form-label">Scroll Speed (Seconds)</label>
-                        <input type="number" name="topbar_speed" value="{{ $settings['topbar_speed'] ?? '25' }}" class="form-input" min="5" max="100">
+                        <input type="number" name="topbar_speed" value="{{ $settings['topbar_speed'] ?? '55' }}" class="form-input" min="5" max="150">
                     </div>
                     <div>
                         <label class="form-label">Topbar Background Color</label>

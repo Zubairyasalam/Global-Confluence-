@@ -8,9 +8,9 @@
 @include('sections.navbar')
 
 <!-- Contact Hero Banner -->
-<div class="page-banner" style="background-color: #0f172a; padding: 75px 20px 70px; text-align: center; color: #ffffff;">
-    <div style="max-width: 900px; margin: 0 auto;">
-        <h1 style="text-transform: uppercase; font-size: clamp(2.2rem, 4vw, 2.9rem); font-weight: 800; letter-spacing: 1px; color: #ffffff; margin: 0;">
+<div class="page-banner" style="background: linear-gradient(135deg, #0a192f 0%, #0f172a 50%, #112240 100%); padding: 75px 20px 70px; text-align: center; color: #ffffff; position: relative;">
+    <div class="page-banner-content" style="max-width: 900px; margin: 0 auto; position: relative; z-index: 5;">
+        <h1 style="text-transform: uppercase; font-size: clamp(2.2rem, 4vw, 2.9rem); font-weight: 800; letter-spacing: 2px; color: #ffffff !important; margin: 0; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">
             {{ $settings['contact_hero_title'] ?? 'CONTACT US' }}
         </h1>
     </div>
@@ -81,7 +81,7 @@
         </h2>
 
         <!-- Official Website & Email Grid -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-bottom: 35px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-bottom: 25px;">
             <!-- Official Website -->
             <div class="contact-info-box">
                 <div class="contact-icon-sq">
@@ -105,6 +105,55 @@
                     <a href="mailto:{{ $settings['contact_email'] ?? 'gohc2026@gmail.com' }}" style="color: #00A896; text-decoration: none; font-weight: 600; font-size: 0.95rem;">
                         {{ $settings['contact_email'] ?? 'gohc2026@gmail.com' }}
                     </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Special Assistance & Information Grid (Foreign Students & Accommodation) -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-bottom: 35px;">
+            <!-- Foreign Students / Visa Assistance -->
+            <div class="contact-info-box" style="border-left: 4px solid #028090; align-items: flex-start; padding: 22px 24px;">
+                <div class="contact-icon-sq" style="background: #e0f2fe; color: #028090;">
+                    <i class="fa-solid fa-passport"></i>
+                </div>
+                <div style="flex: 1;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+                        <strong style="color: #0f172a; font-size: 1.05rem; font-weight: 800;">
+                            {{ $settings['contact_foreign_title'] ?? 'Foreign Students' }}
+                        </strong>
+                        <span style="background: #e0f2fe; color: #0369a1; font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: 6px; text-transform: uppercase;">
+                            Visa Support
+                        </span>
+                    </div>
+                    <p style="color: #475569; font-size: 0.92rem; margin: 0 0 10px 0; line-height: 1.5;">
+                        {{ $settings['contact_foreign_note'] ?? 'Kindly contact Dean IP regarding Visa' }}
+                    </p>
+                    <a href="mailto:{{ $settings['contact_foreign_email'] ?? 'deanip@mcc.edu.in' }}" style="display: inline-flex; align-items: center; gap: 8px; color: #028090; font-weight: 700; font-size: 0.95rem; text-decoration: none; background: #f0f9ff; padding: 6px 14px; border-radius: 8px; border: 1px solid #bae6fd; transition: all 0.2s;">
+                        <i class="fa-solid fa-envelope"></i> {{ $settings['contact_foreign_email'] ?? 'deanip@mcc.edu.in' }}
+                    </a>
+                </div>
+            </div>
+
+            <!-- Accommodation -->
+            <div class="contact-info-box" style="border-left: 4px solid #00A896; align-items: flex-start; padding: 22px 24px;">
+                <div class="contact-icon-sq" style="background: #e6f7f5; color: #00A896;">
+                    <i class="fa-solid fa-hotel"></i>
+                </div>
+                <div style="flex: 1;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+                        <strong style="color: #0f172a; font-size: 1.05rem; font-weight: 800;">
+                            {{ $settings['contact_accom_title'] ?? 'Accommodation' }}
+                        </strong>
+                        <span style="background: #fef3c7; color: #b45309; font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: 6px; text-transform: uppercase;">
+                            Notice
+                        </span>
+                    </div>
+                    <p style="color: #475569; font-size: 0.92rem; margin: 0 0 10px 0; line-height: 1.5;">
+                        {{ $settings['contact_accom_note'] ?? 'Will be updated soon' }}
+                    </p>
+                    <span style="display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 0.85rem; font-weight: 500;">
+                        <i class="fa-solid fa-clock-rotate-left" style="color: #f59e0b;"></i> Please check back for updates
+                    </span>
                 </div>
             </div>
         </div>

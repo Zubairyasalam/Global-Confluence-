@@ -1,5 +1,12 @@
-<!-- Partner & Accreditation Logos Strip (Below Hero) -->
+<!-- Partner & Accreditation Logos Infinite Ticker Strip (Below Hero) -->
 @php
+    $defaultLogos = [
+        ['name' => 'Madras Christian College (MCC)', 'logo_path' => 'images/MMC-LOGO-2.jpg', 'link_url' => 'https://mcc.edu.in'],
+        ['name' => 'National Institute of Siddha (NIS)', 'logo_path' => 'images/nis-logo-transparent.png', 'link_url' => 'https://nischennai.org'],
+        ['name' => 'Microbiologists Society, India', 'logo_path' => 'images/microbiologists_society.png', 'link_url' => 'https://microbiosoc.org'],
+        ['name' => 'Mazumdar Shaw Medical Foundation (MSMF)', 'logo_path' => 'images/msmf_logo2.png', 'link_url' => 'https://msmf.org'],
+    ];
+
     $partnerLogos = collect();
     try {
         if (\Illuminate\Support\Facades\Schema::hasTable('partner_logos')) {
@@ -8,70 +15,187 @@
     } catch (\Throwable $e) {
         $partnerLogos = collect();
     }
+
+    if ($partnerLogos->isEmpty()) {
+        $partnerLogos = collect($defaultLogos)->map(fn($item) => (object)$item);
+    }
+
+    // Multiply logos per group to guarantee seamless continuous marquee across all display sizes (including 4K/ultrawide)
+    $repeatCount = max(3, (int)ceil(16 / max(1, $partnerLogos->count())));
+    $expandedLogos = collect();
+    for ($i = 0; $i < $repeatCount; $i++) {
+        $expandedLogos = $expandedLogos->concat($partnerLogos);
+    }
 @endphp
 
-<div class="partner-logos-bar-section" style="background: #ffffff; border-top: 1px solid #e2e8f0; border-bottom: 2px solid #e2e8f0; box-shadow: 0 4px 15px rgba(15, 23, 42, 0.03); position: relative; z-index: 10; width: 100%; overflow: hidden;">
-    <div class="partner-logos-container" style="max-width: 1400px; margin: 0 auto; display: flex; align-items: stretch; justify-content: center; overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none;">
-        @if($partnerLogos->count() > 0)
-            @foreach($partnerLogos as $index => $logo)
-                <a href="{{ $logo->link_url ?? '#' }}" 
-                   target="{{ (!empty($logo->link_url) && $logo->link_url !== '#' && $logo->link_url !== '/') ? '_blank' : '_self' }}"
-                   class="partner-logo-cell"
-                   title="{{ $logo->name }}"
-                   style="flex: 1 1 0; min-width: 140px; max-width: 240px; height: 90px; padding: 12px 24px; display: flex; align-items: center; justify-content: center; text-decoration: none; border-right: 1px solid #e2e8f0; transition: all 0.25s ease; background: #ffffff;">
-                    <img src="{{ asset($logo->logo_path) }}" 
-                         alt="{{ $logo->name }}" 
-                         class="partner-strip-img"
-                         style="max-height: 65px; max-width: 100%; width: auto; height: auto; object-fit: contain; filter: grayscale(15%); transition: all 0.3s ease;">
-                </a>
-            @endforeach
-        @else
-            <!-- Fallback Default 5 Partner Logos -->
-            <div class="partner-logo-cell" style="flex: 1 1 0; min-width: 140px; max-width: 240px; height: 90px; padding: 12px 24px; display: flex; align-items: center; justify-content: center; border-right: 1px solid #e2e8f0;">
-                <img src="{{ asset('images/MMC-LOGO-2.jpg') }}" alt="MCC" class="partner-strip-img" style="max-height: 65px; max-width: 100%; object-fit: contain;">
+<div class="partner-logos-bar-section">
+    <!-- Top glowing accent bar -->
+    <div class="partner-strip-top-bar"></div>
+
+    <div class="partner-ticker-wrapper">
+        <div class="partner-ticker-track">
+            <!-- First Set of Logos -->
+            <div class="partner-ticker-group">
+                @foreach($expandedLogos as $logo)
+                    <a href="{{ $logo->link_url ?? '#' }}" 
+                       target="{{ (!empty($logo->link_url) && $logo->link_url !== '#' && $logo->link_url !== '/') ? '_blank' : '_self' }}"
+                       class="partner-logo-card"
+                       title="{{ $logo->name }}">
+                        <img src="{{ asset($logo->logo_path) }}" 
+                             alt="{{ $logo->name }}" 
+                             class="partner-strip-img">
+                    </a>
+                @endforeach
             </div>
-            <div class="partner-logo-cell" style="flex: 1 1 0; min-width: 140px; max-width: 240px; height: 90px; padding: 12px 24px; display: flex; align-items: center; justify-content: center; border-right: 1px solid #e2e8f0;">
-                <img src="{{ asset('images/nis-logo-transparent.png') }}" alt="NIS" class="partner-strip-img" style="max-height: 65px; max-width: 100%; object-fit: contain;">
+            <!-- Duplicate Set for Seamless Infinite Loop -->
+            <div class="partner-ticker-group" aria-hidden="true">
+                @foreach($expandedLogos as $logo)
+                    <a href="{{ $logo->link_url ?? '#' }}" 
+                       target="{{ (!empty($logo->link_url) && $logo->link_url !== '#' && $logo->link_url !== '/') ? '_blank' : '_self' }}"
+                       class="partner-logo-card"
+                       title="{{ $logo->name }}">
+                        <img src="{{ asset($logo->logo_path) }}" 
+                             alt="{{ $logo->name }}" 
+                             class="partner-strip-img">
+                    </a>
+                @endforeach
             </div>
-            <div class="partner-logo-cell" style="flex: 1 1 0; min-width: 140px; max-width: 240px; height: 90px; padding: 12px 24px; display: flex; align-items: center; justify-content: center; border-right: 1px solid #e2e8f0;">
-                <img src="{{ asset('images/msmf_logo2.png') }}" alt="MSMF" class="partner-strip-img" style="max-height: 65px; max-width: 100%; object-fit: contain;">
-            </div>
-            <div class="partner-logo-cell" style="flex: 1 1 0; min-width: 140px; max-width: 240px; height: 90px; padding: 12px 24px; display: flex; align-items: center; justify-content: center; border-right: 1px solid #e2e8f0;">
-                <img src="{{ asset('images/microbiologists_society.png') }}" alt="Microbiologists Society" class="partner-strip-img" style="max-height: 65px; max-width: 100%; object-fit: contain;">
-            </div>
-            <div class="partner-logo-cell" style="flex: 1 1 0; min-width: 140px; max-width: 240px; height: 90px; padding: 12px 24px; display: flex; align-items: center; justify-content: center;">
-                <img src="{{ asset('images/1791201953_ChatGPT_Image_Oct_5__2026__05_34_56_PM.png') }}" alt="MCC-MRF Innovation Park" class="partner-strip-img" style="max-height: 65px; max-width: 100%; object-fit: contain;">
-            </div>
-        @endif
+        </div>
     </div>
 </div>
 
 <style>
-    .partner-logos-container::-webkit-scrollbar {
-        display: none;
+    .partner-logos-bar-section {
+        background: linear-gradient(180deg, #f8fafc 0%, #ffffff 50%, #f8fafc 100%);
+        border-bottom: 1px solid #e2e8f0;
+        box-shadow: 0 4px 20px rgba(15, 23, 42, 0.03);
+        position: relative;
+        z-index: 10;
+        width: 100%;
+        overflow: hidden;
+        padding: 20px 0;
     }
-    .partner-logo-cell:last-child {
-        border-right: none !important;
+
+    .partner-strip-top-bar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #0d9488 0%, #0284c7 35%, #0d9488 70%, #0f766e 100%);
     }
-    .partner-logo-cell:hover {
-        background: #f8fafc !important;
+
+    .partner-ticker-wrapper {
+        width: 100%;
+        overflow: hidden;
+        display: flex;
+        position: relative;
+        padding: 6px 0;
     }
-    .partner-logo-cell:hover .partner-strip-img {
-        filter: grayscale(0%) !important;
+
+    .partner-ticker-wrapper::before,
+    .partner-ticker-wrapper::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 120px;
+        z-index: 2;
+        pointer-events: none;
+    }
+    .partner-ticker-wrapper::before {
+        left: 0;
+        background: linear-gradient(to right, #f8fafc 15%, rgba(248, 250, 252, 0) 100%);
+    }
+    .partner-ticker-wrapper::after {
+        right: 0;
+        background: linear-gradient(to left, #f8fafc 15%, rgba(248, 250, 252, 0) 100%);
+    }
+
+    .partner-ticker-track {
+        display: flex;
+        width: max-content;
+        will-change: transform;
+        animation: ticker-slide 40s linear infinite;
+        align-items: center;
+    }
+
+    .partner-ticker-wrapper:hover .partner-ticker-track {
+        animation-play-state: paused;
+    }
+
+    .partner-ticker-group {
+        display: flex;
+        align-items: center;
+        flex-shrink: 0;
+        gap: 22px;
+        padding: 0 11px;
+    }
+
+    .partner-logo-card {
+        flex: 0 0 280px;
+        width: 280px;
+        height: 105px;
+        padding: 14px 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        box-shadow: 0 3px 12px rgba(15, 23, 42, 0.05);
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        cursor: pointer;
+    }
+
+    .partner-logo-card:hover {
+        background: #ffffff;
+        border-color: #0d9488;
+        transform: translateY(-4px);
+        box-shadow: 0 10px 25px rgba(13, 148, 136, 0.16);
+    }
+
+    .partner-strip-img {
+        max-height: 76px;
+        max-width: 225px;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+        transition: transform 0.3s ease;
+        filter: contrast(1.02);
+    }
+
+    .partner-logo-card:hover .partner-strip-img {
         transform: scale(1.06);
     }
-    @media (max-width: 768px) {
-        .partner-logos-container {
-            justify-content: flex-start !important;
-            padding: 0 10px;
+
+    @keyframes ticker-slide {
+        0% {
+            transform: translateX(0);
         }
-        .partner-logo-cell {
-            min-width: 120px !important;
-            height: 75px !important;
-            padding: 8px 15px !important;
+        100% {
+            transform: translateX(-50%);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .partner-logos-bar-section {
+            padding: 14px 0;
+        }
+        .partner-ticker-group {
+            gap: 12px;
+        }
+        .partner-logo-card {
+            flex: 0 0 180px;
+            width: 180px;
+            height: 75px;
+            padding: 10px 16px;
+            border-radius: 10px;
         }
         .partner-strip-img {
-            max-height: 50px !important;
+            max-height: 52px;
+            max-width: 145px;
         }
     }
 </style>

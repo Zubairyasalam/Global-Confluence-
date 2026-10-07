@@ -30,20 +30,20 @@
 
                     @if(($settings['nav_event_list_show'] ?? '1') == '1')
                         <div style="background-color: #f8fafc; border-top: 1px solid var(--border-light); padding: 5px 0;">
-                            <div style="padding: 8px 20px 4px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #00A896; letter-spacing: 0.5px; text-align: left;">
+                            <div style="padding: 8px 20px 4px; font-size: 0.82rem; font-weight: 700; text-transform: uppercase; color: #00A896; letter-spacing: 0.5px; text-align: left;">
                                 {{ $settings['nav_event_list_label'] ?? 'Events' }}
                             </div>
                             @if(($settings['nav_oral_show'] ?? '1') == '1')
-                                <a href="{{ $settings['nav_oral_url'] ?? route('events.oral_presentation') }}" style="padding: 8px 20px 8px 28px; font-size: 0.88rem; color: #475569; text-align: left;">{{ $settings['nav_oral_label'] ?? 'Oral Presentation' }}</a>
+                                <a href="{{ $settings['nav_oral_url'] ?? route('events.oral_presentation') }}" style="padding: 9px 20px 9px 28px; font-size: 0.98rem; color: #334155; text-align: left; font-weight: 600;">{{ $settings['nav_oral_label'] ?? 'Oral Presentation' }}</a>
                             @endif
                             @if(($settings['nav_poster_show'] ?? '1') == '1')
-                                <a href="{{ $settings['nav_poster_url'] ?? route('events.poster_presentation') }}" style="padding: 8px 20px 8px 28px; font-size: 0.88rem; color: #475569; text-align: left;">{{ $settings['nav_poster_label'] ?? 'Poster Presentation' }}</a>
+                                <a href="{{ $settings['nav_poster_url'] ?? route('events.poster_presentation') }}" style="padding: 9px 20px 9px 28px; font-size: 0.98rem; color: #334155; text-align: left; font-weight: 600;">{{ $settings['nav_poster_label'] ?? 'Poster Presentation' }}</a>
                             @endif
                             @if(($settings['nav_innovation_show'] ?? '1') == '1')
-                                <a href="{{ $settings['nav_innovation_url'] ?? route('events.innovation_pitch') }}" style="padding: 8px 20px 8px 28px; font-size: 0.88rem; color: #475569; text-align: left;">{{ $settings['nav_innovation_label'] ?? 'Innovation Pitch' }}</a>
+                                <a href="{{ $settings['nav_innovation_url'] ?? route('events.innovation_pitch') }}" style="padding: 9px 20px 9px 28px; font-size: 0.98rem; color: #334155; text-align: left; font-weight: 600;">{{ $settings['nav_innovation_label'] ?? 'Innovation Pitch' }}</a>
                             @endif
                             @if(($settings['nav_hackathon_show'] ?? '1') == '1')
-                                <a href="{{ $settings['nav_hackathon_url'] ?? route('events.hackathon') }}" style="padding: 8px 20px 8px 28px; font-size: 0.88rem; color: #475569; text-align: left;">{{ $settings['nav_hackathon_label'] ?? 'Hackathon' }}</a>
+                                <a href="{{ $settings['nav_hackathon_url'] ?? route('events.hackathon') }}" style="padding: 9px 20px 9px 28px; font-size: 0.98rem; color: #334155; text-align: left; font-weight: 600;">{{ $settings['nav_hackathon_label'] ?? 'Hackathon' }}</a>
                             @endif
                         </div>
                     @endif
@@ -108,11 +108,11 @@
                     <i class="fa-solid fa-chevron-down nav-arrow" style="font-size: 0.75rem; margin-left: 4px; transition: transform 0.2s;"></i>
                 </a>
                 <div class="nav-dropdown-content" style="min-width: 220px;">
-                    <a href="{{ route('mcc-memorial') }}" style="padding: 10px 20px; font-size: 0.88rem; color: #475569; text-align: left; display: flex; align-items: center; gap: 8px;">
-                        <i class="fa-solid fa-landmark" style="color: #00A896; font-size: 0.85rem;"></i> {{ $settings['nav_mcc_gallery_label'] ?? 'MCC Gallery' }}
+                    <a href="{{ route('mcc-memorial') }}" style="padding: 12px 20px; font-size: 1rem; color: #1e293b; font-weight: 600; text-align: left; display: flex; align-items: center; gap: 10px;">
+                        <i class="fa-solid fa-landmark" style="color: #00A896; font-size: 0.95rem;"></i> {{ $settings['nav_mcc_gallery_label'] ?? 'MCC Gallery' }}
                     </a>
-                    <a href="{{ route('venue') }}" style="padding: 10px 20px; font-size: 0.88rem; color: #475569; text-align: left; display: flex; align-items: center; gap: 8px;">
-                        <i class="fa-solid fa-map-location-dot" style="color: #00A896; font-size: 0.85rem;"></i> {{ $settings['nav_visit_places_label'] ?? 'Places to Visit' }}
+                    <a href="{{ route('venue') }}" style="padding: 12px 20px; font-size: 1rem; color: #1e293b; font-weight: 600; text-align: left; display: flex; align-items: center; gap: 10px;">
+                        <i class="fa-solid fa-map-location-dot" style="color: #00A896; font-size: 0.95rem;"></i> {{ $settings['nav_visit_places_label'] ?? 'Places to Visit' }}
                     </a>
                 </div>
             </div>

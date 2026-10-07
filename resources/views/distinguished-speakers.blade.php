@@ -233,7 +233,11 @@
         @endif
     </div>
 
-    <!-- Pre-Conference Speakers Section matching User Image -->
+    <!-- Pre-Conference Speakers Section -->
+    @php
+        $preConf = $preConferenceSpeakers ?? \App\Models\Speaker::where('type', 'pre_conference')->orderBy('sort_order')->get();
+    @endphp
+    @if(count($preConf) > 0)
     <div style="margin-top: 80px;">
         <div style="text-align: center; margin-bottom: 35px;">
             <h2 style="font-size: clamp(1.8rem, 3.5vw, 2.3rem); font-weight: 800; color: #0f172a; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: -0.5px;">
@@ -255,101 +259,40 @@
                         </tr>
                     </thead>
                     <tbody style="font-size: 0.93rem; color: #334155;">
-                        <!-- Row 1 -->
-                        <tr style="border-bottom: 1px solid #eef2f6; transition: background 0.2s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
-                            <td style="padding: 24px 20px; text-align: center; font-weight: 700; color: #64748b; vertical-align: middle;">1.</td>
-                            <td style="padding: 24px 25px; text-align: center; vertical-align: middle;">
-                                <div style="width: 100px; height: 100px; margin: 0 auto 10px auto; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border: 2px solid #e2e8f0; background: #f8fafc;">
-                                    <img src="{{ asset('images/speakers/raman_muthusamy.png') }}" alt="Prof. Dr. Raman Muthusamy" style="width: 100%; height: 100%; object-fit: cover;">
-                                </div>
-                                <strong style="font-size: 1.02rem; color: #0f172a; display: block; line-height: 1.3;">Prof. Dr. Raman Muthusamy</strong>
-                            </td>
-                            <td style="padding: 24px 25px; vertical-align: middle; line-height: 1.6; color: #334155;">
-                                Advisor & Cluster Head, One Health, Center for Global Health Research, Saveetha Medical College,<br>
-                                Former Director, Translational Research platform for Veterinary Biologicals, TANUVAS, Chennai
-                            </td>
-                            <td style="padding: 24px 25px; vertical-align: middle; line-height: 1.5; color: #475569;">
-                                One Health, AMR, Zoonotic disease and translational research
-                            </td>
-                        </tr>
-
-                        <!-- Row 2 -->
-                        <tr style="border-bottom: 1px solid #eef2f6; transition: background 0.2s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
-                            <td style="padding: 24px 20px; text-align: center; font-weight: 700; color: #64748b; vertical-align: middle;">2.</td>
-                            <td style="padding: 24px 25px; text-align: center; vertical-align: middle;">
-                                <div style="width: 100px; height: 100px; margin: 0 auto 10px auto; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border: 2px solid #e2e8f0; background: #f8fafc;">
-                                    <img src="{{ asset('images/speakers/suresh_kannan.png') }}" alt="Dr. S. Suresh Kannan" style="width: 100%; height: 100%; object-fit: cover;">
-                                </div>
-                                <strong style="font-size: 1.02rem; color: #0f172a; display: block; line-height: 1.3;">Dr. S. Suresh Kannan</strong>
-                            </td>
-                            <td style="padding: 24px 25px; vertical-align: middle; line-height: 1.6; color: #334155;">
-                                Professor & Head, Department of Veterinary Public Health and Epidemiology, Madras Veterinary college, Chennai
-                            </td>
-                            <td style="padding: 24px 25px; vertical-align: middle; line-height: 1.5; color: #475569;">
-                                One health, zoonotic disease surveillance, AMR and veterinary public health
-                            </td>
-                        </tr>
-
-                        <!-- Row 3 -->
-                        <tr style="border-bottom: 1px solid #eef2f6; transition: background 0.2s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
-                            <td style="padding: 24px 20px; text-align: center; font-weight: 700; color: #64748b; vertical-align: middle;">3.</td>
-                            <td style="padding: 24px 25px; text-align: center; vertical-align: middle;">
-                                <div style="width: 100px; height: 100px; margin: 0 auto 10px auto; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border: 2px solid #e2e8f0; background: #f8fafc;">
-                                    <img src="{{ asset('images/speakers/meenakshi_sundaram.png') }}" alt="Dr. M. Meenakshi Sundaram" style="width: 100%; height: 100%; object-fit: cover;">
-                                </div>
-                                <strong style="font-size: 1.02rem; color: #0f172a; display: block; line-height: 1.3;">Dr. M. Meenakshi Sundaram</strong>
-                            </td>
-                            <td style="padding: 24px 25px; vertical-align: middle; line-height: 1.6; color: #334155;">
-                                Dean, Professor & Head, Department of Kuzhandhai Maruthuvam, National Institute of Siddha, Chennai
-                            </td>
-                            <td style="padding: 24px 25px; vertical-align: middle; line-height: 1.5; color: #475569;">
-                                Indian Knowledge system
-                            </td>
-                        </tr>
-
-                        <!-- Row 4 -->
-                        <tr style="border-bottom: 1px solid #eef2f6; transition: background 0.2s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
-                            <td style="padding: 24px 20px; text-align: center; font-weight: 700; color: #64748b; vertical-align: middle;">4.</td>
-                            <td style="padding: 24px 25px; text-align: center; vertical-align: middle;">
-                                <strong style="font-size: 1.05rem; color: #0f172a; display: block;">Dr. V. Vijaykumar</strong>
-                            </td>
-                            <td style="padding: 24px 25px; vertical-align: middle; line-height: 1.6; color: #334155;">
-                                Expert Advisor for child health, National Health Mission, Chennai
-                            </td>
-                            <td style="padding: 24px 25px; vertical-align: middle; line-height: 1.5; color: #475569;">
-                                Public health integration and environmental determinants and health policy
-                            </td>
-                        </tr>
-
-                        <!-- Row 5 -->
-                        <tr style="border-bottom: 1px solid #eef2f6; transition: background 0.2s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
-                            <td style="padding: 24px 20px; text-align: center; font-weight: 700; color: #64748b; vertical-align: middle;">5.</td>
-                            <td style="padding: 24px 25px; text-align: center; vertical-align: middle;">
-                                <div style="width: 100px; height: 100px; margin: 0 auto 10px auto; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border: 2px solid #e2e8f0; background: #f8fafc;">
-                                    <img src="{{ asset('images/speakers/ramdev_krishnan.png') }}" alt="Dr. Ramdev Krishnan. J" style="width: 100%; height: 100%; object-fit: cover;">
-                                </div>
-                                <strong style="font-size: 1.02rem; color: #0f172a; display: block; line-height: 1.3;">Dr. Ramdev Krishnan. J</strong>
-                            </td>
-                            <td style="padding: 24px 25px; vertical-align: middle; line-height: 1.6; color: #334155;">
-                                Head of Operations, Mazumdarshaw Medical Foundation (MSMF)-TBI Narayana Health, Bangalore
-                            </td>
-                            <td style="padding: 24px 25px; vertical-align: middle; line-height: 1.5; color: #475569;">
-                                AI in health-care
-                            </td>
-                        </tr>
-
-                        <!-- Row 6 -->
-                        <tr style="background: #f8fafc; font-weight: 700;">
-                            <td style="padding: 20px; text-align: center; color: #64748b; vertical-align: middle;">6.</td>
-                            <td colspan="3" style="padding: 20px 25px; vertical-align: middle; color: #0f172a; font-size: 1rem;">
-                                Panel discussion with Doctors and health care experts (Tentative)
-                            </td>
-                        </tr>
+                        @foreach($preConf as $index => $preSpeaker)
+                            @if(($preSpeaker->university === '-' || empty($preSpeaker->university)) && ($preSpeaker->field === '-' || empty($preSpeaker->field)))
+                                <tr style="background: #f8fafc; font-weight: 700; border-bottom: 1px solid #eef2f6;">
+                                    <td style="padding: 20px; text-align: center; color: #64748b; vertical-align: middle;">{{ $index + 1 }}.</td>
+                                    <td colspan="3" style="padding: 20px 25px; vertical-align: middle; color: #0f172a; font-size: 1rem;">
+                                        {{ $preSpeaker->name }}
+                                    </td>
+                                </tr>
+                            @else
+                                <tr style="border-bottom: 1px solid #eef2f6; transition: background 0.2s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
+                                    <td style="padding: 24px 20px; text-align: center; font-weight: 700; color: #64748b; vertical-align: middle;">{{ $index + 1 }}.</td>
+                                    <td style="padding: 24px 25px; text-align: center; vertical-align: middle;">
+                                        @if($preSpeaker->image_path && file_exists(public_path($preSpeaker->image_path)))
+                                            <div style="width: 100px; height: 100px; margin: 0 auto 10px auto; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border: 2px solid #e2e8f0; background: #f8fafc;">
+                                                <img src="{{ asset($preSpeaker->image_path) }}" alt="{{ $preSpeaker->name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                                            </div>
+                                        @endif
+                                        <strong style="font-size: 1.02rem; color: #0f172a; display: block; line-height: 1.3;">{{ $preSpeaker->name }}</strong>
+                                    </td>
+                                    <td style="padding: 24px 25px; vertical-align: middle; line-height: 1.6; color: #334155;">
+                                        {!! nl2br(e($preSpeaker->university)) !!}
+                                    </td>
+                                    <td style="padding: 24px 25px; vertical-align: middle; line-height: 1.5; color: #475569;">
+                                        {!! nl2br(e($preSpeaker->field ?? $preSpeaker->title ?? '-')) !!}
+                                    </td>
+                                </tr>
+                            @endif
+                        @endforeach
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+    @endif
 </section>
 
 @include('sections.footer')

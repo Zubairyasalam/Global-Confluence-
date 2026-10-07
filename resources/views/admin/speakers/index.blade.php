@@ -110,25 +110,40 @@
         <div class="nav-tabs">
             <a href="{{ route('admin.experts', ['type' => 'keynote']) }}" class="nav-tab {{ $type == 'keynote' ? 'active' : '' }}">Keynote Speakers</a>
             <a href="{{ route('admin.experts', ['type' => 'distinguished']) }}" class="nav-tab {{ $type == 'distinguished' ? 'active' : '' }}">Distinguished Speakers</a>
+            <a href="{{ route('admin.experts', ['type' => 'pre_conference']) }}" class="nav-tab {{ $type == 'pre_conference' ? 'active' : '' }}">Pre-Conference Speakers</a>
         </div>
 
         <div class="card" style="margin-bottom: 30px;">
-            <h3 style="font-size: 1.2rem; color: var(--admin-sidebar); margin-bottom: 20px;">Current {{ ucfirst($type) }} Speakers</h3>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3 style="font-size: 1.2rem; color: var(--admin-sidebar); margin: 0;">Current {{ $type == 'pre_conference' ? 'Pre-Conference' : ucfirst($type) }} Speakers</h3>
+                <span style="background: rgba(0, 168, 150, 0.1); color: #009688; padding: 4px 12px; border-radius: 20px; font-weight: 700; font-size: 0.85rem;">Total: {{ count($speakers) }}</span>
+            </div>
             
             @if(count($speakers) > 0)
                 @foreach($speakers as $speaker)
                     <div class="speaker-card">
-                        <img src="{{ asset($speaker->image_path) }}" class="speaker-img" alt="{{ $speaker->name }}">
+                        @if($speaker->image_path && file_exists(public_path($speaker->image_path)))
+                            <img src="{{ asset($speaker->image_path) }}" class="speaker-img" alt="{{ $speaker->name }}">
+                        @else
+                            <div class="speaker-img" style="background: #f1f5f9; display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 2rem; border: 1px dashed #cbd5e1;">
+                                <i class="fa-solid fa-user"></i>
+                            </div>
+                        @endif
                         <div class="speaker-info">
                             <div class="speaker-title">{{ $speaker->name }}</div>
                             <div class="speaker-meta">
                                 @if($speaker->h_index)<strong>H-Index:</strong> {{ $speaker->h_index }} | @endif
-                                <strong>University:</strong> {{ $speaker->university }} |
+                                <strong>{{ $speaker->type == 'pre_conference' ? 'Affiliation' : 'University' }}:</strong> {{ $speaker->university }} |
+                                @if($speaker->type != 'pre_conference')
                                 <strong>Country:</strong> {{ $speaker->country }} |
+                                @endif
                                 <strong>Order:</strong> {{ $speaker->sort_order }}
                             </div>
+                            @if($speaker->field)
+                            <div class="speaker-topic" style="color: #0284c7; margin-top: 4px;"><strong>Expertise:</strong> {{ $speaker->field }}</div>
+                            @endif
                             @if($speaker->title)
-                            <div class="speaker-topic">Title: {{ $speaker->title }}</div>
+                            <div class="speaker-topic" style="margin-top: 4px;"><strong>Title:</strong> {{ $speaker->title }}</div>
                             @endif
                         </div>
                         <div class="speaker-actions">
@@ -146,7 +161,7 @@
                     </div>
                 @endforeach
             @else
-                <p style="color: #64748b;">No speakers added yet.</p>
+                <p style="color: #64748b;">No {{ $type == 'pre_conference' ? 'pre-conference' : $type }} speakers added yet.</p>
             @endif
         </div>
     </div>
@@ -154,7 +169,7 @@
     <!-- Add/Edit Form -->
     <div>
         <div class="card" style="position: sticky; top: 20px; max-height: calc(100vh - 40px); overflow-y: auto;">
-            <h3 id="form-title" style="font-size: 1.2rem; color: var(--admin-sidebar); margin-bottom: 20px;">Add New {{ ucfirst($type) }} Speaker</h3>
+            <h3 id="form-title" style="font-size: 1.2rem; color: var(--admin-sidebar); margin-bottom: 20px;">Add New {{ $type == 'pre_conference' ? 'Pre-Conference' : ucfirst($type) }} Speaker</h3>
             
             <form id="speaker-form" action="{{ route('admin.speakers.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
@@ -164,41 +179,47 @@
 
                 <div class="form-group" style="margin-bottom: 15px;">
                     <label class="form-label" style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--admin-sidebar); font-size: 0.9rem;">Speaker Type *</label>
-                    <select name="type" id="type" required style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; font-family: inherit;">
+                    <select name="type" id="type" required style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; font-family: inherit;" onchange="adjustFormFields(this.value)">
                         <option value="keynote" {{ $type == 'keynote' ? 'selected' : '' }}>Keynote Speaker</option>
                         <option value="distinguished" {{ $type == 'distinguished' ? 'selected' : '' }}>Distinguished Speaker</option>
+                        <option value="pre_conference" {{ $type == 'pre_conference' ? 'selected' : '' }}>Pre-Conference Speaker</option>
                     </select>
                 </div>
 
                 <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--admin-sidebar); font-size: 0.9rem;">Full Name</label>
+                    <label id="lbl-name" style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--admin-sidebar); font-size: 0.9rem;">Full Name / Title *</label>
                     <input type="text" name="name" id="name" required style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; font-family: inherit;">
                 </div>
 
-                <div class="form-group" style="margin-bottom: 15px;">
+                <div class="form-group" id="group-affiliation" style="margin-bottom: 15px;">
+                    <label id="lbl-university" style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--admin-sidebar); font-size: 0.9rem;">Affiliation / Organization *</label>
+                    <textarea name="university" id="university" rows="3" style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; font-family: inherit;" placeholder="e.g. Professor & Head, Department of..."></textarea>
+                </div>
+
+                <div class="form-group" id="group-expertise" style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--admin-sidebar); font-size: 0.9rem;">Expertise / Domain</label>
+                    <textarea name="field" id="field" rows="2" style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; font-family: inherit;" placeholder="e.g. One Health, AMR, Zoonotic disease..."></textarea>
+                </div>
+
+                <div class="form-group" id="group-hindex" style="margin-bottom: 15px;">
                     <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--admin-sidebar); font-size: 0.9rem;">H-Index (Optional)</label>
                     <input type="text" name="h_index" id="h_index" style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; font-family: inherit;">
                 </div>
 
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--admin-sidebar); font-size: 0.9rem;">University / Institution</label>
-                    <input type="text" name="university" id="university" required style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; font-family: inherit;">
-                </div>
-
-                <div class="form-group" style="margin-bottom: 15px;">
+                <div class="form-group" id="group-country" style="margin-bottom: 15px;">
                     <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--admin-sidebar); font-size: 0.9rem;">Country</label>
-                    <input type="text" name="country" id="country" required style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; font-family: inherit;">
+                    <input type="text" name="country" id="country" value="India" style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; font-family: inherit;">
                 </div>
 
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--admin-sidebar); font-size: 0.9rem;">Presentation Title (Optional for some)</label>
-                    <textarea name="title" id="title" rows="3" style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; font-family: inherit;"></textarea>
+                <div class="form-group" id="group-title" style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--admin-sidebar); font-size: 0.9rem;">Presentation Title / Talk Theme (Optional)</label>
+                    <textarea name="title" id="title" rows="2" style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; font-family: inherit;"></textarea>
                 </div>
 
                 <div class="form-group" style="margin-bottom: 25px;">
-                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--admin-sidebar); font-size: 0.9rem;">Speaker Photo (Square Recommended)</label>
-                    <input type="file" name="image" id="image" accept="image/*" required style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; font-family: inherit;">
-                    <small id="image-help" style="color: #64748b; display: block; margin-top: 5px;">Upload a new image to change.</small>
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--admin-sidebar); font-size: 0.9rem;">Speaker Photo (Optional)</label>
+                    <input type="file" name="image" id="image" accept="image/*" style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; font-family: inherit;">
+                    <small id="image-help" style="color: #64748b; display: block; margin-top: 5px;">Upload square photo (PNG/JPG).</small>
                 </div>
 
                 <button type="submit" id="submit-btn" class="btn btn-primary" style="width: 100%; background: var(--admin-primary); color: white; border: none; padding: 12px; border-radius: 6px; font-weight: 700; cursor: pointer;">Save Speaker</button>
@@ -209,6 +230,29 @@
 </div>
 
 <script>
+    function adjustFormFields(typeVal) {
+        const hindexGroup = document.getElementById('group-hindex');
+        const countryGroup = document.getElementById('group-country');
+        const expertiseGroup = document.getElementById('group-expertise');
+        const lblUniv = document.getElementById('lbl-university');
+
+        if (typeVal === 'pre_conference') {
+            if (hindexGroup) hindexGroup.style.display = 'none';
+            if (countryGroup) countryGroup.style.display = 'none';
+            if (expertiseGroup) expertiseGroup.style.display = 'block';
+            if (lblUniv) lblUniv.innerText = 'Affiliation / Organization *';
+        } else {
+            if (hindexGroup) hindexGroup.style.display = 'block';
+            if (countryGroup) countryGroup.style.display = 'block';
+            if (expertiseGroup) expertiseGroup.style.display = 'none';
+            if (lblUniv) lblUniv.innerText = 'University / Institution *';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        adjustFormFields(document.getElementById('type').value);
+    });
+
     function editSpeaker(speaker) {
         document.getElementById('form-title').innerText = 'Edit Speaker';
         
@@ -219,14 +263,19 @@
         
         document.getElementById('name').value = speaker.name;
         document.getElementById('h_index').value = speaker.h_index || '';
-        document.getElementById('university').value = speaker.university;
-        document.getElementById('country').value = speaker.country;
+        document.getElementById('university').value = speaker.university || '';
+        document.getElementById('country').value = speaker.country || 'India';
         document.getElementById('title').value = speaker.title || '';
+        if (document.getElementById('field')) {
+            document.getElementById('field').value = speaker.field || '';
+        }
         document.getElementById('sort_order').value = speaker.sort_order;
         document.getElementById('type').value = speaker.type;
         
+        adjustFormFields(speaker.type);
+        
         let imgInput = document.getElementById('image');
-        imgInput.required = false; // Not required when editing
+        imgInput.required = false;
         document.getElementById('image-help').innerText = 'Leave empty to keep current photo.';
 
         document.getElementById('submit-btn').innerText = 'Update Speaker';
