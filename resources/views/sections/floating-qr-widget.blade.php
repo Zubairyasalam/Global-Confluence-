@@ -1,25 +1,33 @@
-<!-- Floating QR Code Widget (Side Popup) -->
+@php
+    $isStallBookingPage = request()->is('stall-booking*') || 
+                          request()->is('page/stall-booking*') || 
+                          request()->is('*stall-booking*') || 
+                          (isset($slug) && in_array($slug, ['stall-booking-and-merchandise', 'stall-booking', 'stall-booking-merchandise']));
+@endphp
+
+@if($isStallBookingPage)
+<!-- Floating QR Code Payment Widget (Exclusive to Stall Booking & Merchandise Page) -->
 <div id="floatingQrWidget" class="floating-qr-widget">
     <button type="button" class="floating-qr-close" id="floatingQrClose" aria-label="Close QR Widget" onclick="toggleFloatingQr(false)">
         <i class="fa-solid fa-xmark"></i>
     </button>
     <div class="floating-qr-inner">
         <div class="floating-qr-img-box">
-            <img src="{{ asset('images/payment_qr_final.png') }}" alt="Scan QR Code to Register and Pay" class="floating-qr-img" onerror="this.src='{{ asset('images/stall_booking/payment_qr.png') }}'">
+            <img src="{{ asset('images/payment_qr_final.png') }}" alt="Scan QR Code for Payment" class="floating-qr-img" onerror="this.src='{{ asset('images/stall_booking/payment_qr.png') }}'">
         </div>
-        <div class="floating-qr-title">Scan Here to Register</div>
-        <div class="floating-qr-sub">Instant Registration & Fee Payment</div>
-        <a href="{{ route('registration') }}" class="floating-qr-btn">
-            <span>Register Online</span>
-            <i class="fa-solid fa-arrow-right"></i>
+        <div class="floating-qr-title">Scan for Payment</div>
+        <div class="floating-qr-sub">Direct UPI / GPay / PhonePe</div>
+        <a href="https://u.payu.in/PAYUMN/IJZcZKXf5LTs" target="_blank" rel="noopener noreferrer" class="floating-qr-btn">
+            <span>Pay Online</span>
+            <i class="fa-solid fa-arrow-up-right-from-square"></i>
         </a>
     </div>
 </div>
 
 <!-- Minimized Trigger Button (when closed) -->
-<button type="button" id="floatingQrLauncher" class="floating-qr-launcher" onclick="toggleFloatingQr(true)" title="Open Registration QR Code">
+<button type="button" id="floatingQrLauncher" class="floating-qr-launcher" onclick="toggleFloatingQr(true)" title="Open Payment QR Code">
     <i class="fa-solid fa-qrcode"></i>
-    <span class="launcher-text">Scan QR</span>
+    <span class="launcher-text">Pay QR</span>
 </button>
 
 <style>
@@ -235,3 +243,4 @@
         }
     });
 </script>
+@endif
