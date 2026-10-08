@@ -1,17 +1,20 @@
 <!-- Partner & Accreditation Logos Infinite Ticker Strip (Below Hero) -->
 @php
     $defaultLogos = [
-        ['name' => 'Madras Christian College (MCC)', 'logo_path' => 'images/MMC-LOGO-2.jpg', 'link_url' => 'https://mcc.edu.in'],
-        ['name' => 'MCC - MRF Innovation Park', 'logo_path' => 'images/1791374861_ChatGPT_Image_Oct_5__2026__05_34_56_PM.png', 'link_url' => 'https://mcc.edu.in'],
-        ['name' => 'National Institute of Siddha (NIS)', 'logo_path' => 'images/nis-logo-transparent.png', 'link_url' => 'https://nischennai.org'],
         ['name' => 'Microbiologists Society, India', 'logo_path' => 'images/microbiologists_society.png', 'link_url' => 'https://microbiosoc.org'],
+        ['name' => 'MCC - MRF Innovation Park', 'logo_path' => 'images/1791374861_ChatGPT_Image_Oct_5__2026__05_34_56_PM.png', 'link_url' => 'https://mcc.edu.in'],
         ['name' => 'Mazumdar Shaw Medical Foundation (MSMF)', 'logo_path' => 'images/msmf_logo2.png', 'link_url' => 'https://msmf.org'],
+        ['name' => 'Madras Christian College (MCC)', 'logo_path' => 'images/MMC-LOGO-2.jpg', 'link_url' => 'https://mcc.edu.in'],
+        ['name' => 'National Institute of Siddha (NIS)', 'logo_path' => 'images/nis-logo-transparent.png', 'link_url' => 'https://nischennai.org'],
     ];
 
     $partnerLogos = collect();
     try {
         if (\Illuminate\Support\Facades\Schema::hasTable('partner_logos')) {
-            $dbLogos = \App\Models\PartnerLogo::where('is_active', true)->orderBy('sort_order')->get();
+            $dbLogos = \App\Models\PartnerLogo::where('is_active', true)
+                ->whereNotIn('name', ['---', '77', 'test', 'Test'])
+                ->orderBy('sort_order')
+                ->get();
             if ($dbLogos->isNotEmpty()) {
                 $partnerLogos = $dbLogos;
             }
@@ -33,9 +36,15 @@
 @endphp
 
 @if($expandedLogos->isNotEmpty())
-<section class="partner-logos-bar-section" aria-label="Partner & Organizer Logos">
+<section class="partner-logos-bar-section" aria-label="Our Partners">
     <!-- Top glowing accent bar -->
     <div class="partner-strip-top-bar"></div>
+
+    <div class="partner-strip-header-container">
+        <span class="partner-badge-pill">
+            <i class="fa-solid fa-handshake"></i> OUR PARTNERS
+        </span>
+    </div>
 
     <div class="partner-ticker-wrapper">
         <div class="partner-ticker-track">
@@ -95,7 +104,7 @@
         z-index: 10;
         width: 100%;
         overflow: hidden;
-        padding: 20px 0;
+        padding: 16px 0 20px 0;
         display: block !important;
     }
 
@@ -108,12 +117,35 @@
         background: linear-gradient(90deg, #0d9488 0%, #0284c7 35%, #0d9488 70%, #0f766e 100%);
     }
 
+    .partner-strip-header-container {
+        text-align: center;
+        margin-bottom: 14px;
+        position: relative;
+        z-index: 5;
+    }
+
+    .partner-badge-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(13, 148, 136, 0.1);
+        color: #0d9488;
+        font-weight: 800;
+        font-size: 0.82rem;
+        padding: 5px 18px;
+        border-radius: 30px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        border: 1px solid rgba(13, 148, 136, 0.2);
+        box-shadow: 0 2px 6px rgba(13, 148, 136, 0.08);
+    }
+
     .partner-ticker-wrapper {
         width: 100%;
         overflow: hidden;
         display: flex;
         position: relative;
-        padding: 6px 0;
+        padding: 4px 0;
     }
 
     .partner-ticker-wrapper::before,
@@ -216,7 +248,11 @@
 
     @media (max-width: 768px) {
         .partner-logos-bar-section {
-            padding: 14px 0;
+            padding: 12px 0 16px 0;
+        }
+        .partner-badge-pill {
+            font-size: 0.75rem;
+            padding: 4px 14px;
         }
         .partner-ticker-group {
             gap: 12px;
