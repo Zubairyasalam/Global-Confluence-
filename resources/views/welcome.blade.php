@@ -29,3 +29,5 @@
 @section('scripts')
 <!-- Countdown script removed as these boxes are now manually edited statistics from the admin panel -->
 @endsection
+
+
