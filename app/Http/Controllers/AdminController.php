@@ -1072,6 +1072,8 @@ class AdminController extends Controller
             $imageName = time().'.'.$request->image->extension();  
             $request->image->move(public_path('images/speakers'), $imageName);
             $data['image_path'] = 'images/speakers/' . $imageName;
+        } else {
+            $data['image_path'] = null;
         }
 
         \App\Models\Speaker::create($data);

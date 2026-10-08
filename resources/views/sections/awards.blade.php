@@ -27,7 +27,7 @@
         </div>
         @endif
 
-        <!-- Awards List Container Card (Matches Reference Image 1) -->
+        <!-- Awards List Container Card -->
         <div class="distinguished-awards-card" style="max-width: 720px; margin: 0 auto; border: 2px solid #8da8f6; background-color: #f6fafe; border-radius: 6px; overflow: hidden; box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);">
             
             @php
@@ -90,13 +90,49 @@
                     </div>
 
                     <!-- Apply Button -->
-                    <div style="margin-top: 18px; text-align: center;">
+                    <div id="award-btn-wrap-{{ $i }}" style="margin-top: 18px; text-align: center;">
                         <button type="button" 
-                                onclick="openAwardModal('{{ addslashes($awardTitle) }}', '{{ route($proformaRoute) }}')" 
+                                onclick="document.getElementById('award-apply-{{ $i }}').style.display = 'block'; document.getElementById('award-btn-wrap-{{ $i }}').style.display = 'none';" 
                                 style="background: #009688; color: #ffffff; padding: 9px 28px; border: none; border-radius: 4px; font-weight: 700; font-size: 0.92rem; cursor: pointer; text-transform: uppercase; letter-spacing: 0.6px; transition: all 0.2s ease; box-shadow: 0 2px 6px rgba(0, 150, 136, 0.2);">
                             APPLY
                         </button>
                     </div>
+
+                    <!-- Inline Application Details & Form -->
+                    <div id="award-apply-{{ $i }}" style="display: none; margin-top: 20px; padding: 22px; background: #e2e8f0; border-radius: 6px;">
+                        
+                        <!-- Step 1: Download Proforma -->
+                        <div style="margin-bottom: 20px; text-align: center;">
+                            <p style="margin-top: 0; color: #0f172a; font-size: 1.15rem; font-weight: 800; letter-spacing: 0.3px; margin-bottom: 12px;">
+                                <i class="fa-solid fa-file-arrow-down" style="color: #009688; margin-right: 6px;"></i> Step 1: Download and fill the Proforma
+                            </p>
+                            <a href="{{ route($proformaRoute) }}" style="display: inline-flex; align-items: center; gap: 8px; background: #1e3250; color: white; padding: 11px 24px; text-decoration: none; border-radius: 4px; font-weight: bold; font-size: 0.95rem; box-shadow: 0 2px 5px rgba(0,0,0,0.15);">
+                                <i class="fa-solid fa-download"></i> Download Proforma (.doc)
+                            </a>
+                        </div>
+
+                        <!-- Step 2: Upload Completed Form -->
+                        <form action="{{ route('awards.apply') }}" method="POST" enctype="multipart/form-data" style="margin: 0; padding: 20px; background: white; border-radius: 6px; border: 1px dashed #cbd5e1;">
+                            @csrf
+                            <input type="hidden" name="award_name" value="{{ $awardTitle }}">
+                            
+                            <p style="margin-top: 0; color: #0f172a; font-size: 1.15rem; text-align: center; margin-bottom: 15px; font-weight: 800; letter-spacing: 0.3px;">
+                                <i class="fa-solid fa-file-arrow-up" style="color: #f59e0b; margin-right: 6px;"></i> Step 2: Upload your completed form
+                            </p>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #1e3250; font-size: 0.9rem;">Upload Filled Form (.doc, .docx, .pdf)</label>
+                            <input type="file" name="application_file" accept=".doc,.docx,.pdf" required style="display: block; width: 100%; margin-bottom: 15px; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box; font-size: 0.9rem;">
+                            
+                            <div style="display: flex; gap: 10px; justify-content: center; align-items: center; flex-wrap: wrap;">
+                                <button type="button" onclick="document.getElementById('award-apply-{{ $i }}').style.display = 'none'; document.getElementById('award-btn-wrap-{{ $i }}').style.display = 'block';" style="background: #94a3b8; color: white; padding: 10px 20px; border: none; border-radius: 4px; font-weight: 600; cursor: pointer;">
+                                    Cancel
+                                </button>
+                                <button type="submit" style="background: #009688; color: white; padding: 10px 24px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0, 150, 136, 0.3);">
+                                    <i class="fa-solid fa-upload"></i> Submit Application
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
                 </div>
                 @endif
             @endfor
@@ -117,86 +153,3 @@
 
     </div>
 </section>
-
-<!-- Award Application Modal -->
-<div id="awardApplicationModal" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); z-index: 9999; backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 20px;">
-    <div style="background: #ffffff; border-radius: 12px; max-width: 550px; width: 100%; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); overflow: hidden; animation: modalFadeIn 0.3s ease;">
-        
-        <!-- Modal Header -->
-        <div style="background: linear-gradient(135deg, #1e3250 0%, #0f172a 100%); padding: 20px 25px; display: flex; justify-content: space-between; align-items: center; color: white;">
-            <div>
-                <span style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: #38bdf8; font-weight: 700;">Nomination Proforma</span>
-                <h3 id="modalAwardTitle" style="margin: 4px 0 0 0; font-size: 1.25rem; font-weight: 700; color: white;">Apply for Award</h3>
-            </div>
-            <button onclick="closeAwardModal()" style="background: none; border: none; color: #94a3b8; font-size: 1.5rem; cursor: pointer; padding: 0 5px; line-height: 1;">&times;</button>
-        </div>
-
-        <div style="padding: 25px;">
-            
-            <!-- Step 1: Download Proforma -->
-            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 18px; margin-bottom: 20px; text-align: center;">
-                <div style="font-size: 0.9rem; font-weight: 700; color: #0f172a; margin-bottom: 6px;">
-                    <i class="fa-solid fa-file-arrow-down" style="color: #009688; margin-right: 6px;"></i> STEP 1: Download & Fill the Proforma Form
-                </div>
-                <p style="font-size: 0.85rem; color: #64748b; margin: 0 0 12px 0;">
-                    Download the official nomination Word document, fill out your details and research profile.
-                </p>
-                <a id="modalDownloadBtn" href="#" style="display: inline-flex; align-items: center; gap: 8px; background: #1e3250; color: white; padding: 10px 22px; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 0.9rem; transition: background 0.2s;">
-                    <i class="fa-solid fa-download"></i> Download Proforma (.doc)
-                </a>
-            </div>
-
-            <!-- Step 2: Upload Form -->
-            <form action="{{ route('awards.apply') }}" method="POST" enctype="multipart/form-data" style="margin: 0;">
-                @csrf
-                <input type="hidden" name="award_name" id="modalAwardInput" value="">
-                
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; font-weight: 700; color: #0f172a; font-size: 0.9rem; margin-bottom: 6px;">
-                        <i class="fa-solid fa-file-arrow-up" style="color: #f59e0b; margin-right: 6px;"></i> STEP 2: Upload Completed Application (.doc, .docx, .pdf)
-                    </label>
-                    <input type="file" name="application_file" accept=".doc,.docx,.pdf" required style="width: 100%; padding: 10px; border: 1.5px dashed #cbd5e1; border-radius: 6px; background: #fdfdfd; box-sizing: border-box; font-size: 0.9rem;">
-                    <span style="font-size: 0.78rem; color: #94a3b8; margin-top: 4px; display: block;">Maximum file size: 10MB</span>
-                </div>
-
-                <div style="display: flex; gap: 12px; justify-content: flex-end;">
-                    <button type="button" onclick="closeAwardModal()" style="background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; padding: 10px 20px; border-radius: 6px; font-weight: 600; cursor: pointer;">
-                        Cancel
-                    </button>
-                    <button type="submit" style="background: #009688; color: white; border: none; padding: 10px 24px; border-radius: 6px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0, 150, 136, 0.3);">
-                        <i class="fa-solid fa-paper-plane"></i> Submit Application
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<style>
-@keyframes modalFadeIn {
-    from { opacity: 0; transform: scale(0.95); }
-    to { opacity: 1; transform: scale(1); }
-}
-</style>
-
-<script>
-function openAwardModal(awardTitle, downloadUrl) {
-    document.getElementById('modalAwardTitle').innerText = awardTitle;
-    document.getElementById('modalAwardInput').value = awardTitle;
-    document.getElementById('modalDownloadBtn').href = downloadUrl;
-    const modal = document.getElementById('awardApplicationModal');
-    modal.style.display = 'flex';
-}
-
-function closeAwardModal() {
-    document.getElementById('awardApplicationModal').style.display = 'none';
-}
-
-// Close modal when clicking outside
-window.addEventListener('click', function(e) {
-    const modal = document.getElementById('awardApplicationModal');
-    if (e.target === modal) {
-        closeAwardModal();
-    }
-});
-</script>

@@ -10,24 +10,33 @@
     $partnerLogos = collect();
     try {
         if (\Illuminate\Support\Facades\Schema::hasTable('partner_logos')) {
-            $partnerLogos = \App\Models\PartnerLogo::where('is_active', true)->orderBy('sort_order')->get();
+            $dbLogos = \App\Models\PartnerLogo::where('is_active', true)->orderBy('sort_order')->get();
+            $validLogos = $dbLogos->filter(function($item) {
+                return !empty($item->logo_path) && file_exists(public_path($item->logo_path));
+            });
+            if ($validLogos->isNotEmpty()) {
+                $partnerLogos = $validLogos;
+            }
         }
     } catch (\Throwable $e) {
         $partnerLogos = collect();
     }
 
     if ($partnerLogos->isEmpty()) {
-        $partnerLogos = collect($defaultLogos)->map(fn($item) => (object)$item);
+        $partnerLogos = collect($defaultLogos)->filter(function($item) {
+            return !empty($item['logo_path']) && file_exists(public_path($item['logo_path']));
+        })->map(fn($item) => (object)$item);
     }
 
     // Multiply logos per group to guarantee seamless continuous marquee across all display sizes (including 4K/ultrawide)
-    $repeatCount = max(3, (int)ceil(16 / max(1, $partnerLogos->count())));
+    $repeatCount = $partnerLogos->isNotEmpty() ? max(3, (int)ceil(16 / max(1, $partnerLogos->count()))) : 0;
     $expandedLogos = collect();
     for ($i = 0; $i < $repeatCount; $i++) {
         $expandedLogos = $expandedLogos->concat($partnerLogos);
     }
 @endphp
 
+@if($expandedLogos->isNotEmpty())
 <div class="partner-logos-bar-section">
     <!-- Top glowing accent bar -->
     <div class="partner-strip-top-bar"></div>
@@ -43,7 +52,8 @@
                        title="{{ $logo->name }}">
                         <img src="{{ asset($logo->logo_path) }}" 
                              alt="{{ $logo->name }}" 
-                             class="partner-strip-img">
+                             class="partner-strip-img"
+                             onerror="this.onerror=null; this.closest('.partner-logo-card').style.display='none';">
                     </a>
                 @endforeach
             </div>
@@ -56,13 +66,15 @@
                        title="{{ $logo->name }}">
                         <img src="{{ asset($logo->logo_path) }}" 
                              alt="{{ $logo->name }}" 
-                             class="partner-strip-img">
+                             class="partner-strip-img"
+                             onerror="this.onerror=null; this.closest('.partner-logo-card').style.display='none';">
                     </a>
                 @endforeach
             </div>
         </div>
     </div>
 </div>
+@endif
 
 <style>
     .partner-logos-bar-section {
