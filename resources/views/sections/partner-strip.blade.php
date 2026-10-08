@@ -1,5 +1,10 @@
 <!-- Partner & Accreditation Logos Infinite Ticker Strip (Below Hero) -->
 @php
+    if (defined('__PARTNER_STRIP_SHOWN')) {
+        return;
+    }
+    define('__PARTNER_STRIP_SHOWN', true);
+
     $defaultLogos = [
         ['name' => 'Microbiologists Society, India', 'logo_path' => 'images/microbiologists_society.png', 'link_url' => 'https://microbiosoc.org'],
         ['name' => 'MCC - MRF Innovation Park', 'logo_path' => 'images/1791374861_ChatGPT_Image_Oct_5__2026__05_34_56_PM.png', 'link_url' => 'https://mcc.edu.in'],

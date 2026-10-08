@@ -77,7 +77,9 @@
                 </a>
             @endif
         </div>
-    </div>
 </section>
+
+<!-- Partner & Accreditation Logos Strip (Below Hero) -->
+@include('sections.partner-strip')
 
 
