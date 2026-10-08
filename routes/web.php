@@ -610,4 +610,32 @@ Route::get('/clear-all-cache', function () {
     </div>";
 });
 
+Route::get('/git-pull', function () {
+    try {
+        $output = [];
+        $returnVar = 0;
+        @exec('git pull origin main 2>&1', $output, $returnVar);
+        $gitLog = [];
+        @exec('git log -n 1 --oneline 2>&1', $gitLog);
+        
+        \Illuminate\Support\Facades\Artisan::call('view:clear');
+        \Illuminate\Support\Facades\Artisan::call('cache:clear');
+        \Illuminate\Support\Facades\Artisan::call('config:clear');
+        \Illuminate\Support\Facades\Artisan::call('route:clear');
+        
+        $seeder = new \Database\Seeders\PartnerLogoSeeder();
+        $seeder->run();
+
+        return "<div style='font-family: sans-serif; padding: 30px; max-width: 650px; margin: 30px auto; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px;'>
+            <h2 style='color: #166534;'>Git Pull & Live Update</h2>
+            <p><strong>Current Live Commit:</strong> " . (!empty($gitLog) ? implode('<br>', $gitLog) : 'N/A (exec disabled)') . "</p>
+            <p><strong>Git Pull Output:</strong><br><pre style='background: #1e293b; color: #f8fafc; padding: 12px; border-radius: 8px;'>" . (!empty($output) ? implode("\n", $output) : 'Executed') . "</pre></p>
+            <p style='color: #166534;'>Caches cleared and PartnerLogos synchronized!</p>
+            <a href='/' style='display: inline-block; background: #16a34a; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: bold;'>Visit Homepage</a>
+        </div>";
+    } catch (\Exception $e) {
+        return "Error: " . $e->getMessage();
+    }
+});
+
 
