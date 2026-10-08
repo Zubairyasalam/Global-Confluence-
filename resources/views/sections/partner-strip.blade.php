@@ -2,6 +2,7 @@
 @php
     $defaultLogos = [
         ['name' => 'Madras Christian College (MCC)', 'logo_path' => 'images/MMC-LOGO-2.jpg', 'link_url' => 'https://mcc.edu.in'],
+        ['name' => 'MCC - MRF Innovation Park', 'logo_path' => 'images/1791374861_ChatGPT_Image_Oct_5__2026__05_34_56_PM.png', 'link_url' => 'https://mcc.edu.in'],
         ['name' => 'National Institute of Siddha (NIS)', 'logo_path' => 'images/nis-logo-transparent.png', 'link_url' => 'https://nischennai.org'],
         ['name' => 'Microbiologists Society, India', 'logo_path' => 'images/microbiologists_society.png', 'link_url' => 'https://microbiosoc.org'],
         ['name' => 'Mazumdar Shaw Medical Foundation (MSMF)', 'logo_path' => 'images/msmf_logo2.png', 'link_url' => 'https://msmf.org'],
@@ -32,7 +33,7 @@
 @endphp
 
 @if($expandedLogos->isNotEmpty())
-<div class="partner-logos-bar-section">
+<section class="partner-logos-bar-section" aria-label="Partner & Organizer Logos">
     <!-- Top glowing accent bar -->
     <div class="partner-strip-top-bar"></div>
 
@@ -41,34 +42,48 @@
             <!-- First Set of Logos -->
             <div class="partner-ticker-group">
                 @foreach($expandedLogos as $logo)
+                    @php
+                        $cleanLogoPath = !empty($logo->logo_path) ? ltrim(str_replace('public/', '', $logo->logo_path), '/') : 'images/MMC-LOGO-2.jpg';
+                    @endphp
                     <a href="{{ $logo->link_url ?? '#' }}" 
                        target="{{ (!empty($logo->link_url) && $logo->link_url !== '#' && $logo->link_url !== '/') ? '_blank' : '_self' }}"
                        class="partner-logo-card"
                        title="{{ $logo->name }}">
-                        <img src="{{ asset($logo->logo_path) }}" 
+                        <img src="{{ asset($cleanLogoPath) }}" 
                              alt="{{ $logo->name }}" 
                              class="partner-strip-img"
-                             onerror="this.onerror=null; this.closest('.partner-logo-card').style.display='none';">
+                             onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="partner-logo-fallback" style="display: none;">
+                            <i class="fa-solid fa-building-columns" style="color: #0d9488;"></i>
+                            <span>{{ $logo->name }}</span>
+                        </div>
                     </a>
                 @endforeach
             </div>
             <!-- Duplicate Set for Seamless Infinite Loop -->
             <div class="partner-ticker-group" aria-hidden="true">
                 @foreach($expandedLogos as $logo)
+                    @php
+                        $cleanLogoPath = !empty($logo->logo_path) ? ltrim(str_replace('public/', '', $logo->logo_path), '/') : 'images/MMC-LOGO-2.jpg';
+                    @endphp
                     <a href="{{ $logo->link_url ?? '#' }}" 
                        target="{{ (!empty($logo->link_url) && $logo->link_url !== '#' && $logo->link_url !== '/') ? '_blank' : '_self' }}"
                        class="partner-logo-card"
                        title="{{ $logo->name }}">
-                        <img src="{{ asset($logo->logo_path) }}" 
+                        <img src="{{ asset($cleanLogoPath) }}" 
                              alt="{{ $logo->name }}" 
                              class="partner-strip-img"
-                             onerror="this.onerror=null; this.closest('.partner-logo-card').style.display='none';">
+                             onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="partner-logo-fallback" style="display: none;">
+                            <i class="fa-solid fa-building-columns" style="color: #0d9488;"></i>
+                            <span>{{ $logo->name }}</span>
+                        </div>
                     </a>
                 @endforeach
             </div>
         </div>
     </div>
-</div>
+</section>
 @endif
 
 <style>
@@ -81,6 +96,7 @@
         width: 100%;
         overflow: hidden;
         padding: 20px 0;
+        display: block !important;
     }
 
     .partner-strip-top-bar {
@@ -177,6 +193,18 @@
         transform: scale(1.06);
     }
 
+    .partner-logo-fallback {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-size: 0.88rem;
+        font-weight: 700;
+        color: #1e293b;
+        text-align: center;
+        line-height: 1.3;
+    }
+
     @keyframes ticker-slide {
         0% {
             transform: translateX(0);
@@ -203,6 +231,9 @@
         .partner-strip-img {
             max-height: 52px;
             max-width: 145px;
+        }
+        .partner-logo-fallback {
+            font-size: 0.75rem;
         }
     }
 </style>

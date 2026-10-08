@@ -21,6 +21,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if (request()->isSecure() || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')) {
+            \Illuminate\Support\Facades\URL::forceScheme('https');
+        }
+
         // Share site settings and deadlines globally if tables exist
         if (\Schema::hasTable('site_settings')) {
             $settings = SiteSetting::all()->pluck('value', 'key')->toArray();
