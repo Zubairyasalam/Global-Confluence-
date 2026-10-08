@@ -8,18 +8,53 @@ use App\Http\Controllers\PaperSubmissionController;
 use App\Http\Controllers\RegistrationController;
 
 Route::get('/storage-file/{path}', function ($path) {
-    $path = ltrim(str_replace(['public/', 'storage/'], '', $path), '/');
-    $filePath = storage_path('app/public/' . $path);
-    if (!file_exists($filePath)) {
-        $filePath = storage_path('app/' . $path);
+    $cleanPath = ltrim(str_replace(['public/', 'storage/'], '', $path), '/');
+    $decodedPath = urldecode($cleanPath);
+    
+    $candidates = [
+        storage_path('app/public/' . $cleanPath),
+        storage_path('app/public/' . $decodedPath),
+        storage_path('app/' . $cleanPath),
+        storage_path('app/' . $decodedPath),
+        public_path('storage/' . $cleanPath),
+        public_path('storage/' . $decodedPath),
+        base_path('../public_html/storage/' . $cleanPath),
+        base_path('../public_html/storage/' . $decodedPath),
+        public_path($cleanPath),
+        public_path($decodedPath),
+    ];
+
+    $filePath = null;
+    foreach ($candidates as $cand) {
+        if (!empty($cand) && file_exists($cand) && !is_dir($cand)) {
+            $filePath = $cand;
+            break;
+        }
     }
-    if (!file_exists($filePath)) {
-        abort(404);
+
+    if (!$filePath) {
+        abort(404, 'File not found');
     }
-    $mimeType = \Illuminate\Support\Facades\File::mimeType($filePath) ?: 'application/octet-stream';
+
+    $extension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+    $mimeTypes = [
+        'jpg' => 'image/jpeg',
+        'jpeg' => 'image/jpeg',
+        'png' => 'image/png',
+        'gif' => 'image/gif',
+        'webp' => 'image/webp',
+        'svg' => 'image/svg+xml',
+        'pdf' => 'application/pdf',
+        'doc' => 'application/msword',
+        'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    ];
+
+    $mimeType = $mimeTypes[$extension] ?? (\Illuminate\Support\Facades\File::mimeType($filePath) ?: 'application/octet-stream');
+
     return response()->file($filePath, [
         'Content-Type' => $mimeType,
-        'Content-Disposition' => 'inline; filename="' . basename($filePath) . '"'
+        'Content-Disposition' => 'inline; filename="' . basename($filePath) . '"',
+        'Cache-Control' => 'public, max-age=86400',
     ]);
 })->where('path', '.*')->name('storage.file');
 

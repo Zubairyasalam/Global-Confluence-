@@ -424,8 +424,10 @@
                 const idCardFile = formData.id_card_file || reg.id_card_file;
                 if (idCardFile) {
                     const cleanIdPath = idCardFile.replace(/^public\//, '').replace(/^storage\//, '');
-                    const idFileUrl = '{{ url("storage-file") }}/' + cleanIdPath;
+                    const idFileUrl = '{{ url("storage-file") }}/' + encodeURI(cleanIdPath);
+                    const directIdUrl = '{{ asset("storage") }}/' + encodeURI(cleanIdPath);
                     const isIdPdf = cleanIdPath.toLowerCase().endsWith('.pdf');
+                    const isIdDoc = /\.(doc|docx)$/i.test(cleanIdPath);
                     const idOriginalName = formData.id_card_original_name || cleanIdPath.split('/').pop().replace(/^\d+_id_/, '');
 
                     document.getElementById('m-idcard-actions').innerHTML = `
@@ -443,10 +445,22 @@
                         document.getElementById('m-idcard-content').innerHTML = `
                             <iframe src="${idFileUrl}" style="width: 100%; height: 350px; border: 1px solid #cbd5e1; border-radius: 8px; background: #fff;"></iframe>
                         `;
+                    } else if (isIdDoc) {
+                        document.getElementById('m-idcard-content').innerHTML = `
+                            <div style="padding: 25px; text-align: center; background: #fff; border-radius: 8px; border: 1px solid #cbd5e1;">
+                                <i class="fa-solid fa-file-word" style="font-size: 2.5rem; color: #2563eb; margin-bottom: 8px; display: block;"></i>
+                                <div style="font-weight: 700; font-size: 0.95rem; color: #1e293b;">${idOriginalName}</div>
+                                <a href="${idFileUrl}" download="${idOriginalName}" style="display: inline-flex; align-items: center; gap: 6px; background: #0284c7; color: #fff; padding: 7px 16px; border-radius: 6px; font-size: 0.85rem; font-weight: 700; text-decoration: none; margin-top: 10px;">
+                                    <i class="fa-solid fa-download"></i> Download Document
+                                </a>
+                            </div>
+                        `;
                     } else {
                         document.getElementById('m-idcard-content').innerHTML = `
                             <div style="text-align: center; background: #fff; padding: 15px; border-radius: 8px; border: 1px solid #cbd5e1;">
-                                <img src="${idFileUrl}" alt="Institutional ID Card" style="max-height: 280px; max-width: 100%; border-radius: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.08);">
+                                <a href="${idFileUrl}" target="_blank" title="Click to view full image">
+                                    <img src="${idFileUrl}" alt="Institutional ID Card" onerror="this.onerror=null; this.src='${directIdUrl}';" style="max-height: 280px; max-width: 100%; border-radius: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); display: inline-block; cursor: pointer;">
+                                </a>
                                 <div style="font-size: 0.82rem; color: #64748b; margin-top: 8px;">File: ${idOriginalName}</div>
                             </div>
                         `;
@@ -460,7 +474,7 @@
                 const abstractFile = reg.abstract_file || formData.abstract_file;
                 if (abstractFile) {
                     const cleanAbsPath = abstractFile.replace(/^public\//, '').replace(/^storage\//, '');
-                    const absFileUrl = '{{ url("storage-file") }}/' + cleanAbsPath;
+                    const absFileUrl = '{{ url("storage-file") }}/' + encodeURI(cleanAbsPath);
                     const isAbsPdf = cleanAbsPath.toLowerCase().endsWith('.pdf');
                     const absOriginalName = formData.abstract_original_name || cleanAbsPath.split('/').pop().replace(/^\d+_/, '');
 
@@ -499,8 +513,10 @@
                 const receiptFile = formData.payment_receipt_file;
                 if (receiptFile) {
                     const cleanRecPath = receiptFile.replace(/^public\//, '').replace(/^storage\//, '');
-                    const recFileUrl = '{{ url("storage-file") }}/' + cleanRecPath;
+                    const recFileUrl = '{{ url("storage-file") }}/' + encodeURI(cleanRecPath);
+                    const directRecUrl = '{{ asset("storage") }}/' + encodeURI(cleanRecPath);
                     const isRecPdf = cleanRecPath.toLowerCase().endsWith('.pdf');
+                    const isRecDoc = /\.(doc|docx)$/i.test(cleanRecPath);
                     const recOriginalName = formData.payment_receipt_original_name || cleanRecPath.split('/').pop().replace(/^\d+_receipt_/, '');
 
                     document.getElementById('m-receipt-actions').innerHTML = `
@@ -518,10 +534,22 @@
                         document.getElementById('m-receipt-content').innerHTML = `
                             <iframe src="${recFileUrl}" style="width: 100%; height: 350px; border: 1px solid #cbd5e1; border-radius: 8px; background: #fff;"></iframe>
                         `;
+                    } else if (isRecDoc) {
+                        document.getElementById('m-receipt-content').innerHTML = `
+                            <div style="padding: 25px; text-align: center; background: #fff; border-radius: 8px; border: 1px solid #cbd5e1;">
+                                <i class="fa-solid fa-file-word" style="font-size: 2.5rem; color: #2563eb; margin-bottom: 8px; display: block;"></i>
+                                <div style="font-weight: 700; font-size: 0.95rem; color: #1e293b;">${recOriginalName}</div>
+                                <a href="${recFileUrl}" download="${recOriginalName}" style="display: inline-flex; align-items: center; gap: 6px; background: #d97706; color: #fff; padding: 7px 16px; border-radius: 6px; font-size: 0.85rem; font-weight: 700; text-decoration: none; margin-top: 10px;">
+                                    <i class="fa-solid fa-download"></i> Download Document
+                                </a>
+                            </div>
+                        `;
                     } else {
                         document.getElementById('m-receipt-content').innerHTML = `
                             <div style="text-align: center; background: #fff; padding: 15px; border-radius: 8px; border: 1px solid #cbd5e1;">
-                                <img src="${recFileUrl}" alt="Payment Receipt Screenshot" style="max-height: 320px; max-width: 100%; border-radius: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.08);">
+                                <a href="${recFileUrl}" target="_blank" title="Click to view full image">
+                                    <img src="${recFileUrl}" alt="Payment Receipt Screenshot" onerror="this.onerror=null; this.src='${directRecUrl}';" style="max-height: 320px; max-width: 100%; border-radius: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); display: inline-block; cursor: pointer;">
+                                </a>
                                 <div style="font-size: 0.82rem; color: #64748b; margin-top: 8px;">File: ${recOriginalName}</div>
                             </div>
                         `;
