@@ -539,9 +539,16 @@ Route::get('/sync-db-settings', function () {
         
         \App\Models\RegistrationField::where('name', 'interested_in')->delete();
         \App\Models\SiteSetting::updateOrCreate(['key' => 'contact_address'], ['value' => 'Madras Christian College, Tambaram, Chennai', 'group' => 'contact']);
+        \App\Models\SiteSetting::updateOrCreate(['key' => 'hero_btn1_text'], ['value' => 'REGISTER NOW', 'group' => 'hero', 'type' => 'text', 'label' => 'Primary Button Text']);
+        \App\Models\SiteSetting::updateOrCreate(['key' => 'hero_btn1_link'], ['value' => '/registration', 'group' => 'hero', 'type' => 'text', 'label' => 'Primary Button Link']);
+        \App\Models\SiteSetting::updateOrCreate(['key' => 'hero_btn2_text'], ['value' => 'APPLY FOR AWARDS', 'group' => 'hero', 'type' => 'text', 'label' => 'Secondary Button Text']);
+        \App\Models\SiteSetting::updateOrCreate(['key' => 'hero_btn2_link'], ['value' => '/awards', 'group' => 'hero', 'type' => 'text', 'label' => 'Secondary Button Link']);
 
         $seeder = new \Database\Seeders\SiteSettingSeeder();
         $seeder->run();
+
+        $logoSeeder = new \Database\Seeders\PartnerLogoSeeder();
+        $logoSeeder->run();
 
         return "<div style='font-family: sans-serif; padding: 40px; background: #f0fdf4; color: #166534; border-radius: 12px; margin: 30px auto; max-width: 600px; border: 1px solid #bbf7d0;'>
             <h2><i class='fa-solid fa-circle-check'></i> Live Database Settings Synchronized!</h2>

@@ -64,24 +64,37 @@
 
         <div class="photo-gallery">
             @php
-                $images = [];
-                $files = glob(public_path('images/mcc_memorial_*.*'));
-                foreach ($files as $file) {
-                    $images[] = asset('images/' . basename($file));
+                if (empty($images)) {
+                    $images = [];
+                    $possiblePaths = [
+                        public_path('images/mcc_memorial_*.*'),
+                        base_path('../public_html/images/mcc_memorial_*.*'),
+                        base_path('public/images/mcc_memorial_*.*'),
+                    ];
+                    $files = [];
+                    foreach ($possiblePaths as $p) {
+                        $found = glob($p);
+                        if (!empty($found)) {
+                            $files = $found;
+                            break;
+                        }
+                    }
+                    foreach ($files as $file) {
+                        $images[] = asset('images/' . basename($file));
+                    }
+                    
+                    usort($images, function($a, $b) {
+                        preg_match('/mcc_memorial_(\d+)/', $a, $matchA);
+                        preg_match('/mcc_memorial_(\d+)/', $b, $matchB);
+                        $numA = (int)($matchA[1] ?? 0);
+                        $numB = (int)($matchB[1] ?? 0);
+                        return $numA <=> $numB;
+                    });
                 }
-                
-                // Ensure proper numeric sorting so mcc_memorial_2 comes before mcc_memorial_10
-                usort($images, function($a, $b) {
-                    preg_match('/mcc_memorial_(\d+)/', $a, $matchA);
-                    preg_match('/mcc_memorial_(\d+)/', $b, $matchB);
-                    $numA = (int)($matchA[1] ?? 0);
-                    $numB = (int)($matchB[1] ?? 0);
-                    return $numA <=> $numB;
-                });
             @endphp
             @foreach($images as $img)
                 <div class="gallery-item">
-                    <img src="{{ $img }}" alt="MCC Memorial Image">
+                    <img src="{{ $img }}" alt="MCC Memorial Image" onerror="this.parentElement.style.display='none';">
                 </div>
             @endforeach
         </div>

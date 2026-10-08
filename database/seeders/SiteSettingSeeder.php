@@ -942,7 +942,7 @@ Establish your brand as a thought leader in your industry',
   111 => 
   array (
     'key' => 'hero_btn2_text',
-    'value' => '',
+    'value' => 'APPLY FOR AWARDS',
     'type' => 'text',
     'group' => 'hero',
     'label' => 'Secondary Button Text',
@@ -950,7 +950,7 @@ Establish your brand as a thought leader in your industry',
   112 => 
   array (
     'key' => 'hero_btn2_link',
-    'value' => '',
+    'value' => '/awards',
     'type' => 'text',
     'group' => 'hero',
     'label' => 'Secondary Button Link',

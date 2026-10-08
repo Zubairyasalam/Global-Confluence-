@@ -11,11 +11,8 @@
     try {
         if (\Illuminate\Support\Facades\Schema::hasTable('partner_logos')) {
             $dbLogos = \App\Models\PartnerLogo::where('is_active', true)->orderBy('sort_order')->get();
-            $validLogos = $dbLogos->filter(function($item) {
-                return !empty($item->logo_path) && file_exists(public_path($item->logo_path));
-            });
-            if ($validLogos->isNotEmpty()) {
-                $partnerLogos = $validLogos;
+            if ($dbLogos->isNotEmpty()) {
+                $partnerLogos = $dbLogos;
             }
         }
     } catch (\Throwable $e) {
@@ -23,9 +20,7 @@
     }
 
     if ($partnerLogos->isEmpty()) {
-        $partnerLogos = collect($defaultLogos)->filter(function($item) {
-            return !empty($item['logo_path']) && file_exists(public_path($item['logo_path']));
-        })->map(fn($item) => (object)$item);
+        $partnerLogos = collect($defaultLogos)->map(fn($item) => (object)$item);
     }
 
     // Multiply logos per group to guarantee seamless continuous marquee across all display sizes (including 4K/ultrawide)

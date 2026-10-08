@@ -34,7 +34,7 @@
                                 <i class="fa-solid fa-grip-vertical"></i>
                             </div>
                             <div style="width: 90px; height: 65px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; padding: 6px; flex-shrink: 0;">
-                                <img src="{{ asset($logo->logo_path) }}" alt="{{ $logo->name }}" style="max-height: 100%; max-width: 100%; object-fit: contain;">
+                                <img src="{{ asset($logo->logo_path) }}" alt="{{ $logo->name }}" style="max-height: 100%; max-width: 100%; object-fit: contain;" onerror="this.onerror=null; this.src='https://placehold.co/120x80?text=Logo';">
                             </div>
                             <div>
                                 <h4 style="margin: 0 0 4px 0; font-size: 1.05rem; font-weight: 700; color: #0a192f;">{{ $logo->name }}</h4>

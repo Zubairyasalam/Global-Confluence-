@@ -2004,7 +2004,11 @@ class AdminController extends Controller
         if ($request->hasFile('logo')) {
             $file = $request->file('logo');
             $filename = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
-            $file->move(public_path('images'), $filename);
+            $destination = public_path('images');
+            if (!file_exists($destination)) {
+                @mkdir($destination, 0777, true);
+            }
+            $file->move($destination, $filename);
             $logoPath = 'images/' . $filename;
         }
 
@@ -2040,7 +2044,11 @@ class AdminController extends Controller
         if ($request->hasFile('logo')) {
             $file = $request->file('logo');
             $filename = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
-            $file->move(public_path('images'), $filename);
+            $destination = public_path('images');
+            if (!file_exists($destination)) {
+                @mkdir($destination, 0777, true);
+            }
+            $file->move($destination, $filename);
             $data['logo_path'] = 'images/' . $filename;
         }
 
@@ -2054,6 +2062,15 @@ class AdminController extends Controller
         $logo = \App\Models\PartnerLogo::findOrFail($id);
         $logo->delete();
         return back()->with('success', 'Partner logo deleted successfully.');
+    }
+
+    public function reorderPartnerLogos(Request $request)
+    {
+        $order = $request->input('order', []);
+        foreach ($order as $index => $id) {
+            \App\Models\PartnerLogo::where('id', $id)->update(['sort_order' => $index + 1]);
+        }
+        return response()->json(['status' => 'success']);
     }
 
     public function stallBookingSettings()

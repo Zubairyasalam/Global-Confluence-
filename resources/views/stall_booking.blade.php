@@ -149,6 +149,31 @@
         </div>
     @endforeach
 
+    <!-- Quick Payment QR Section for Stall Booking & Tariff -->
+    <div style="background: linear-gradient(135deg, #0a192f 0%, #0f172a 100%); border-radius: 16px; border: 1.5px solid #1e293b; box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2); padding: 35px 30px; margin: 30px 0; color: #ffffff;">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 30px; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 280px;">
+                <span style="background: rgba(0, 168, 150, 0.2); color: #00e676; font-size: 0.8rem; font-weight: 800; padding: 4px 14px; border-radius: 20px; text-transform: uppercase; letter-spacing: 1px; display: inline-block; margin-bottom: 10px;">
+                    Fast & Direct Payment
+                </span>
+                <h3 style="font-size: 1.6rem; font-weight: 800; color: #ffffff; margin: 0 0 10px 0;">
+                    Scan QR Code for Payment
+                </h3>
+                <p style="color: #94a3b8; font-size: 0.95rem; line-height: 1.6; margin: 0 0 18px 0;">
+                    Scan the official MCC payment QR code using any UPI App (GPay, PhonePe, Paytm) to complete your stall booking or sponsorship contribution.
+                </p>
+                <div style="font-size: 0.9rem; color: #cbd5e1; margin-bottom: 8px;">
+                    <strong>Online PayU Link:</strong> 
+                    <a href="https://u.payu.in/PAYUMN/IJZCzKXf5LTs" target="_blank" style="color: #00e676; font-weight: 700; text-decoration: underline; margin-left: 5px;">https://u.payu.in/PAYUMN/IJZCzKXf5LTs</a>
+                </div>
+            </div>
+            
+            <div style="flex-shrink: 0; text-align: center; background: #ffffff; padding: 15px; border-radius: 14px; box-shadow: 0 8px 25px rgba(0,0,0,0.3); border: 2px solid #00A896;">
+                <img src="{{ asset('images/payment_qr_final.png') }}" alt="Scan QR Code for Payment" style="max-width: 200px; width: 100%; display: block; border-radius: 8px;">
+            </div>
+        </div>
+    </div>
+
     <!-- Sponsors & Industry Partners Showcase -->
     <div style="background: #ffffff; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06); padding: 35px 30px; margin-top: 20px;">
         <div style="text-align: center; margin-bottom: 28px;">

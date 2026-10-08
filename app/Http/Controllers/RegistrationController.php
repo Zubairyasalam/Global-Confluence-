@@ -20,7 +20,7 @@ class RegistrationController extends Controller
 
         $dynamicFields = \App\Models\RegistrationField::all();
         foreach ($dynamicFields as $field) {
-            if ($field->is_required) {
+            if ($field->is_required && $field->name !== 'interested_in') {
                 $rules['fields.' . $field->name] = 'required';
             }
         }
@@ -39,7 +39,7 @@ class RegistrationController extends Controller
         $registration = new \App\Models\Registration();
         
         // Save the dynamic fields as JSON
-        $fieldsData = $request->input('fields');
+        $fieldsData = $request->input('fields', []);
 
         // Handle abstract file upload with original filename preservation
         if ($request->hasFile('abstract_file')) {
@@ -86,13 +86,18 @@ class RegistrationController extends Controller
         $registration->name = $fieldsData['name'] ?? 'N/A';
         $registration->email = $fieldsData['email'] ?? 'N/A';
         $registration->phone = $fieldsData['phone'] ?? null;
+        $registration->gender = $fieldsData['gender'] ?? null;
         $registration->organization = $fieldsData['organization'] ?? null;
         $registration->city = $fieldsData['city'] ?? null;
         $registration->country = $fieldsData['country'] ?? null;
         $registration->postal_code = $fieldsData['postal_code'] ?? null;
-        $registration->interested_in = $fieldsData['interested_in'] ?? null;
+        $registration->interested_in = $fieldsData['interested_in'] ?? $fieldsData['presentation_event_type'] ?? $fieldsData['registration_type'] ?? 'Participation';
         $registration->registration_type = $fieldsData['registration_type'] ?? 'Participation';
+        $registration->presentation_event_type = $fieldsData['presentation_event_type'] ?? null;
+        $registration->presentation_track = $fieldsData['presentation_track'] ?? null;
         $registration->abstract_file = $fieldsData['abstract_file'] ?? null;
+        $registration->id_card_file = $fieldsData['id_card_file'] ?? null;
+        $registration->payment_receipt_file = $fieldsData['payment_receipt_file'] ?? null;
         $registration->reg_category = $request->input('reg_category');
         $registration->payment_method = !empty($fieldsData['transaction_id']) ? ('Txn: ' . $fieldsData['transaction_id']) : 'N/A';
 
@@ -125,6 +130,13 @@ class RegistrationController extends Controller
             } catch (\Exception $e) {
                 // Log silently, don't break user flow
             }
+        }
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Registration completed successfully!'
+            ]);
         }
 
         return redirect()->back()->with('success', 'Registration completed successfully!');

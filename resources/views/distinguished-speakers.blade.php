@@ -271,9 +271,9 @@
                                 <tr style="border-bottom: 1px solid #eef2f6; transition: background 0.2s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
                                     <td style="padding: 24px 20px; text-align: center; font-weight: 700; color: #64748b; vertical-align: middle;">{{ $index + 1 }}.</td>
                                     <td style="padding: 24px 25px; text-align: center; vertical-align: middle;">
-                                        @if($preSpeaker->image_path && file_exists(public_path($preSpeaker->image_path)))
+                                        @if(!empty($preSpeaker->image_path))
                                             <div style="width: 100px; height: 100px; margin: 0 auto 10px auto; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border: 2px solid #e2e8f0; background: #f8fafc;">
-                                                <img src="{{ asset($preSpeaker->image_path) }}" alt="{{ $preSpeaker->name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                                                <img src="{{ asset($preSpeaker->image_path) }}" alt="{{ $preSpeaker->name }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.parentElement.style.display='none';">
                                             </div>
                                         @endif
                                         <strong style="font-size: 1.02rem; color: #0f172a; display: block; line-height: 1.3;">{{ $preSpeaker->name }}</strong>

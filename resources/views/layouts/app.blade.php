@@ -55,10 +55,13 @@
 </head>
 <body>
     @yield('content')
-    <!-- Floating WhatsApp Button -->
+    <!-- Floating WhatsApp Button (Bottom Left) -->
     <a href="{{ $settings['contact_whatsapp_link'] ?? 'https://wa.me/918148018894' }}" class="whatsapp-float" target="_blank" rel="noopener noreferrer" title="Chat with us on WhatsApp (+91 81480 18894)">
         <i class="fa-brands fa-whatsapp"></i>
     </a>
+
+    <!-- Floating QR Code Widget (Bottom Right) -->
+    @include('sections.floating-qr-widget')
 
     @yield('scripts')
 </body>

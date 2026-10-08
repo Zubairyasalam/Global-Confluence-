@@ -37,6 +37,7 @@ class DatabaseSeeder extends Seeder
             SponsorSeeder::class,
             SubmitPaperFieldSeeder::class,
             TopicSeeder::class,
+            PartnerLogoSeeder::class,
         ]);
     }
 }

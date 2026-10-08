@@ -122,8 +122,11 @@
             @if(count($speakers) > 0)
                 @foreach($speakers as $speaker)
                     <div class="speaker-card">
-                        @if($speaker->image_path && file_exists(public_path($speaker->image_path)))
-                            <img src="{{ asset($speaker->image_path) }}" class="speaker-img" alt="{{ $speaker->name }}">
+                        @if(!empty($speaker->image_path))
+                            <img src="{{ asset($speaker->image_path) }}" class="speaker-img" alt="{{ $speaker->name }}" onerror="this.onerror=null; this.src=''; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="speaker-img" style="background: #f1f5f9; display: none; align-items: center; justify-content: center; color: #94a3b8; font-size: 2rem; border: 1px dashed #cbd5e1;">
+                                <i class="fa-solid fa-user"></i>
+                            </div>
                         @else
                             <div class="speaker-img" style="background: #f1f5f9; display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 2rem; border: 1px dashed #cbd5e1;">
                                 <i class="fa-solid fa-user"></i>
