@@ -2482,14 +2482,9 @@ align-items: flex-start;
         padding-bottom: 8px !important;
     }
 
-    /* Show the mobile announcement ticker below navbar */
+    /* Mobile announcement banner removed */
     .mobile-announcement {
-        display: block;
-        background-color: var(--navy-dark);
-        position: sticky;
-        top: 58px;
-        z-index: 99;
-        border-top: none;
+        display: none !important;
     }
 
     .hero {
