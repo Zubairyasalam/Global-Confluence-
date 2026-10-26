@@ -1805,8 +1805,7 @@ class AdminController extends Controller
 
     public function topbarSettings()
     {
-        $settings = \App\Models\SiteSetting::whereIn('group', ['topbar', 'contact', 'deadlines'])->pluck('value', 'key')->toArray();
-        $deadlines = \App\Models\Deadline::where('is_active', true)->orderBy('sort_order')->get();
+        $settings = \App\Models\SiteSetting::whereIn('group', ['topbar', 'contact'])->pluck('value', 'key')->toArray();
         
         $customTickerItems = [];
         foreach ($settings as $k => $v) {
@@ -1817,7 +1816,7 @@ class AdminController extends Controller
         ksort($customTickerItems);
         $customTickerItems = array_values($customTickerItems);
 
-        return view('admin.topbar.index', compact('settings', 'deadlines', 'customTickerItems'));
+        return view('admin.topbar.index', compact('settings', 'customTickerItems'));
     }
 
     public function updateTopbarSettings(Request $request)
@@ -1847,7 +1846,7 @@ class AdminController extends Controller
         }
 
         // Topbar general settings
-        $topbarKeys = ['topbar_enabled', 'topbar_bg_color', 'topbar_text_color', 'topbar_speed', 'topbar_ticker_mode', 'topbar_format'];
+        $topbarKeys = ['topbar_enabled', 'topbar_bg_color', 'topbar_text_color', 'topbar_speed', 'topbar_format'];
         foreach ($topbarKeys as $tKey) {
             if ($request->has($tKey)) {
                 \App\Models\SiteSetting::updateOrCreate(['key' => $tKey], ['value' => $request->input($tKey), 'group' => 'topbar']);

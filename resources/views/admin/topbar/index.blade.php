@@ -47,7 +47,7 @@
         outline: none;
     }
 
-    /* Live Preview Component (1:1 with frontend) */
+    /* Live Preview Component */
     .prev-topbar-desktop {
         padding: 10px 22px;
         display: flex;
@@ -210,29 +210,6 @@
         border-radius: 5px;
         border: none;
     }
-
-    .mode-card-radio {
-        flex: 1;
-        min-width: 260px;
-        border: 2px solid #e2e8f0;
-        border-radius: 12px;
-        padding: 16px 20px;
-        cursor: pointer;
-        transition: all 0.2s;
-        background: #ffffff;
-        display: flex;
-        align-items: flex-start;
-        gap: 12px;
-    }
-
-    .mode-card-radio:hover {
-        border-color: #94a3b8;
-    }
-
-    .mode-card-radio.active {
-        border-color: #009688;
-        background: #f0fdfa;
-    }
 </style>
 
 <div class="topbar-admin-wrap">
@@ -243,7 +220,7 @@
             <h2 style="font-size: 1.7rem; font-weight: 800; color: #0a192f; margin: 0 0 4px 0;">
                 <i class="fa-solid fa-bullhorn" style="color: #009688; margin-right: 8px;"></i> Topbar &amp; Announcement Header CMS
             </h2>
-            <p style="color: #64748b; font-size: 0.95rem; margin: 0;">Dynamically manage scrolling announcements ticker, phone numbers, colors, and live deadlines with real-time preview.</p>
+            <p style="color: #64748b; font-size: 0.95rem; margin: 0;">Dynamically manage announcement marquee ticker messages, contact phone numbers, colors, and scroll speed with real-time preview.</p>
         </div>
         <div style="display: flex; gap: 12px; align-items: center;">
             <a href="/" target="_blank" style="background: #ffffff; color: #0f172a; border: 1.5px solid #cbd5e1; padding: 11px 20px; border-radius: 10px; font-weight: 700; font-size: 0.92rem; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.04);">
@@ -265,8 +242,8 @@
                 <h4 style="font-size: 1rem; font-weight: 800; color: #0f172a; margin: 0;">
                     <i class="fa-solid fa-desktop" style="color: #64748b; margin-right: 6px;"></i> Live Visual Preview
                 </h4>
-                <span id="prev-mode-badge" style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #0f766e; background: #ccfbf1; padding: 3px 10px; border-radius: 12px; border: 1px solid #99f6e4;">
-                    Custom Ticker Mode
+                <span style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #0f766e; background: #ccfbf1; padding: 3px 10px; border-radius: 12px; border: 1px solid #99f6e4;">
+                    Announcement Ticker
                 </span>
             </div>
             <span style="font-size: 0.8rem; color: #94a3b8; font-weight: 500;">
@@ -300,7 +277,7 @@
                         <h3 style="margin: 0 0 4px 0; font-size: 1.25rem; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 8px;">
                             <i class="fa-solid fa-scroll" style="color: #f59e0b;"></i> 1. Scrolling Announcement Marquee Ticker
                         </h3>
-                        <p style="margin: 0; color: #64748b; font-size: 0.88rem;">Select whether to automatically pull live Deadlines or write fully customized announcement items.</p>
+                        <p style="margin: 0; color: #64748b; font-size: 0.88rem;">Add, edit, and reorder custom marquee headlines, announcements, and alerts.</p>
                     </div>
                     <div style="display: flex; gap: 8px;">
                         <button type="button" onclick="addTickerRow('')" style="background: #fffbeb; color: #b45309; border: 1.5px solid #fde68a; padding: 9px 18px; border-radius: 8px; font-weight: 700; font-size: 0.88rem; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 4px rgba(245,158,11,0.1);">
@@ -309,56 +286,26 @@
                     </div>
                 </div>
 
-                <!-- Ticker Mode Selection Cards -->
-                <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 25px;">
-                    @php
-                        $activeMode = $settings['topbar_ticker_mode'] ?? 'custom';
-                    @endphp
-                    <label class="mode-card-radio {{ $activeMode === 'deadlines' ? 'active' : '' }}" onclick="selectTickerMode('deadlines')">
-                        <input type="radio" name="topbar_ticker_mode" value="deadlines" {{ $activeMode === 'deadlines' ? 'checked' : '' }} style="margin-top: 4px;">
-                        <div>
-                            <div style="font-weight: 700; color: #0f172a; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
-                                <i class="fa-solid fa-calendar-check" style="color: #009688;"></i> Automatically Sync with Deadlines
-                            </div>
-                            <div style="color: #64748b; font-size: 0.84rem;">
-                                Pulls live active deadlines automatically ({{ $deadlines->count() }} active in database).
-                            </div>
-                        </div>
-                    </label>
-
-                    <label class="mode-card-radio {{ $activeMode === 'custom' ? 'active' : '' }}" onclick="selectTickerMode('custom')">
-                        <input type="radio" name="topbar_ticker_mode" value="custom" {{ $activeMode === 'custom' ? 'checked' : '' }} style="margin-top: 4px;">
-                        <div>
-                            <div style="font-weight: 700; color: #0f172a; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
-                                <i class="fa-solid fa-pen-to-square" style="color: #f59e0b;"></i> Use Custom Announcement Items
-                            </div>
-                            <div style="color: #64748b; font-size: 0.84rem;">
-                                Add, edit, reorder custom marquee headlines, announcements, and alerts.
-                            </div>
-                        </div>
-                    </label>
-                </div>
-
                 <!-- Quick Presets Toolbar -->
                 <div id="presets-wrap" style="background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 12px; padding: 14px 18px; margin-bottom: 20px;">
                     <div style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #64748b; margin-bottom: 8px;">
                         <i class="fa-solid fa-wand-magic-sparkles" style="color: #009688;"></i> Quick Add Templates (Click to insert):
                     </div>
                     <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                        <button type="button" class="preset-pill" onclick="addTickerRow('Submission of Abstract: 2026-10-30')">
-                            <i class="fa-solid fa-plus"></i> Abstract Deadline
-                        </button>
-                        <button type="button" class="preset-pill" onclick="addTickerRow('Early Bird Registration: 2026-10-15')">
-                            <i class="fa-solid fa-plus"></i> Early Bird Registration
-                        </button>
-                        <button type="button" class="preset-pill" onclick="addTickerRow('Regular Registration Deadline: 2026-11-20')">
-                            <i class="fa-solid fa-plus"></i> Regular Registration
+                        <button type="button" class="preset-pill" onclick="addTickerRow('Quality presentation will be peer reviewed and considered for further publication in selected Scopus/ WoS indexed journals. All the Presentation will be published as a conference proceedings in ISBN indexed book')">
+                            <i class="fa-solid fa-plus"></i> Publication Note
                         </button>
                         <button type="button" class="preset-pill" onclick="addTickerRow('📌 Important Announcement: Register before the deadline as a participant, and submit your abstract later!')">
                             <i class="fa-solid fa-plus"></i> Important Announcement
                         </button>
-                        <button type="button" class="preset-pill" onclick="addTickerRow('Quality presentation will be peer reviewed and considered for further publication in selected Scopus/ WoS indexed journals. All the Presentation will be published as a conference proceedings in ISBN indexed book')">
-                            <i class="fa-solid fa-plus"></i> Publication Note
+                        <button type="button" class="preset-pill" onclick="addTickerRow('Registration fee waived!')">
+                            <i class="fa-solid fa-plus"></i> Fee Notice
+                        </button>
+                        <button type="button" class="preset-pill" onclick="addTickerRow('Submission of Abstract: 2026-10-30')">
+                            <i class="fa-solid fa-plus"></i> Abstract Deadline
+                        </button>
+                        <button type="button" class="preset-pill" onclick="addTickerRow('Early Bird Registration: 2026-10-15')">
+                            <i class="fa-solid fa-plus"></i> Early Bird
                         </button>
                     </div>
                 </div>
@@ -391,30 +338,6 @@
                                 </div>
                             @endforeach
                         @endif
-                    </div>
-                </div>
-
-                <!-- Deadlines List Notice (Shown when Deadlines mode is active) -->
-                <div id="deadlines-sync-notice" style="display: none; background: #f0fdfa; border: 1.5px solid #ccfbf1; border-radius: 12px; padding: 20px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                        <h4 style="margin: 0; font-size: 1rem; font-weight: 800; color: #0f766e; display: flex; align-items: center; gap: 8px;">
-                            <i class="fa-solid fa-calendar-check"></i> Active Deadlines Being Displayed:
-                        </h4>
-                        <a href="{{ route('admin.home') }}" target="_blank" style="font-size: 0.84rem; color: #009688; font-weight: 700; text-decoration: none;">
-                            <i class="fa-solid fa-pen-to-square"></i> Edit Deadlines in Deadlines CMS &rarr;
-                        </a>
-                    </div>
-                    <div style="display: flex; flex-direction: column; gap: 8px;">
-                        @forelse($deadlines as $dl)
-                            <div style="background: #ffffff; border: 1px solid #99f6e4; padding: 10px 16px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
-                                <span style="font-weight: 600; color: #0f172a;">{{ $dl->title }}</span>
-                                <span style="font-size: 0.85rem; font-weight: 700; color: #0f766e; background: #e6fffa; padding: 3px 10px; border-radius: 20px;">
-                                    {{ $dl->deadline_date }}
-                                </span>
-                            </div>
-                        @empty
-                            <p style="color: #64748b; margin: 0; font-style: italic;">No active deadlines found. Please add deadlines in the Deadlines CMS or switch to Custom Messages.</p>
-                        @endforelse
                     </div>
                 </div>
             </div>
@@ -524,55 +447,6 @@
 </div>
 
 <script>
-    // Live deadlines data from database
-    const dbDeadlines = @json($deadlines->map(function($d) { return ['title' => $d->title, 'date' => $d->deadline_date]; }));
-
-    function selectTickerMode(val) {
-        document.querySelectorAll('input[name="topbar_ticker_mode"]').forEach(r => {
-            r.checked = (r.value === val);
-        });
-
-        document.querySelectorAll('.mode-card-radio').forEach(card => {
-            const input = card.querySelector('input');
-            if (input && input.value === val) {
-                card.classList.add('active');
-            } else {
-                card.classList.remove('active');
-            }
-        });
-
-        const customWrap = document.getElementById('custom-ticker-wrap');
-        const presetsWrap = document.getElementById('presets-wrap');
-        const noticeWrap = document.getElementById('deadlines-sync-notice');
-        const modeBadge = document.getElementById('prev-mode-badge');
-
-        if (val === 'deadlines') {
-            customWrap.style.display = 'none';
-            presetsWrap.style.display = 'none';
-            noticeWrap.style.display = 'block';
-            modeBadge.textContent = 'Syncing Live Deadlines';
-            modeBadge.style.color = '#00796b';
-            modeBadge.style.background = '#e6fffa';
-            modeBadge.style.borderColor = '#99f6e4';
-        } else {
-            customWrap.style.display = 'block';
-            presetsWrap.style.display = 'block';
-            noticeWrap.style.display = 'none';
-            modeBadge.textContent = 'Custom Ticker Mode';
-            modeBadge.style.color = '#b45309';
-            modeBadge.style.background = '#fef3c7';
-            modeBadge.style.borderColor = '#fde68a';
-
-            if (document.querySelectorAll('#ticker-items-container input[name="custom_ticker_items[]"]').length === 0) {
-                addTickerRow('Submission of Abstract: 2026-10-30');
-                addTickerRow('Early Bird Registration: 2026-10-15');
-                addTickerRow('Regular Registration Deadline: 2026-11-20');
-            }
-        }
-
-        updateLivePreview();
-    }
-
     function syncColor(type, val) {
         if (!val) return;
         if (type === 'bg') {
@@ -682,9 +556,6 @@
     }
 
     function updateLivePreview() {
-        const checkedModeInput = document.querySelector('input[name="topbar_ticker_mode"]:checked');
-        const mode = checkedModeInput ? checkedModeInput.value : 'custom';
-
         // 1. Update Left Phones in Preview
         const phonesContainer = document.getElementById('prev-left-phones');
         if (phonesContainer) {
@@ -712,23 +583,15 @@
         if (!marquee) return;
 
         let items = [];
-        if (mode === 'deadlines') {
-            if (dbDeadlines && dbDeadlines.length > 0) {
-                items = dbDeadlines.map(d => `${d.title}: ${d.date}`);
-            } else {
-                items = ['No active deadlines in database'];
-            }
-        } else {
-            document.querySelectorAll('#ticker-items-container input[name="custom_ticker_items[]"]').forEach(inp => {
-                const val = inp.value.trim();
-                if (val) items.push(val);
-            });
-            if (items.length === 0) {
-                items = [
-                    'All the Presentation will be published as a conference proceedings in ISBN indexed book',
-                    'Quality presentation will be peer reviewed and considered for further publication in selected Scopus/ WoS indexed journals'
-                ];
-            }
+        document.querySelectorAll('#ticker-items-container input[name="custom_ticker_items[]"]').forEach(inp => {
+            const val = inp.value.trim();
+            if (val) items.push(val);
+        });
+        if (items.length === 0) {
+            items = [
+                'All the Presentation will be published as a conference proceedings in ISBN indexed book',
+                'Quality presentation will be peer reviewed and considered for further publication in selected Scopus/ WoS indexed journals'
+            ];
         }
 
         // Render repeated for seamless loop
@@ -750,8 +613,6 @@
     // Initialize on page load
     document.addEventListener('DOMContentLoaded', function() {
         renumberTickerItems();
-        const checkedMode = document.querySelector('input[name="topbar_ticker_mode"]:checked')?.value || 'custom';
-        selectTickerMode(checkedMode);
         syncSpeed(document.getElementById('topbar_speed')?.value || 55);
         syncColor('bg', document.getElementById('topbar_bg_color')?.value || '#0f233a');
         syncColor('text', document.getElementById('topbar_text_color')?.value || '#ffffff');
