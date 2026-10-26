@@ -6,11 +6,16 @@
 
     $tickerMode = $settings['topbar_ticker_mode'] ?? 'custom';
     $customItems = [];
-    for ($t = 1; $t <= 20; $t++) {
-        if (!empty($settings['topbar_ticker_' . $t])) {
-            $customItems[] = $settings['topbar_ticker_' . $t];
+    foreach ($settings as $k => $v) {
+        if (str_starts_with($k, 'topbar_ticker_') && $k !== 'topbar_ticker_mode' && $k !== 'topbar_ticker_count') {
+            if (!empty(trim($v))) {
+                $idx = (int)str_replace('topbar_ticker_', '', $k);
+                $customItems[$idx] = trim($v);
+            }
         }
     }
+    ksort($customItems);
+    $customItems = array_values($customItems);
     if (empty($customItems)) {
         $customItems = [
             'All the Presentation will be published as a conference proceedings in ISBN indexed book',
@@ -56,7 +61,17 @@
 <div class="topbar topbar-desktop">
     <div class="marquee-container">
         <div class="marquee-content">
-            @if($tickerMode === 'custom' || count($customItems) > 0)
+            @if($tickerMode === 'deadlines' && isset($deadlines) && count($deadlines) > 0)
+                @for($r = 0; $r < 4; $r++)
+                    @foreach($deadlines as $dl)
+                        <span style="margin-right: 45px; display: inline-flex; align-items: center; gap: 8px;">
+                            <i class="fa-solid fa-circle" style="color: #00A896; font-size: 0.45rem;"></i>
+                            <span>{{ $dl->title }}: {{ $dl->deadline_date }}</span>
+                            <span style="color: rgba(255,255,255,0.25); margin-left: 20px;">|</span>
+                        </span>
+                    @endforeach
+                @endfor
+            @elseif(count($customItems) > 0)
                 @for($r = 0; $r < 4; $r++)
                     @foreach($customItems as $item)
                         <span style="margin-right: 45px; display: inline-flex; align-items: center; gap: 8px;">
@@ -66,13 +81,6 @@
                         </span>
                     @endforeach
                 @endfor
-            @elseif(isset($deadlines) && count($deadlines) > 0)
-                @foreach($deadlines as $dl)
-                    <span style="margin-right: 50px;">{{ $dl->title }}: {{ $dl->deadline_date }}</span>
-                @endforeach
-                @foreach($deadlines as $dl)
-                    <span style="margin-right: 50px;">{{ $dl->title }}: {{ $dl->deadline_date }}</span>
-                @endforeach
             @else
                 <span style="margin-right: 50px;">All the Presentation will be published as a conference proceedings in ISBN indexed book</span>
                 <span style="margin-right: 50px;">Quality presentation will be peer reviewed and considered for further publication in selected Scopus/ WoS indexed journals</span>

@@ -1807,7 +1807,17 @@ class AdminController extends Controller
     {
         $settings = \App\Models\SiteSetting::whereIn('group', ['topbar', 'contact', 'deadlines'])->pluck('value', 'key')->toArray();
         $deadlines = \App\Models\Deadline::where('is_active', true)->orderBy('sort_order')->get();
-        return view('admin.topbar.index', compact('settings', 'deadlines'));
+        
+        $customTickerItems = [];
+        foreach ($settings as $k => $v) {
+            if (preg_match('/^topbar_ticker_(\d+)$/', $k, $m)) {
+                $customTickerItems[(int)$m[1]] = $v;
+            }
+        }
+        ksort($customTickerItems);
+        $customTickerItems = array_values($customTickerItems);
+
+        return view('admin.topbar.index', compact('settings', 'deadlines', 'customTickerItems'));
     }
 
     public function updateTopbarSettings(Request $request)
@@ -1824,10 +1834,10 @@ class AdminController extends Controller
         }
 
         // Additional phone array if submitted
-        if ($request->has('additional_phones')) {
-            \App\Models\SiteSetting::where('group', 'contact')->where('key', 'like', 'contact_phone_%')->whereNotIn('key', ['contact_phone_2', 'contact_phone_3'])->delete();
-            $phones = $request->additional_phones;
-            $count = 3;
+        \App\Models\SiteSetting::where('group', 'contact')->where('key', 'like', 'contact_phone_%')->whereNotIn('key', ['contact_phone_2', 'contact_phone_3'])->delete();
+        $phones = $request->input('additional_phones', []);
+        $count = 3;
+        if (is_array($phones)) {
             foreach ($phones as $ph) {
                 if (!empty(trim($ph))) {
                     $count++;
@@ -1845,18 +1855,18 @@ class AdminController extends Controller
         }
 
         // Custom Ticker Items
-        if ($request->has('custom_ticker_items')) {
-            \App\Models\SiteSetting::where('group', 'topbar')->where('key', 'like', 'topbar_ticker_%')->delete();
-            $items = $request->input('custom_ticker_items', []);
-            $tCount = 0;
+        \App\Models\SiteSetting::where('group', 'topbar')->where('key', 'like', 'topbar_ticker_%')->delete();
+        $items = $request->input('custom_ticker_items', []);
+        $tCount = 0;
+        if (is_array($items)) {
             foreach ($items as $item) {
                 if (!empty(trim($item))) {
                     $tCount++;
                     \App\Models\SiteSetting::updateOrCreate(['key' => "topbar_ticker_{$tCount}"], ['value' => trim($item), 'group' => 'topbar']);
                 }
             }
-            \App\Models\SiteSetting::updateOrCreate(['key' => 'topbar_ticker_count'], ['value' => $tCount, 'group' => 'topbar']);
         }
+        \App\Models\SiteSetting::updateOrCreate(['key' => 'topbar_ticker_count'], ['value' => $tCount, 'group' => 'topbar']);
 
         return back()->with('success', 'Header Topbar and Announcement Ticker settings updated successfully.');
     }

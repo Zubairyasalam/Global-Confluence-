@@ -38,24 +38,26 @@
         font-size: 0.95rem;
         color: #0f172a;
         font-family: inherit;
-        transition: border-color 0.2s;
+        transition: border-color 0.2s, box-shadow 0.2s;
     }
 
     .form-input:focus {
         border-color: #009688;
+        box-shadow: 0 0 0 3px rgba(0, 150, 136, 0.15);
         outline: none;
     }
 
-    /* Live Preview Component (1:1 with User Image) */
+    /* Live Preview Component (1:1 with frontend) */
     .prev-topbar-desktop {
-        padding: 10px 25px;
+        padding: 10px 22px;
         display: flex;
         align-items: center;
         background-color: {{ $settings['topbar_bg_color'] ?? '#0f233a' }};
         color: {{ $settings['topbar_text_color'] ?? '#ffffff' }};
         font-size: 0.88rem;
-        border-radius: 10px;
+        border-radius: 12px;
         overflow: hidden;
+        transition: background-color 0.2s, color 0.2s;
     }
 
     .prev-topbar-left {
@@ -67,6 +69,7 @@
         align-items: center;
         white-space: nowrap;
         font-weight: 600;
+        font-size: 0.84rem;
         z-index: 2;
     }
 
@@ -94,6 +97,10 @@
         will-change: transform;
     }
 
+    .prev-marquee-container:hover .prev-marquee-content {
+        animation-play-state: paused;
+    }
+
     @keyframes prev-marquee-scroll {
         0% { transform: translateX(0); }
         100% { transform: translateX(-50%); }
@@ -102,18 +109,129 @@
     .item-row-card {
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 10px;
         background: #f8fafc;
-        border: 1px solid #e2e8f0;
+        border: 1.5px solid #e2e8f0;
         border-radius: 10px;
-        padding: 12px 16px;
-        margin-bottom: 12px;
-        transition: all 0.2s;
+        padding: 10px 14px;
+        margin-bottom: 10px;
+        transition: all 0.2s ease;
     }
 
     .item-row-card:hover {
         border-color: #009688;
         background: #ffffff;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+    }
+
+    .item-badge-num {
+        background: #e2e8f0;
+        color: #475569;
+        font-size: 0.75rem;
+        font-weight: 700;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .item-btn-tool {
+        background: #ffffff;
+        color: #64748b;
+        border: 1px solid #cbd5e1;
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.82rem;
+        transition: all 0.15s ease;
+    }
+
+    .item-btn-tool:hover {
+        background: #f1f5f9;
+        color: #0f172a;
+        border-color: #94a3b8;
+    }
+
+    .item-btn-tool.btn-del:hover {
+        background: #fee2e2;
+        color: #dc2626;
+        border-color: #fca5a5;
+    }
+
+    .preset-pill {
+        background: #f1f5f9;
+        color: #334155;
+        border: 1px solid #cbd5e1;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        transition: all 0.15s;
+    }
+
+    .preset-pill:hover {
+        background: #009688;
+        color: #ffffff;
+        border-color: #009688;
+        transform: translateY(-1px);
+    }
+
+    .color-picker-box {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .color-swatch-input {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        width: 44px;
+        height: 44px;
+        border: 1.5px solid #cbd5e1;
+        border-radius: 8px;
+        cursor: pointer;
+        padding: 3px;
+        background: #ffffff;
+    }
+
+    .color-swatch-input::-webkit-color-swatch {
+        border-radius: 5px;
+        border: none;
+    }
+
+    .mode-card-radio {
+        flex: 1;
+        min-width: 260px;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 16px 20px;
+        cursor: pointer;
+        transition: all 0.2s;
+        background: #ffffff;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .mode-card-radio:hover {
+        border-color: #94a3b8;
+    }
+
+    .mode-card-radio.active {
+        border-color: #009688;
+        background: #f0fdfa;
     }
 </style>
 
@@ -125,10 +243,10 @@
             <h2 style="font-size: 1.7rem; font-weight: 800; color: #0a192f; margin: 0 0 4px 0;">
                 <i class="fa-solid fa-bullhorn" style="color: #009688; margin-right: 8px;"></i> Topbar &amp; Announcement Header CMS
             </h2>
-            <p style="color: #64748b; font-size: 0.95rem; margin: 0;">Manage contact phone numbers, scrolling announcements ticker, event format, and colors dynamically.</p>
+            <p style="color: #64748b; font-size: 0.95rem; margin: 0;">Dynamically manage scrolling announcements ticker, phone numbers, colors, and live deadlines with real-time preview.</p>
         </div>
         <div style="display: flex; gap: 12px; align-items: center;">
-            <a href="/" target="_blank" style="background: #ffffff; color: #0f172a; border: 1.5px solid #cbd5e1; padding: 11px 20px; border-radius: 10px; font-weight: 700; font-size: 0.92rem; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+            <a href="/" target="_blank" style="background: #ffffff; color: #0f172a; border: 1.5px solid #cbd5e1; padding: 11px 20px; border-radius: 10px; font-weight: 700; font-size: 0.92rem; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.04);">
                 <i class="fa-solid fa-arrow-up-right-from-square"></i> View Live Site
             </a>
         </div>
@@ -140,73 +258,223 @@
         </div>
     @endif
 
-    <!-- 1. LIVE VISUAL PREVIEW (Exact match to User Image) -->
-    <div style="background: #ffffff; border-radius: 20px; border: 2px solid #e2e8f0; padding: 30px; box-shadow: 0 10px 35px rgba(15, 23, 42, 0.06); position: relative;">
-        <div style="position: absolute; top: 15px; right: 20px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: #009688; background: #e6f7f5; padding: 5px 14px; border-radius: 20px; border: 1px solid #b2dfdb; z-index: 10;">
-            <i class="fa-solid fa-eye"></i> Live Visual Preview
+    <!-- 1. DYNAMIC LIVE VISUAL PREVIEW (Real-Time Synchronized) -->
+    <div style="background: #ffffff; border-radius: 20px; border: 2px solid #e2e8f0; padding: 25px; box-shadow: 0 10px 35px rgba(15, 23, 42, 0.06); position: relative;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <h4 style="font-size: 1rem; font-weight: 800; color: #0f172a; margin: 0;">
+                    <i class="fa-solid fa-desktop" style="color: #64748b; margin-right: 6px;"></i> Live Visual Preview
+                </h4>
+                <span id="prev-mode-badge" style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #0f766e; background: #ccfbf1; padding: 3px 10px; border-radius: 12px; border: 1px solid #99f6e4;">
+                    Custom Ticker Mode
+                </span>
+            </div>
+            <span style="font-size: 0.8rem; color: #94a3b8; font-weight: 500;">
+                <i class="fa-solid fa-arrows-rotate"></i> Updates in real-time as you type or change settings
+            </span>
         </div>
 
-        <h4 style="font-size: 1rem; font-weight: 800; color: #0f172a; margin: 0 0 15px 0;">Top Announcement Bar Preview</h4>
-
-        <div class="prev-topbar-desktop">
-            <div class="prev-marquee-container" style="width: 100%; padding-left: 0;">
-                <div class="prev-marquee-content">
-                    @php
-                        $mode = $settings['topbar_ticker_mode'] ?? 'custom';
-                        $customItems = [];
-                        for($i = 1; $i <= 20; $i++) {
-                            if (!empty($settings['topbar_ticker_' . $i])) {
-                                $customItems[] = $settings['topbar_ticker_' . $i];
-                            }
-                        }
-                        if (empty($customItems)) {
-                            $customItems = [
-                                'All the Presentation will be published as a conference proceedings in ISBN indexed book',
-                                'Quality presentation will be peer reviewed and considered for further publication in selected Scopus/ WoS indexed journals'
-                            ];
-                        }
-                    @endphp
-
-                    @if($mode === 'custom' || count($customItems) > 0)
-                        @for($r = 0; $r < 4; $r++)
-                            @foreach($customItems as $item)
-                                <span style="margin-right: 45px; display: inline-flex; align-items: center; gap: 8px;">
-                                    <i class="fa-solid fa-circle" style="color: #00A896; font-size: 0.45rem;"></i>
-                                    <span>{{ $item }}</span>
-                                    <span style="color: rgba(255,255,255,0.25); margin-left: 20px;">|</span>
-                                </span>
-                            @endforeach
-                        @endfor
-                    @elseif(isset($deadlines) && count($deadlines) > 0)
-                        @foreach($deadlines as $dl)
-                            <span style="margin-right: 50px;">{{ $dl->title }}: {{ $dl->deadline_date }}</span>
-                        @endforeach
-                        @foreach($deadlines as $dl)
-                            <span style="margin-right: 50px;">{{ $dl->title }}: {{ $dl->deadline_date }}</span>
-                        @endforeach
-                    @else
-                        <span style="margin-right: 50px;">All the Presentation will be published as a conference proceedings in ISBN indexed book</span>
-                        <span style="margin-right: 50px;">Quality presentation will be peer reviewed and considered for further publication in selected Scopus/ WoS indexed journals</span>
-                    @endif
+        <!-- Preview Bar -->
+        <div id="prev-topbar-desktop" class="prev-topbar-desktop">
+            <div id="prev-left-phones" class="prev-topbar-left">
+                <!-- Dynamically populated by JS -->
+            </div>
+            <div class="prev-marquee-container">
+                <div id="prev-marquee-content" class="prev-marquee-content">
+                    <!-- Dynamically populated by JS -->
                 </div>
             </div>
         </div>
     </div>
 
     <!-- 2. EDIT FORM -->
-    <form method="POST" action="{{ route('admin.topbar.update') }}">
+    <form id="topbar-cms-form" method="POST" action="{{ route('admin.topbar.update') }}">
         @csrf
 
         <div style="display: flex; flex-direction: column; gap: 30px;">
 
-            <!-- SECTION 1: PHONE NUMBERS -->
+            <!-- SECTION 1: ANNOUNCEMENT TICKER / MARQUEE -->
             <div class="admin-card-section">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
                     <div>
                         <h3 style="margin: 0 0 4px 0; font-size: 1.25rem; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 8px;">
-                            <i class="fa-solid fa-phone" style="color: #009688;"></i> 1. Contact &amp; Helpdesk Phone Numbers
+                            <i class="fa-solid fa-scroll" style="color: #f59e0b;"></i> 1. Scrolling Announcement Marquee Ticker
                         </h3>
-                        <p style="margin: 0; color: #64748b; font-size: 0.88rem;">These phone numbers appear on the left side of the topbar header.</p>
+                        <p style="margin: 0; color: #64748b; font-size: 0.88rem;">Select whether to automatically pull live Deadlines or write fully customized announcement items.</p>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button type="button" onclick="addTickerRow('')" style="background: #fffbeb; color: #b45309; border: 1.5px solid #fde68a; padding: 9px 18px; border-radius: 8px; font-weight: 700; font-size: 0.88rem; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 4px rgba(245,158,11,0.1);">
+                            <i class="fa-solid fa-plus"></i> Add Custom Message
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Ticker Mode Selection Cards -->
+                <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 25px;">
+                    @php
+                        $activeMode = $settings['topbar_ticker_mode'] ?? 'custom';
+                    @endphp
+                    <label class="mode-card-radio {{ $activeMode === 'deadlines' ? 'active' : '' }}" onclick="selectTickerMode('deadlines')">
+                        <input type="radio" name="topbar_ticker_mode" value="deadlines" {{ $activeMode === 'deadlines' ? 'checked' : '' }} style="margin-top: 4px;">
+                        <div>
+                            <div style="font-weight: 700; color: #0f172a; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+                                <i class="fa-solid fa-calendar-check" style="color: #009688;"></i> Automatically Sync with Deadlines
+                            </div>
+                            <div style="color: #64748b; font-size: 0.84rem;">
+                                Pulls live active deadlines automatically ({{ $deadlines->count() }} active in database).
+                            </div>
+                        </div>
+                    </label>
+
+                    <label class="mode-card-radio {{ $activeMode === 'custom' ? 'active' : '' }}" onclick="selectTickerMode('custom')">
+                        <input type="radio" name="topbar_ticker_mode" value="custom" {{ $activeMode === 'custom' ? 'checked' : '' }} style="margin-top: 4px;">
+                        <div>
+                            <div style="font-weight: 700; color: #0f172a; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+                                <i class="fa-solid fa-pen-to-square" style="color: #f59e0b;"></i> Use Custom Announcement Items
+                            </div>
+                            <div style="color: #64748b; font-size: 0.84rem;">
+                                Add, edit, reorder custom marquee headlines, announcements, and alerts.
+                            </div>
+                        </div>
+                    </label>
+                </div>
+
+                <!-- Quick Presets Toolbar -->
+                <div id="presets-wrap" style="background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 12px; padding: 14px 18px; margin-bottom: 20px;">
+                    <div style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #64748b; margin-bottom: 8px;">
+                        <i class="fa-solid fa-wand-magic-sparkles" style="color: #009688;"></i> Quick Add Templates (Click to insert):
+                    </div>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <button type="button" class="preset-pill" onclick="addTickerRow('Submission of Abstract: 2026-10-30')">
+                            <i class="fa-solid fa-plus"></i> Abstract Deadline
+                        </button>
+                        <button type="button" class="preset-pill" onclick="addTickerRow('Early Bird Registration: 2026-10-15')">
+                            <i class="fa-solid fa-plus"></i> Early Bird Registration
+                        </button>
+                        <button type="button" class="preset-pill" onclick="addTickerRow('Regular Registration Deadline: 2026-11-20')">
+                            <i class="fa-solid fa-plus"></i> Regular Registration
+                        </button>
+                        <button type="button" class="preset-pill" onclick="addTickerRow('📌 Important Announcement: Register before the deadline as a participant, and submit your abstract later!')">
+                            <i class="fa-solid fa-plus"></i> Important Announcement
+                        </button>
+                        <button type="button" class="preset-pill" onclick="addTickerRow('Quality presentation will be peer reviewed and considered for further publication in selected Scopus/ WoS indexed journals. All the Presentation will be published as a conference proceedings in ISBN indexed book')">
+                            <i class="fa-solid fa-plus"></i> Publication Note
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Custom Ticker Items List Container -->
+                <div id="custom-ticker-wrap">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <label class="form-label" style="margin: 0;">
+                            Announcement Items (<span id="ticker-items-count">0</span>)
+                        </label>
+                        <span style="font-size: 0.8rem; color: #94a3b8;">Use the arrows to reorder items dynamically</span>
+                    </div>
+
+                    <div id="ticker-items-container">
+                        @if(isset($customTickerItems) && count($customTickerItems) > 0)
+                            @foreach($customTickerItems as $idx => $tItem)
+                                <div class="item-row-card">
+                                    <span class="item-badge-num">{{ $loop->iteration }}</span>
+                                    <i class="fa-solid fa-bullhorn" style="color: #f59e0b; font-size: 0.95rem;"></i>
+                                    <input type="text" name="custom_ticker_items[]" value="{{ $tItem }}" class="form-input" style="flex: 1;" placeholder="Enter marquee text..." oninput="updateLivePreview()">
+                                    <button type="button" class="item-btn-tool" onclick="moveItemUp(this)" title="Move Up">
+                                        <i class="fa-solid fa-arrow-up"></i>
+                                    </button>
+                                    <button type="button" class="item-btn-tool" onclick="moveItemDown(this)" title="Move Down">
+                                        <i class="fa-solid fa-arrow-down"></i>
+                                    </button>
+                                    <button type="button" class="item-btn-tool btn-del" onclick="removeTickerRow(this)" title="Delete Item">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </div>
+                            @endforeach
+                        @endif
+                    </div>
+                </div>
+
+                <!-- Deadlines List Notice (Shown when Deadlines mode is active) -->
+                <div id="deadlines-sync-notice" style="display: none; background: #f0fdfa; border: 1.5px solid #ccfbf1; border-radius: 12px; padding: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <h4 style="margin: 0; font-size: 1rem; font-weight: 800; color: #0f766e; display: flex; align-items: center; gap: 8px;">
+                            <i class="fa-solid fa-calendar-check"></i> Active Deadlines Being Displayed:
+                        </h4>
+                        <a href="{{ route('admin.home') }}" target="_blank" style="font-size: 0.84rem; color: #009688; font-weight: 700; text-decoration: none;">
+                            <i class="fa-solid fa-pen-to-square"></i> Edit Deadlines in Deadlines CMS &rarr;
+                        </a>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        @forelse($deadlines as $dl)
+                            <div style="background: #ffffff; border: 1px solid #99f6e4; padding: 10px 16px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-weight: 600; color: #0f172a;">{{ $dl->title }}</span>
+                                <span style="font-size: 0.85rem; font-weight: 700; color: #0f766e; background: #e6fffa; padding: 3px 10px; border-radius: 20px;">
+                                    {{ $dl->deadline_date }}
+                                </span>
+                            </div>
+                        @empty
+                            <p style="color: #64748b; margin: 0; font-style: italic;">No active deadlines found. Please add deadlines in the Deadlines CMS or switch to Custom Messages.</p>
+                        @endforelse
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 2: APPEARANCE & STYLING -->
+            <div class="admin-card-section">
+                <h3 style="margin: 0 0 4px 0; font-size: 1.25rem; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-palette" style="color: #009688;"></i> 2. Topbar Appearance &amp; Speed
+                </h3>
+                <p style="margin: 0 0 20px 0; color: #64748b; font-size: 0.88rem;">Customize colors and marquee animation speed in real time.</p>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px;">
+                    <!-- Background Color -->
+                    <div>
+                        <label class="form-label">Background Color</label>
+                        <div class="color-picker-box">
+                            <input type="color" id="bg-color-swatch" value="{{ $settings['topbar_bg_color'] ?? '#0f233a' }}" class="color-swatch-input" oninput="syncColor('bg', this.value)">
+                            <input type="text" id="topbar_bg_color" name="topbar_bg_color" value="{{ $settings['topbar_bg_color'] ?? '#0f233a' }}" class="form-input" placeholder="#0f233a" oninput="syncColor('bg', this.value)">
+                        </div>
+                    </div>
+
+                    <!-- Text Color -->
+                    <div>
+                        <label class="form-label">Text &amp; Icon Color</label>
+                        <div class="color-picker-box">
+                            <input type="color" id="text-color-swatch" value="{{ $settings['topbar_text_color'] ?? '#ffffff' }}" class="color-swatch-input" oninput="syncColor('text', this.value)">
+                            <input type="text" id="topbar_text_color" name="topbar_text_color" value="{{ $settings['topbar_text_color'] ?? '#ffffff' }}" class="form-input" placeholder="#ffffff" oninput="syncColor('text', this.value)">
+                        </div>
+                    </div>
+
+                    <!-- Scroll Speed -->
+                    <div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <label class="form-label" style="margin: 0;">Scroll Speed (Seconds)</label>
+                            <span id="speed-val-badge" style="font-size: 0.82rem; font-weight: 700; color: #009688; background: #e0f2fe; padding: 2px 8px; border-radius: 6px;">
+                                {{ $settings['topbar_speed'] ?? '55' }}s
+                            </span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <input type="range" id="topbar_speed_range" min="15" max="150" value="{{ $settings['topbar_speed'] ?? '55' }}" style="flex: 1; accent-color: #009688;" oninput="syncSpeed(this.value)">
+                            <input type="number" id="topbar_speed" name="topbar_speed" value="{{ $settings['topbar_speed'] ?? '55' }}" class="form-input" style="width: 85px;" min="10" max="200" oninput="syncSpeed(this.value)">
+                        </div>
+                    </div>
+
+                    <!-- Mobile Event Format Badge -->
+                    <div>
+                        <label class="form-label">Event Format Badge</label>
+                        <input type="text" name="topbar_format" value="{{ $settings['topbar_format'] ?? 'Online | In-person' }}" class="form-input" placeholder="Online | In-person">
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 3: PHONE NUMBERS -->
+            <div class="admin-card-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+                    <div>
+                        <h3 style="margin: 0 0 4px 0; font-size: 1.25rem; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 8px;">
+                            <i class="fa-solid fa-phone" style="color: #009688;"></i> 3. Contact &amp; Helpdesk Phone Numbers
+                        </h3>
+                        <p style="margin: 0; color: #64748b; font-size: 0.88rem;">These phone numbers appear on the left side of the topbar.</p>
                     </div>
                     <button type="button" onclick="addPhoneRow()" style="background: #e0f2fe; color: #0284c7; border: 1.5px solid #bae6fd; padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: 0.88rem; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
                         <i class="fa-solid fa-plus"></i> Add Another Phone
@@ -216,25 +484,25 @@
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 15px;">
                     <div>
                         <label class="form-label">Phone 1 (Primary)</label>
-                        <input type="text" name="contact_phone" value="{{ $settings['contact_phone'] ?? '+91 9789582404' }}" class="form-input" placeholder="+91 9789582404" required>
+                        <input type="text" id="contact_phone_1" name="contact_phone" value="{{ $settings['contact_phone'] ?? '+91 9789582404' }}" class="form-input" placeholder="+91 9789582404" oninput="updateLivePreview()" required>
                     </div>
                     <div>
                         <label class="form-label">Phone 2</label>
-                        <input type="text" name="contact_phone_2" value="{{ $settings['contact_phone_2'] ?? '+91 9025596984' }}" class="form-input" placeholder="+91 9025596984">
+                        <input type="text" id="contact_phone_2" name="contact_phone_2" value="{{ $settings['contact_phone_2'] ?? '+91 9025596984' }}" class="form-input" placeholder="+91 9025596984" oninput="updateLivePreview()">
                     </div>
                     <div>
                         <label class="form-label">Phone 3</label>
-                        <input type="text" name="contact_phone_3" value="{{ $settings['contact_phone_3'] ?? '+91 81480 18894' }}" class="form-input" placeholder="+91 81480 18894">
+                        <input type="text" id="contact_phone_3" name="contact_phone_3" value="{{ $settings['contact_phone_3'] ?? '+91 81480 18894' }}" class="form-input" placeholder="+91 81480 18894" oninput="updateLivePreview()">
                     </div>
                 </div>
 
                 <div id="additional-phones-wrapper">
-                    @for($p = 4; $p <= 10; $p++)
+                    @for($p = 4; $p <= 20; $p++)
                         @if(isset($settings['contact_phone_' . $p]))
                             <div class="item-row-card">
                                 <i class="fa-solid fa-phone" style="color: #009688;"></i>
-                                <input type="text" name="additional_phones[]" value="{{ $settings['contact_phone_' . $p] }}" class="form-input" style="flex: 1;" placeholder="Enter phone number...">
-                                <button type="button" onclick="this.closest('.item-row-card').remove()" style="background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; width: 38px; height: 38px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="Remove">
+                                <input type="text" name="additional_phones[]" value="{{ $settings['contact_phone_' . $p] }}" class="form-input" style="flex: 1;" placeholder="Enter phone number..." oninput="updateLivePreview()">
+                                <button type="button" class="item-btn-tool btn-del" onclick="this.closest('.item-row-card').remove(); updateLivePreview();" title="Remove">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
                             </div>
@@ -243,77 +511,9 @@
                 </div>
             </div>
 
-            <!-- SECTION 2: ANNOUNCEMENT TICKER / MARQUEE -->
-            <div class="admin-card-section">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
-                    <div>
-                        <h3 style="margin: 0 0 4px 0; font-size: 1.25rem; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 8px;">
-                            <i class="fa-solid fa-scroll" style="color: #f59e0b;"></i> 2. Scrolling Announcement Marquee Ticker
-                        </h3>
-                        <p style="margin: 0; color: #64748b; font-size: 0.88rem;">Choose whether to automatically pull live Deadlines or show custom announcement messages.</p>
-                    </div>
-                    <button type="button" onclick="addTickerRow()" style="background: #fffbeb; color: #b45309; border: 1.5px solid #fde68a; padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: 0.88rem; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
-                        <i class="fa-solid fa-plus"></i> Add Custom Message
-                    </button>
-                </div>
-
-                <!-- Ticker Mode Selection -->
-                <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 18px 22px; margin-bottom: 22px;">
-                    <label class="form-label" style="margin-bottom: 12px;">Ticker Content Source</label>
-                    <div style="display: flex; gap: 25px; flex-wrap: wrap;">
-                        <label style="display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 600; color: #0f172a;">
-                            <input type="radio" name="topbar_ticker_mode" value="deadlines" {{ ($settings['topbar_ticker_mode'] ?? 'deadlines') === 'deadlines' ? 'checked' : '' }} onchange="toggleTickerMode(this.value)">
-                            <span><i class="fa-solid fa-calendar-check" style="color: #009688;"></i> Automatically sync with Important Deadlines ({{ $deadlines->count() }} active)</span>
-                        </label>
-                        <label style="display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 600; color: #0f172a;">
-                            <input type="radio" name="topbar_ticker_mode" value="custom" {{ ($settings['topbar_ticker_mode'] ?? 'deadlines') === 'custom' ? 'checked' : '' }} onchange="toggleTickerMode(this.value)">
-                            <span><i class="fa-solid fa-pen-to-square" style="color: #f59e0b;"></i> Use Custom Announcement Items</span>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Custom Ticker List -->
-                <div id="custom-ticker-wrap" style="{{ ($settings['topbar_ticker_mode'] ?? 'deadlines') === 'custom' ? 'display: block;' : 'display: none;' }} margin-bottom: 20px;">
-                    <label class="form-label">Custom Marquee Announcement Items</label>
-                    <div id="ticker-items-container">
-                        @for($t = 1; $t <= 20; $t++)
-                            @if(isset($settings['topbar_ticker_' . $t]))
-                                <div class="item-row-card">
-                                    <i class="fa-solid fa-bullhorn" style="color: #f59e0b;"></i>
-                                    <input type="text" name="custom_ticker_items[]" value="{{ $settings['topbar_ticker_' . $t] }}" class="form-input" style="flex: 1;" placeholder="e.g. Submission of Abstract: 2026-10-07">
-                                    <button type="button" onclick="this.closest('.item-row-card').remove()" style="background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; width: 38px; height: 38px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="Remove">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </button>
-                                </div>
-                            @endif
-                        @endfor
-                    </div>
-                </div>
-
-                <!-- Settings Grid -->
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;">
-                    <div>
-                        <label class="form-label">Scroll Speed (Seconds)</label>
-                        <input type="number" name="topbar_speed" value="{{ $settings['topbar_speed'] ?? '55' }}" class="form-input" min="5" max="150">
-                    </div>
-                    <div>
-                        <label class="form-label">Topbar Background Color</label>
-                        <input type="text" name="topbar_bg_color" value="{{ $settings['topbar_bg_color'] ?? '#0f233a' }}" class="form-input" placeholder="#0f233a">
-                    </div>
-                    <div>
-                        <label class="form-label">Topbar Text Color</label>
-                        <input type="text" name="topbar_text_color" value="{{ $settings['topbar_text_color'] ?? '#ffffff' }}" class="form-input" placeholder="#ffffff">
-                    </div>
-                    <div>
-                        <label class="form-label">Mobile Format Badge</label>
-                        <input type="text" name="topbar_format" value="{{ $settings['topbar_format'] ?? 'Online | In-person' }}" class="form-input" placeholder="Online | In-person">
-                    </div>
-                </div>
-            </div>
-
             <!-- SUBMIT BUTTON -->
             <div style="text-align: right; margin-bottom: 30px;">
-                <button type="submit" class="btn" style="background: linear-gradient(135deg, #009688, #00796b); color: #ffffff; padding: 14px 34px; border-radius: 10px; font-weight: 800; font-size: 1.05rem; border: none; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 150, 136, 0.35); display: inline-flex; align-items: center; gap: 10px;">
+                <button type="submit" class="btn" style="background: linear-gradient(135deg, #009688, #00796b); color: #ffffff; padding: 14px 38px; border-radius: 10px; font-weight: 800; font-size: 1.05rem; border: none; cursor: pointer; box-shadow: 0 6px 20px rgba(0, 150, 136, 0.35); display: inline-flex; align-items: center; gap: 10px; transition: transform 0.15s, box-shadow 0.15s;">
                     <i class="fa-solid fa-floppy-disk"></i> Save Topbar &amp; Announcements
                 </button>
             </div>
@@ -324,17 +524,144 @@
 </div>
 
 <script>
-    function toggleTickerMode(val) {
-        const wrap = document.getElementById('custom-ticker-wrap');
-        if (val === 'custom') {
-            wrap.style.display = 'block';
-            if (document.getElementById('ticker-items-container').children.length === 0) {
-                addTickerRow('Submission of Abstract: 2026-10-07');
-                addTickerRow('Acceptance of Abstract: 2026-10-15');
-                addTickerRow('Full Paper Submission: 2026-11-15');
+    // Live deadlines data from database
+    const dbDeadlines = @json($deadlines->map(function($d) { return ['title' => $d->title, 'date' => $d->deadline_date]; }));
+
+    function selectTickerMode(val) {
+        document.querySelectorAll('input[name="topbar_ticker_mode"]').forEach(r => {
+            r.checked = (r.value === val);
+        });
+
+        document.querySelectorAll('.mode-card-radio').forEach(card => {
+            const input = card.querySelector('input');
+            if (input && input.value === val) {
+                card.classList.add('active');
+            } else {
+                card.classList.remove('active');
             }
+        });
+
+        const customWrap = document.getElementById('custom-ticker-wrap');
+        const presetsWrap = document.getElementById('presets-wrap');
+        const noticeWrap = document.getElementById('deadlines-sync-notice');
+        const modeBadge = document.getElementById('prev-mode-badge');
+
+        if (val === 'deadlines') {
+            customWrap.style.display = 'none';
+            presetsWrap.style.display = 'none';
+            noticeWrap.style.display = 'block';
+            modeBadge.textContent = 'Syncing Live Deadlines';
+            modeBadge.style.color = '#00796b';
+            modeBadge.style.background = '#e6fffa';
+            modeBadge.style.borderColor = '#99f6e4';
         } else {
-            wrap.style.display = 'none';
+            customWrap.style.display = 'block';
+            presetsWrap.style.display = 'block';
+            noticeWrap.style.display = 'none';
+            modeBadge.textContent = 'Custom Ticker Mode';
+            modeBadge.style.color = '#b45309';
+            modeBadge.style.background = '#fef3c7';
+            modeBadge.style.borderColor = '#fde68a';
+
+            if (document.querySelectorAll('#ticker-items-container input[name="custom_ticker_items[]"]').length === 0) {
+                addTickerRow('Submission of Abstract: 2026-10-30');
+                addTickerRow('Early Bird Registration: 2026-10-15');
+                addTickerRow('Regular Registration Deadline: 2026-11-20');
+            }
+        }
+
+        updateLivePreview();
+    }
+
+    function syncColor(type, val) {
+        if (!val) return;
+        if (type === 'bg') {
+            document.getElementById('bg-color-swatch').value = val;
+            document.getElementById('topbar_bg_color').value = val;
+            document.getElementById('prev-topbar-desktop').style.backgroundColor = val;
+        } else {
+            document.getElementById('text-color-swatch').value = val;
+            document.getElementById('topbar_text_color').value = val;
+            document.getElementById('prev-topbar-desktop').style.color = val;
+        }
+    }
+
+    function syncSpeed(val) {
+        const speed = Math.max(10, parseInt(val) || 55);
+        document.getElementById('topbar_speed_range').value = speed;
+        document.getElementById('topbar_speed').value = speed;
+        document.getElementById('speed-val-badge').textContent = speed + 's';
+
+        const marquee = document.getElementById('prev-marquee-content');
+        if (marquee) {
+            marquee.style.animationDuration = speed + 's';
+        }
+    }
+
+    function renumberTickerItems() {
+        const container = document.getElementById('ticker-items-container');
+        const rows = container.querySelectorAll('.item-row-card');
+        rows.forEach((row, idx) => {
+            const badge = row.querySelector('.item-badge-num');
+            if (badge) badge.textContent = (idx + 1);
+        });
+        const countSpan = document.getElementById('ticker-items-count');
+        if (countSpan) countSpan.textContent = rows.length;
+    }
+
+    function addTickerRow(text = '') {
+        const container = document.getElementById('ticker-items-container');
+        const div = document.createElement('div');
+        div.className = 'item-row-card';
+        div.innerHTML = `
+            <span class="item-badge-num">1</span>
+            <i class="fa-solid fa-bullhorn" style="color: #f59e0b; font-size: 0.95rem;"></i>
+            <input type="text" name="custom_ticker_items[]" value="" class="form-input" style="flex: 1;" placeholder="Enter marquee text..." oninput="updateLivePreview()">
+            <button type="button" class="item-btn-tool" onclick="moveItemUp(this)" title="Move Up">
+                <i class="fa-solid fa-arrow-up"></i>
+            </button>
+            <button type="button" class="item-btn-tool" onclick="moveItemDown(this)" title="Move Down">
+                <i class="fa-solid fa-arrow-down"></i>
+            </button>
+            <button type="button" class="item-btn-tool btn-del" onclick="removeTickerRow(this)" title="Delete Item">
+                <i class="fa-solid fa-trash"></i>
+            </button>
+        `;
+        div.querySelector('input').value = text;
+        container.appendChild(div);
+        renumberTickerItems();
+        updateLivePreview();
+        if (!text) {
+            div.querySelector('input').focus();
+        }
+    }
+
+    function removeTickerRow(btn) {
+        const row = btn.closest('.item-row-card');
+        if (row) {
+            row.remove();
+            renumberTickerItems();
+            updateLivePreview();
+        }
+    }
+
+    function moveItemUp(btn) {
+        const row = btn.closest('.item-row-card');
+        const prev = row.previousElementSibling;
+        if (prev && prev.classList.contains('item-row-card')) {
+            row.parentNode.insertBefore(row, prev);
+            renumberTickerItems();
+            updateLivePreview();
+        }
+    }
+
+    function moveItemDown(btn) {
+        const row = btn.closest('.item-row-card');
+        const next = row.nextElementSibling;
+        if (next && next.classList.contains('item-row-card')) {
+            row.parentNode.insertBefore(next, row);
+            renumberTickerItems();
+            updateLivePreview();
         }
     }
 
@@ -344,28 +671,91 @@
         div.className = 'item-row-card';
         div.innerHTML = `
             <i class="fa-solid fa-phone" style="color: #009688;"></i>
-            <input type="text" name="additional_phones[]" value="" class="form-input" style="flex: 1;" placeholder="Enter additional phone number...">
-            <button type="button" onclick="this.closest('.item-row-card').remove()" style="background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; width: 38px; height: 38px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="Remove">
+            <input type="text" name="additional_phones[]" value="" class="form-input" style="flex: 1;" placeholder="Enter phone number..." oninput="updateLivePreview()">
+            <button type="button" class="item-btn-tool btn-del" onclick="this.closest('.item-row-card').remove(); updateLivePreview();" title="Remove">
                 <i class="fa-solid fa-trash"></i>
             </button>
         `;
         wrapper.appendChild(div);
         div.querySelector('input').focus();
+        updateLivePreview();
     }
 
-    function addTickerRow(defaultVal = '') {
-        const container = document.getElementById('ticker-items-container');
-        const div = document.createElement('div');
-        div.className = 'item-row-card';
-        div.innerHTML = `
-            <i class="fa-solid fa-bullhorn" style="color: #f59e0b;"></i>
-            <input type="text" name="custom_ticker_items[]" value="${defaultVal}" class="form-input" style="flex: 1;" placeholder="e.g. Submission of Abstract: 2026-10-07">
-            <button type="button" onclick="this.closest('.item-row-card').remove()" style="background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; width: 38px; height: 38px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="Remove">
-                <i class="fa-solid fa-trash"></i>
-            </button>
-        `;
-        container.appendChild(div);
-        div.querySelector('input').focus();
+    function updateLivePreview() {
+        const checkedModeInput = document.querySelector('input[name="topbar_ticker_mode"]:checked');
+        const mode = checkedModeInput ? checkedModeInput.value : 'custom';
+
+        // 1. Update Left Phones in Preview
+        const phonesContainer = document.getElementById('prev-left-phones');
+        if (phonesContainer) {
+            const phones = [];
+            const p1 = document.getElementById('contact_phone_1')?.value.trim();
+            const p2 = document.getElementById('contact_phone_2')?.value.trim();
+            const p3 = document.getElementById('contact_phone_3')?.value.trim();
+            if (p1) phones.push(p1);
+            if (p2) phones.push(p2);
+            if (p3) phones.push(p3);
+            document.querySelectorAll('input[name="additional_phones[]"]').forEach(inp => {
+                if (inp.value.trim()) phones.push(inp.value.trim());
+            });
+
+            if (phones.length > 0) {
+                phonesContainer.style.display = 'flex';
+                phonesContainer.innerHTML = phones.map(p => `<span><i class="fa-solid fa-phone" style="font-size: 0.75rem;"></i> ${p}</span>`).join('');
+            } else {
+                phonesContainer.style.display = 'none';
+            }
+        }
+
+        // 2. Update Marquee Content
+        const marquee = document.getElementById('prev-marquee-content');
+        if (!marquee) return;
+
+        let items = [];
+        if (mode === 'deadlines') {
+            if (dbDeadlines && dbDeadlines.length > 0) {
+                items = dbDeadlines.map(d => `${d.title}: ${d.date}`);
+            } else {
+                items = ['No active deadlines in database'];
+            }
+        } else {
+            document.querySelectorAll('#ticker-items-container input[name="custom_ticker_items[]"]').forEach(inp => {
+                const val = inp.value.trim();
+                if (val) items.push(val);
+            });
+            if (items.length === 0) {
+                items = [
+                    'All the Presentation will be published as a conference proceedings in ISBN indexed book',
+                    'Quality presentation will be peer reviewed and considered for further publication in selected Scopus/ WoS indexed journals'
+                ];
+            }
+        }
+
+        // Render repeated for seamless loop
+        let html = '';
+        for (let r = 0; r < 4; r++) {
+            items.forEach(item => {
+                html += `
+                    <span style="margin-right: 45px; display: inline-flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-circle" style="color: #00A896; font-size: 0.45rem;"></i>
+                        <span>${item}</span>
+                        <span style="color: rgba(255,255,255,0.25); margin-left: 20px;">|</span>
+                    </span>
+                `;
+            });
+        }
+        marquee.innerHTML = html;
     }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        renumberTickerItems();
+        const checkedMode = document.querySelector('input[name="topbar_ticker_mode"]:checked')?.value || 'custom';
+        selectTickerMode(checkedMode);
+        syncSpeed(document.getElementById('topbar_speed')?.value || 55);
+        syncColor('bg', document.getElementById('topbar_bg_color')?.value || '#0f233a');
+        syncColor('text', document.getElementById('topbar_text_color')?.value || '#ffffff');
+        updateLivePreview();
+    });
 </script>
 @endsection
