@@ -1,4 +1,4 @@
-<!-- Topbar (Desktop Only) -->
+<!-- Topbar (Desktop & Mobile) -->
 @php
     $topbarBg = $settings['topbar_bg_color'] ?? '#0f233a';
     $topbarText = $settings['topbar_text_color'] ?? '#ffffff';
@@ -26,12 +26,20 @@
 <style>
     .topbar-desktop {
         padding: 9px 20px;
-        display: flex;
+        display: flex !important;
         align-items: center;
         background-color: {{ $topbarBg }};
         color: {{ $topbarText }};
         font-size: 0.88rem;
         overflow: hidden;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    @media (max-width: 768px) {
+        .topbar-desktop {
+            padding: 7px 12px;
+            font-size: 0.8rem;
+        }
     }
     .marquee-container {
         flex-grow: 1;

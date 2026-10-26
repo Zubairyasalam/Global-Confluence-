@@ -2467,9 +2467,9 @@ align-items: flex-start;
         display: none;
     }
 
-    /* Hide desktop topbar on mobile */
+    /* Display topbar ticker on mobile like desktop */
     .topbar-desktop {
-        display: none !important;
+        display: flex !important;
     }
 
     .about-mcc-section {
